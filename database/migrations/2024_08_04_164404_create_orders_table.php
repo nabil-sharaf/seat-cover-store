@@ -29,7 +29,7 @@ return new class extends Migration {
              $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
              $table->foreign('guest_address_id')->references('id')->on('guest_addresses')->onDelete('set null');
              $table->foreign('user_address_id')->references('id')->on('user_addresses')->onDelete('set null');
-             $table->foreign('promocode_id')->references('id')->on('promocodes')->onDelete('set null');
+             $table->foreign('promocode_id')->references('id')->on('promo_code')->onDelete('set null');
              $table->foreign('status_id')->references('id')->on('statuses')->onDelete('set null');
         });
     }
