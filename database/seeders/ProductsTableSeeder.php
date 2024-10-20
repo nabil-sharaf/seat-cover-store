@@ -3,80 +3,175 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Admin\Product;
-use App\Models\Admin\Category;
 use Illuminate\Support\Facades\DB;
 
 class ProductsTableSeeder extends Seeder
 {
     public function run()
     {
-// تعطيل التحقق من المفاتيح الأجنبية
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-
-        DB::table('products')->truncate();
-
-// إعادة تمكين التحقق من المفاتيح الأجنبية
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
-        $categories = Category::all();
-            Product::create([
-                'name' => 'أسود مطرز نسيج جملي',
-                'description' => 'أسود مطرز نسيج جملي',
-                'quantity' => rand(10, 100),
-                'price' => rand(500, 1000),
-                'goomla_price'=>rand(100,450),
-            ]);
-
-            Product::create([
-                'name' => 'أسود مطرز نسيج بيج',
-                'description' => 'أسود مطرز نسيج بيج   '  ,
-                'quantity' => rand(10, 100),
-                'price' => rand(500, 1000),
-                'goomla_price'=>rand(100,450),
-                ]);
-
-            Product::create([
-                'name' => 'أسود مطرز نسيج أحمر',
-                'description' => 'أسود مطرز نسيج أحمر   '  ,
-                'quantity' => rand(10, 100),
-                'price' => rand(500, 1000),
-                'goomla_price'=>rand(100,450),
-                ]);
-
-            Product::create([
-                'name' => 'بني مطرز نسيج جملي',
-                'description' => 'بني مطرز نسيج جملي   '  ,
-                'quantity' => rand(10, 100),
-                'price' => rand(500, 1000),
-                'goomla_price'=>rand(100,450),
-                ]);
-
-            Product::create([
-                'name' => 'بني مطرز نسيج بيج',
-                'description' => 'بني مطرز نسيج بيج   '  ,
-                'quantity' => rand(10, 100),
-                'price' => rand(500, 1000),
-                'goomla_price'=>rand(100,450),
-                ]);
-
-            Product::create([
-                'name' => 'أسود مطرز نسيج عنابي',
-                'description' => 'أسود مطرز نسيج عنابي   '  ,
-                'quantity' => rand(10, 100),
-                'price' => rand(500, 1000),
-                'goomla_price'=>rand(100,450),
-                ]);
-
-            Product::create([
-                'name' => 'رصاصي مطرز نسيج بيج',
-                'description' => 'رصاصي مطرز نسيج بيج   '  ,
-                'quantity' => rand(10, 100),
-                'price' => rand(500, 1000),
-                'goomla_price'=>rand(100,450),
-                ]);
-
-        }
-
+        DB::table('products')->insert([
+            [
+                'id' => 2,
+                'name' => 'أسود',
+                'tatriz_color' => 'مطرز اسود',
+                'image' => 'products/67087478ce0f5.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 1,
+            ],
+            [
+                'id' => 3,
+                'name' => 'أسود',
+                'tatriz_color' => 'مطرز احمر',
+                'image' => 'products/6708777753b29.jpg',
+                'description' => 'qqqqqqqq',
+                'status' => 1,
+                'category_id' => 1,
+            ],
+            [
+                'id' => 4,
+                'name' => 'أسود',
+                'tatriz_color' => 'مطرز اسود',
+                'image' => 'products/670877a82f4a3.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 1,
+            ],
+            [
+                'id' => 5,
+                'name' => 'أسود',
+                'tatriz_color' => 'مطرز جملي',
+                'image' => 'products/670877c49bfe1.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 1,
+            ],
+            [
+                'id' => 6,
+                'name' => 'أسود',
+                'tatriz_color' => 'مطرز عنابي',
+                'image' => 'products/670877dce6f72.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 1,
+            ],
+            [
+                'id' => 7,
+                'name' => 'بني',
+                'tatriz_color' => 'مطرز بيج',
+                'image' => 'products/6708780399873.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 1,
+            ],
+            [
+                'id' => 8,
+                'name' => 'بني',
+                'tatriz_color' => 'مطرز جملي',
+                'image' => 'products/67087823759c4.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 1,
+            ],
+            [
+                'id' => 9,
+                'name' => 'بيج',
+                'tatriz_color' => 'مطرز بيج',
+                'image' => 'products/670878406181b.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 1,
+            ],
+            [
+                'id' => 10,
+                'name' => 'رصاصي',
+                'tatriz_color' => 'مطرز اسود',
+                'image' => 'products/6708785b96684.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 1,
+            ],
+            [
+                'id' => 11,
+                'name' => 'أسود',
+                'tatriz_color' => 'مطرز اسود',
+                'image' => 'products/670aae2604d95.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 2,
+            ],
+            [
+                'id' => 12,
+                'name' => 'بني',
+                'tatriz_color' => 'مطرز نبي',
+                'image' => 'products/670aae3912e76.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 2,
+            ],
+            [
+                'id' => 13,
+                'name' => 'بيج',
+                'tatriz_color' => 'مطرز نبي',
+                'image' => 'products/670aae67b1f16.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 2,
+            ],
+            [
+                'id' => 14,
+                'name' => 'جملي',
+                'tatriz_color' => 'مطرز جملي',
+                'image' => 'products/670aae7738d97.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 2,
+            ],
+            [
+                'id' => 15,
+                'name' => 'أسود',
+                'tatriz_color' => 'مطرز اسود',
+                'image' => 'products/670aaf445f880.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 3,
+            ],
+            [
+                'id' => 16,
+                'name' => 'أسود',
+                'tatriz_color' => 'مطرز جملي',
+                'image' => 'products/670aaf615ee12.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 3,
+            ],
+            [
+                'id' => 17,
+                'name' => 'أسود',
+                'tatriz_color' => 'مطرز احمر',
+                'image' => 'products/670aaf751c565.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 3,
+            ],
+            [
+                'id' => 18,
+                'name' => 'بني',
+                'tatriz_color' => 'مطرز نبي',
+                'image' => 'products/670aaf909d7e3.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 3,
+            ],
+            [
+                'id' => 19,
+                'name' => 'بيج',
+                'tatriz_color' => 'مطرز بيج',
+                'image' => 'products/670aafb29214e.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 4,
+            ]
+        ]);
+    }
 }
-
