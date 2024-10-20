@@ -1,0 +1,33 @@
+<?php
+
+return [
+    'logo_alt' => 'الشعار',
+    'description' => \App\Models\Admin\Setting::getValue('site_disc_footer_ar')??'مرحبًا بكم في ماما ستور المكان الأفضل لطفلك تسوق الأن واستمتع معنا',
+    'quick_links' => 'روابط سريعة',
+    'helpline' => 'خط المساعدة',
+    'courses' => 'الدورات',
+    'about' => 'من نحن',
+    'event' => 'حدث',
+    'other_page' => 'صفحات أخرى',
+    'blog' => 'مدونة',
+    'speakers' => 'المتحدثين',
+    'contact' => 'اتصل بنا',
+    'tricket' => 'تذكرة',
+    'company' => 'شركة',
+    'jesco' => 'جيسكو',
+    'shop' => 'متجر',
+    'contact_us' => 'اتصل بنا',
+    'log_in' => 'تسجيل الدخول',
+    'help' => 'مساعدة',
+    'store_information' => 'معلومات المتجر',
+    'phone_fax' => 'الموبايل',
+    'email' => 'البريد الإلكتروني',
+    'payment_image_alt' => 'طرق الدفع',
+    'site_name' => 'ماما ستور',
+    'made_with' => 'صنع ',
+    'by' => 'بواسطة',
+    'has_themes' => 'Engix',
+    'home'=>'الرئيسية',
+    'categories'=>'الأقسام',
+
+];
