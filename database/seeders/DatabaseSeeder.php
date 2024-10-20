@@ -21,15 +21,10 @@ class DatabaseSeeder extends Seeder
             CategoriesTableSeeder::class,
             SettingsTableSeeder::class,
             RolesAndPermissionsSeeder::class,
-         //   ProductsTableSeeder::class,
-           // OrdersTableSeeder::class,
-         //   OrderDetailsTableSeeder::class,
-          //  ImagesTableSeeder::class,
-          //  CategoryProductTableSeeder::class,
             ShippingRateSeeder::class,
+            SeatCountTableSeeder::class,
             CarBrandsSeeder::class,
             CarModelsSeeder::class,
-            YearsSeeder::class,
         ]);
     }
 }

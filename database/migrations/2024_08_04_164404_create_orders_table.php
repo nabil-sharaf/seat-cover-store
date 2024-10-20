@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,23 +12,25 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('guest_address_id')->nullable();
             $table->unsignedBigInteger('user_address_id')->nullable();
             $table->unsignedBigInteger('promocode_id')->nullable();
             $table->unsignedBigInteger('status_id')->default(1);
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('guest_address_id')->references('id')->on('guest_addresses')->onDelete('set null');
-            $table->foreign('user_address_id')->references('id')->on('user_addresses')->onDelete('set null');
-            $table->foreign('status_id')->references('id')->on('statuses');
-
             $table->decimal('total_price', 8, 2);
-            $table->decimal('vip_discount', 8, 2)->default(0);
-            $table->decimal('promo_discount', 8, 2)->default(0);
+            $table->decimal('promo_discount', 8, 2)->default(0.00);
             $table->decimal('total_after_discount', 8, 2);
-            $table->timestamps();
+            $table->decimal('shipping_cost', 8, 2);
+            $table->decimal('tax_amount', 8, 2);
+            $table->decimal('final_total', 8, 2);
+            $table->timestamps();  // For created_at and updated_at columns
+
+            // Foreign key constraints 
+             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+             $table->foreign('guest_address_id')->references('id')->on('addresses')->onDelete('set null');
+             $table->foreign('user_address_id')->references('id')->on('addresses')->onDelete('set null');
+             $table->foreign('promocode_id')->references('id')->on('promocodes')->onDelete('set null');
+             $table->foreign('status_id')->references('id')->on('statuses')->onDelete('set null');
         });
     }
 
