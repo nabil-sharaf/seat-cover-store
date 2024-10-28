@@ -82,92 +82,20 @@ class SettingsTableSeeder extends Seeder
                 'hide'=>null
             ],
             [
-                'setting_key' => 'slider_subject_ar',
-                'setting_value' => 'مرحبا بكم في موقعنا',
+                'setting_key' => 'appointments',
+                'setting_value' => 'من السبت للخميس 8 ص : 9 م  ',
                 'setting_type' => 'string',
-                'description' => '',
-                'hide'=>'hide',
+                'description' => 'المواعيد  ',
+                'hide'=>null
             ],
             [
-                'setting_key' => 'slider_desc_ar',
-                'setting_value' => '',
-                'setting_type' => 'string',
-                'description' => '',
-                'hide'=>'hide',
-
-            ],
-            [
-                'setting_key' => 'deal_of_day_subject_ar',
-                'setting_value' => 'Deal of the day',
-                'setting_type' => 'string',
-                'description' => 'عنوان عروض deal of the day',
-                'hide'=>'hide',
-
-            ],
-            [
-                'setting_key' => 'deal_of_day_desc_ar',
-                'setting_value' => 'خصومات تصل حتى 35 % على ملابس الأطفال',
+            'setting_key' => 'footer_desc',
+                'setting_value' => 'شركتنا متخصصة في تصميم وتصنيع الأرضيات -التلبيسات- الفاخرة للسيارات بجميع أنواعها وموديلاتها. مع سنوات من الخبرة العملية في السوق السعودي',
                 'setting_type' => 'text',
-                'description' => 'وصف عروض deal of the day',
-                'hide'=>'hide',
+                'description' => 'الوصف في الفوتر  ',
+                'hide'=>null
             ],
-            [
-                'setting_key' => 'Trending_products_subject',
-                'setting_value' => 'Trending Products',
-                'setting_type' => 'string',
-                'description' => 'عنوان Trending Product',
-                'hide'=>'hide',
-            ],
-            [
-                'setting_key' => 'Trending_products_desc',
-                'setting_value' => 'المنتجات الأشهر والأكثر إقبالا خلال الفترة الحالية',
-                'setting_type' => 'string',
-                'description' => 'وصف Trending Product',
-                'hide'=>'hide',
-            ],
-            [
-                'setting_key' => 'pagination_count',
-                'setting_value' => 25,
-                'setting_type' => 'integer',
-                'description' => 'أقصى عدد للمنتجات في الصفحة',
-                'hide'=>'hide',
-            ],
-            [
-                'setting_key' => 'last_added_count',
-                'setting_value' => 8,
-                'setting_type' => 'integer',
-                'description' => 'عدد منتجات المضاف حديثا في الرئيسية',
-                'hide'=>'hide',
 
-            ],
-            [
-                'setting_key' => 'best_seller_count',
-                'setting_value' => 8,
-                'setting_type' => 'integer',
-                'description' => 'عدد منتجات الأكثر مبيعا في الرئيسية',
-                'hide'=>'hide',
-            ],
-            [
-                'setting_key' => 'trending_count',
-                'setting_value' => 8,
-                'setting_type' => 'integer',
-                'description' => 'عدد منتجات  التريندينج في الرئيسية',
-                'hide'=>'hide',
-            ],
-            [
-                'setting_key' => 'goomla_min_number',
-                'setting_value' => 1,
-                'setting_type' => 'integer',
-                'description' => 'أقل عدد قطع في الأوردر لعميل الجملة',
-                'hide'=>'hide',
-            ],
-            [
-                'setting_key' => 'goomla_min_prices',
-                'setting_value' => 1,
-                'setting_type' => 'integer',
-                'description' => 'اقل سعر للاوردر لعميل الجملة',
-                'hide'=>'hide',
-            ],
             [
                 'setting_key' => 'tax_rate',
                 'setting_value' => 15,

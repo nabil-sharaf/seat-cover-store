@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\OrderRequest;
+use App\Models\Admin\BagOption;
 use App\Models\Admin\CarBrand;
+use App\Models\Admin\CarModel;
 use App\Models\Admin\Category;
 use App\Models\Admin\GuestAddress;
 use App\Models\Admin\Order;
@@ -13,6 +15,7 @@ use App\Models\Admin\Product;
 use App\Models\Admin\ProductDiscount;
 use App\Models\Admin\PromoCode;
 use App\Models\Admin\SeatCount;
+use App\Models\Admin\SeatPrice;
 use App\Models\Admin\Setting;
 use App\Models\Admin\ShippingRate;
 use App\Models\Admin\UserAddress;
@@ -130,29 +133,33 @@ class OrderController extends Controller
                 $totalPrice = 0;
 
 
-                foreach ($request->products as $productData) {
+                foreach ($request->seat_cover as $index => $seatCoverId) {
 
-                    $product = Product::find($productData['id']);
+                    $bagBrice = $this->getBagPrice($seatCoverId,$request->bag_option[$index]);
+                    $talbisaPrice = $this->getTalbisaPrice($seatCoverId,$request->seat_count[$index]);
 
-
-
+                    $unitPrice = $bagBrice + $talbisaPrice;
+                    $count =$request->talbisa_count[$index];
+                    $countPrice = $unitPrice * $count;
 
                     $orderDetail = new OrderDetail();
+
                     $orderDetail->order_id = $order->id;
-                    $orderDetail->seat_cover_id ;
-                    $orderDetail->color_id;
-                    $orderDetail->seat_count_id;
-                    $orderDetail->brand_id;
-                    $orderDetail->model_id;
-                    $orderDetail->made_years;
-                    $orderDetail->bag_option;
-                    $orderDetail->talisa_quantity;
-                    $orderDetail->price = $price ;
+                    $orderDetail->color_id = $request->cover_color[$index];
+                    $orderDetail->seat_cover_id = $seatCoverId;
+                    $orderDetail->seat_count_id = $request->seat_count[$index];
+                    $orderDetail->brand_id = $request->car_brand[$index];
+                    $orderDetail->model_id = $request->car_model[$index];
+                    $orderDetail->made_years = $request->made_year[$index];
+                    $orderDetail->bag_option = $request->bag_option[$index];
+                    $orderDetail->talbisa_quantity = $count;
+                    $orderDetail->unit_price = $unitPrice;
+                    $orderDetail->total_price = $countPrice;
 
                     $orderDetail->save();
 
-                    $totalPrice += $price;
-                    $product->save();
+
+                    $totalPrice += $countPrice;
                 }
 
                 // التحقق من كود الخصم
@@ -188,12 +195,12 @@ class OrderController extends Controller
                 }
 
                 $tax_rate = Setting::getValue('tax_rate');
-                $tax_amount = $totalPrice * ($tax_rate /100);
+                $tax_amount = ($totalPrice + $shippingCost - $promoDiscount) * ($tax_rate /100);
                 $order->total_price = $totalPrice;
                 $order->promo_discount = $promoDiscount;
                 $order->total_after_discount = $totalPrice - $promoDiscount;
                 $order->tax_amount = $tax_amount;
-                $order->final_total = $totalPrice -  $promoDiscount + $tax_amount+ $shippingCost;
+                $order->final_total = $totalPrice + $tax_amount + $shippingCost - $promoDiscount;
                 $order->save();
 
                 if ($promoDiscount) {
@@ -209,7 +216,8 @@ class OrderController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'تم إنشاء الطلب بنجاح'
+                    'req'=>$request->cover_color,
+                    'message' => 'تم إنشاء الطلب بنجاح',
                 ]);
             });
         } catch (\Exception $e) {
@@ -227,14 +235,31 @@ class OrderController extends Controller
         if ($order->status->id == 1) { // تعديل الطلب في حالة اذا لم  يتم شحنه
 
 
-            $products = Product::all();
             $order->load('orderDetails', 'user', 'promocode', 'userAddress', 'guestAddress');
             $user = $order->user;
             $address = $order->userAddress ?? $order->guestAddress;
 
             $states = ShippingRate::all();
+            $seatCovers = Category::with('products')->get();
+            $seatCounts = SeatCount::all();
+            $carBrands = CarBrand::all();
+            $carModels = CarModel::all()->groupBy('brand_id');
 
-            return view('admin.orders.edit', compact('order', 'products', 'user', 'address', 'states'));
+            // جلب الألوان الخاصة بكل نوع تلبيسة
+            $coverColors = Product::all()->groupBy('category_id');
+
+            return view('admin.orders.edit', compact(
+                'order',
+                'coverColors',
+                'user',
+                'address',
+                'states',
+                'seatCounts',
+                'seatCovers',
+                'carBrands',
+                'carModels',
+            )
+            );
         }
         return redirect(route('admin.orders.index'));
     }
@@ -249,8 +274,7 @@ class OrderController extends Controller
     public function update(OrderRequest $request, Order $order)
     {
         try {
-            return DB::transaction(function () use ($request, $order) {
-
+            return DB::transaction(function () use ($request,$order) {
                 $user = null;
                 $isGuest = false;
 
@@ -260,12 +284,6 @@ class OrderController extends Controller
                     $isGuest = true;
                 }
 
-                // Restore previous quantities
-                foreach ($order->orderDetails as $orderDetail) {
-                    $product = $orderDetail->product;
-                    $product->quantity += ($orderDetail->product_quantity + $orderDetail->free_quantity);
-                    $product->save();
-                }
 
                 if ($isGuest) {
                     // حفظ معلومات الزائر في الطلب
@@ -296,64 +314,52 @@ class OrderController extends Controller
 
                 }
 
-                $order->orderDetails()->delete();
+                // إضافة تكلفة الشحن
+                $shippingCost = ShippingRate::where('state', $request->state)->first()->shipping_cost;
+
+                $order->shipping_cost = $shippingCost;
+
+                $order->total_price = 0;
+                $order->promo_discount = 0;
+                $order->total_after_discount = 0;
+                $order->final_total = 0;
+                $order->save();
+
                 $totalPrice = 0;
-                $all_order_quantity = 0;
-
-                foreach ($request->products as $productData) {
-                    $product = Product::findOrFail($productData['id']);
-
-                    // Get free Quantities if exist
-                    $freeProducts = 0;
-                    $quantity = $productData['quantity'];
-                    // جلب نوع العميل
-                    $customerOfferType = auth()->check() ? auth()->user()->customer_type : 'regular'; // نوع العميل الافتراضي هو "reqular"
-
-                    // الحصول على العرض المناسب من الـ Accessor
-                    $offer = $product->getOfferDetails($customerOfferType);
-
-                    // التأكد إذا كان المنتج يحتوي على عرض
-                    if ($offer && $quantity >= $offer->offer_quantity) {
-                        // حساب عدد المنتجات المجانية التي يستحقها العميل
-                        $freeProducts = floor($quantity / $offer->offer_quantity) * $offer->free_quantity;
-                    }
 
 
-                    if ($product->quantity < ($productData['quantity'] + $freeProducts)) {
-                        throw new \Exception('الكمية المطلوبة غير متوفرة للمنتج: ' . $product->name);
-                    }
+                foreach ($request->seat_cover as $index => $seatCoverId) {
 
+                    $bagBrice = $this->getBagPrice($seatCoverId,$request->bag_option[$index]);
+                    $talbisaPrice = $this->getTalbisaPrice($seatCoverId,$request->seat_count[$index]);
 
-                    if ($productData['quantity'] < 1) {
-                        throw new \Exception('الكمية لابد أن تكون واحد على الأقل.');
-                    }
-
-
-                    $priceAfterDiscount = $product->discounted_price;
-
-                    $priceForProduct = $priceAfterDiscount * $productData['quantity'];
-
+                    $unitPrice = $bagBrice + $talbisaPrice;
+                    $count =$request->talbisa_count[$index];
+                    $countPrice = $unitPrice * $count;
 
                     $orderDetail = new OrderDetail();
+
                     $orderDetail->order_id = $order->id;
-                    $orderDetail->product_id = $productData['id'];
-                    $orderDetail->Product_quantity = $productData['quantity'];
-                    $orderDetail->price = $priceAfterDiscount;
-                    $orderDetail->free_quantity = $freeProducts;
+                    $orderDetail->color_id = $request->cover_color[$index];
+                    $orderDetail->seat_cover_id = $seatCoverId;
+                    $orderDetail->seat_count_id = $request->seat_count[$index];
+                    $orderDetail->brand_id = $request->car_brand[$index];
+                    $orderDetail->model_id = $request->car_model[$index];
+                    $orderDetail->made_years = $request->made_year[$index];
+                    $orderDetail->bag_option = $request->bag_option[$index];
+                    $orderDetail->talbisa_quantity = $count;
+                    $orderDetail->unit_price = $unitPrice;
+                    $orderDetail->total_price = $countPrice;
+
                     $orderDetail->save();
 
-                    $totalPrice += $priceForProduct;
 
-                    $product->quantity -= ($productData['quantity'] + $freeProducts);
-                    $product->save();
-
-                    // اضافة الكمية إلى اجمالي عدد القطع في الاوردر
-                    $all_order_quantity += $productData['quantity'];
+                    $totalPrice += $countPrice;
                 }
 
                 // التحقق من كود الخصم
                 if ($request->filled('promo_code')) {
-                    $promoCode = PromoCode::where('code', $order->promocode->code)
+                    $promoCode = PromoCode::where('code', $request->promo_code)
                         ->where('active', 1)
                         ->where('start_date', '<=', now())
                         ->where('end_date', '>=', now())
@@ -363,6 +369,14 @@ class OrderController extends Controller
                         throw new \Exception('كود الخصم غير صالح أو منتهي الصلاحية.');
                     }
 
+                    $promoCodeUsed = DB::table('user_promocode')
+                        ->where('user_id', $user ? $user->id : null)
+                        ->where('promo_code_id', $promoCode->id)
+                        ->exists();
+
+                    if ($promoCodeUsed) {
+                        throw new \Exception('لقد استخدمت هذا الكود من قبل.');
+                    }
 
                     if ($totalPrice < $promoCode->min_amount) {
                         throw new \Exception('يجب أن يكون إجمالي الطلب أكبر من ' . $promoCode->min_amount . ' لاستخدام هذا الكوبون.');
@@ -375,43 +389,30 @@ class OrderController extends Controller
                     $promoDiscount = 0;
                 }
 
-                // حساب خصم ال vip
-                if ($request->user_id) {
-                    $vip_discount = $this->calculateDiscount($user, $totalPrice);
-                } else {
-                    $vip_discount = 0;
-                }
-
-                // شرط الحد الأدنى لإجمالي الطلب إذا كان العميل جملة
-                $minProductsPrice = Setting::getValue('goomla_min_prices');
-
-                // شرط للحد الأدنى للكمية إذا كان العميل جملة
-                $minQuantity = Setting::getValue('goomla_min_number');
-
-                if ($request->user_id) {
-                    if ($user?->customer_type == 'goomla') {
-                        if ($all_order_quantity < $minQuantity && $totalPrice < $minProductsPrice) {
-                            throw new \Exception("يجب أن يكون عدد القطع على الأقل " . $minQuantity . " أو يكون إجمالي السعر على الأقل " . $minProductsPrice . " لعميل الجملة.");
-                        }
-                    }
-                }
-
-                // إضافة تكلفة الشحن
-                $shippingCost = ShippingRate::where('state', $request->state)->first()->shipping_cost;
-
-                $order->shipping_cost = $shippingCost;
-
+                $tax_rate = Setting::getValue('tax_rate');
+                $tax_amount = ($totalPrice + $shippingCost - $promoDiscount) * ($tax_rate /100);
                 $order->total_price = $totalPrice;
-                $order->vip_discount = $vip_discount;
                 $order->promo_discount = $promoDiscount;
-                $order->total_after_discount = $totalPrice - $vip_discount - $promoDiscount;
-                $order->final_total = $totalPrice - $vip_discount - $promoDiscount + $shippingCost;
-
+                $order->total_after_discount = $totalPrice - $promoDiscount;
+                $order->tax_amount = $tax_amount;
+                $order->final_total = $totalPrice + $tax_amount + $shippingCost - $promoDiscount;
                 $order->save();
+
+                if ($promoDiscount) {
+                    DB::table('user_promocode')->insert([
+                        'user_id' => $user ? $user->id : null,
+                        'promo_code_id' => $promoCode->id,
+                        'order_id' => $order->id,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                    $order->update(['promocode_id' => $promoCode->id]);
+                }
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'تم تحديث الطلب بنجاح'
+                    'req'=>$request->cover_color,
+                    'message' => 'تم إنشاء الطلب بنجاح',
                 ]);
             });
         } catch (\Exception $e) {
@@ -552,6 +553,21 @@ class OrderController extends Controller
         $shippingCost = ShippingRate::where('state', $state)->first()->shipping_cost;
 
         return response()->json(['shipping_cost' => $shippingCost]);
+    }
+
+    private function getBagPrice($seat_cover_id,$bagOption)
+    {
+        if($bagOption==1){
+        return  BagOption::where('category_id',$seat_cover_id)->first()->bag_price;
+        }else{
+            return 0;
+        }
+    }
+
+    private function getTalbisaPrice($coverId,$countId)
+    {
+        return SeatPrice::where('category_id',$coverId)->where('seat_count_id',$countId)->first()->price;
+
     }
 
 }

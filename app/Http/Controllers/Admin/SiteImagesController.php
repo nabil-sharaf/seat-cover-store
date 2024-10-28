@@ -22,10 +22,6 @@ class SiteImagesController extends Controller
         // Validation
         $request->validate([
             'logo' => 'nullable|image|max:2048',
-            'slider_image' => 'nullable|image|max:2048',
-            'car_icon'=>'nullable|image|max:2048',
-            'offer_one' => 'nullable|image|max:2048',
-            'offer_two' => 'nullable|image|max:2048',
             'footer_image' => 'nullable|image|max:2048',
             'about_us_image' => 'nullable|image|max:2048',
             'payment_image' => 'nullable|image|max:2048',
@@ -34,10 +30,7 @@ class SiteImagesController extends Controller
 
         $images = [
             'logo' => 'logo',
-            'slider_image' => 'slider',
             'car_icon'=>'car',
-            'offer_one' => 'offer_one',
-            'offer_two' => 'offer_two',
             'footer_image' => 'footer',
             'about_us_image' => 'about',
             'payment_image' => 'payment',

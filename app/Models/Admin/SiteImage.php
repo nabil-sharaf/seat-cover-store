@@ -12,6 +12,6 @@ class SiteImage extends Model
         'sponsor_images' => 'array',
     ];
     protected $table = 'site_images';
-    protected $fillable = ['logo','sponsor_images','about_us_image','offer_one','offer_two','slider_image','footer_image'];
+    protected $fillable = ['logo','sponsor_images','about_us_image','footer_image'];
 
 }

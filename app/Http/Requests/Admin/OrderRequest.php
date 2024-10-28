@@ -23,15 +23,23 @@ class OrderRequest extends FormRequest
     {
         return [
             'user_id' => 'nullable|exists:users,id',
-            'products' => 'required|array|min:1',
             'products.*.id' => 'required|exists:products,id',
-            'products.*.quantity' => 'required|integer|min:1',
-
-            'full_name' => 'required|string|max:255',
-            'phone'     => 'required|numeric|digits:11',
-            'address'   => 'required|string|max:255',
-            'city'      => 'required|string|max:100',
-            'state'     => 'required|string|max:100',
+            'seat_cover' => 'required|array',
+            'cover_color' => 'required|array',
+            'seat_count' => 'required|array',
+            'car_brand' => 'required|array',
+            'car_model' => 'required|array',
+            'made_year' => 'required|array',
+            'bag_option' => 'required|array',
+            'talbisa_count' => 'required|array',
+            'talbisa_price' => 'required|array',
+            'talbisa_count_price' => 'required|array',
+            'full_name' => 'required|string',
+            'phone' => 'required|string',
+            'address' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'promo_code' => 'nullable|string',
         ];
     }
 
@@ -40,11 +48,8 @@ class OrderRequest extends FormRequest
         return [
             'user_id.exists' => 'المستخدم المحدد غير موجود',
             'products.required' => 'يرجى إضافة منتج واحد على الأقل',
-            'products.*.id.required' => 'يرجى اختيار المنتج',
-            'products.*.id.exists' => 'المنتج المحدد غير موجود',
-            'products.*.quantity.required' => 'يرجى تحديد الكمية',
-            'products.*.quantity.integer' => 'الكمية يجب أن تكون رقمًا صحيحًا',
-            'products.*.quantity.min' => 'الكمية يجب أن تكون 1 على الأقل',
+            'products.*.id.required' => 'يرجى اختيار اللون',
+            'products.*.id.exists' => 'اللون المحدد غير موجود',
 
             'full_name.required' => 'الاسم  مطلوب.',
             'full_name.string'   => 'الاسم  يجب أن يكون نص.',

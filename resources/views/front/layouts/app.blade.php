@@ -1,11 +1,12 @@
 @include('front.layouts.head')
 @include('front.layouts.main_header')
 
-<main class="main-content">
-@yield('content')
+<div class="page-content bg-white">
+    @yield('content')
     @isset($slot)
         {{$slot}}
     @endisset
-</main>
+</div>>
 
 @include('front.layouts.footer')
+@include('front.layouts.footer_scripts')

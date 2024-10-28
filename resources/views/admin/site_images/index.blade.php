@@ -18,41 +18,6 @@
                 </div>
             </div>
 
-            <!-- Slider Image -->
-            <div class="row mb-4">
-                <label for="slider_image" class="col-md-4 col-form-label text-md-right">صورة السلايدر :</label>
-                <div class="col-md-6">
-                    <img src="{{ asset('storage/'.$siteImages?->slider_image) }}" alt="Slider" class="img-thumbnail mb-3" id="slider-preview" style="width:100px; max-height: 80px;">
-                    <input type="file" name="slider_image" id="slider_image" class="form-control @error('slider_image') is-invalid @enderror" onchange="previewImage(event, 'slider-preview')">
-                    @error('slider_image')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-
-            <!-- offer_one Image -->
-            <div class="row mb-4">
-                <label for="offer_one" class="col-md-4 col-form-label text-md-right">صورة deal of the day 1 :</label>
-                <div class="col-md-6">
-                    <img src="{{ asset('storage/'.$siteImages?->offer_one) }}" alt="offer_one" class="img-thumbnail mb-3" id="offer_one-preview" style="width:100px; max-height: 80px;">
-                    <input type="file" name="offer_one" id="offer_one" class="form-control @error('offer_one') is-invalid @enderror" onchange="previewImage(event, 'offer_one-preview')">
-                    @error('offer_one')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-
-            <!-- offer_two Image -->
-            <div class="row mb-4">
-                <label for="offer_two" class="col-md-4 col-form-label text-md-right">صورة deal of the day 2 :</label>
-                <div class="col-md-6">
-                    <img src="{{ asset('storage/'.$siteImages?->offer_two) }}" alt="offer_two" class="img-thumbnail mb-3" id="offer_two-preview" style="width:100px; max-height: 80px;">
-                    <input type="file" name="offer_two" id="offer_two" class="form-control @error('offer_two') is-invalid @enderror" onchange="previewImage(event, 'offer_two-preview')">
-                    @error('offer_two')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
 
             <!-- about_us Image -->
             <div class="row mb-4">
@@ -104,18 +69,6 @@
                     <img src="{{ asset('storage/'.$siteImages?->payment_image) }}" alt="payment image" class="img-thumbnail mb-3" id="payment_image-preview" style="width:100px; max-height: 80px;">
                     <input type="file" name="payment_image" id="payment_image" class="form-control @error('payment_image') is-invalid @enderror" onchange="previewImage(event, 'payment_image-preview')">
                     @error('payment_image')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-
-            <!-- Footer car_icon Image -->
-            <div class="row mb-4">
-                <label for="car_icon" class="col-md-4 col-form-label text-md-right">صورة  العربة الصغيرة :</label>
-                <div class="col-md-6">
-                    <img src="{{ asset('storage/'.$siteImages?->car_icon) }}" alt="car image" class="img-thumbnail mb-3" id="car_icon-preview" style="width:100px; max-height: 80px;">
-                    <input type="file" name="car_icon" id="car_icon" class="form-control @error('car_icon') is-invalid @enderror" onchange="previewImage(event, 'car_icon-preview')">
-                    @error('car_icon')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

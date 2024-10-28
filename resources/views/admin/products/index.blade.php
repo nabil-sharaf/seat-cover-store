@@ -60,9 +60,9 @@
                             <td>{{ $product->status == 1 ? 'متاح' : 'غير متاح' }}</td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <a href="{{ route('admin.products.show', $product->id) }}" class="btn btn-sm btn-warning mb-1 mr-1">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
+{{--                                    <a href="{{ route('admin.products.show', $product->id) }}" class="btn btn-sm btn-warning mb-1 mr-1">--}}
+{{--                                        <i class="fas fa-eye"></i>--}}
+{{--                                    </a>--}}
                                     <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-info mb-1 mr-1">
                                         <i class="fas fa-edit"></i>
                                     </a>

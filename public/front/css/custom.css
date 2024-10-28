@@ -1,0 +1,8 @@
+/*nav styles*/
+.header-nav .navbar-nav > li {
+    padding-left: 26px !important;
+}
+
+body{
+    font-family: Cairo,sans-serif;
+}

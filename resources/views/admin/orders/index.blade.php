@@ -72,7 +72,7 @@
                         <th> نوع العميل</th>
                         <th data-sort="created_at">تاريخ الاوردر <i class="fas fa-sort"></i></th>
                         <th>قيمة الخصم</th>
-                        <th data-sort="total_price">الإجمالي بعد الخصم <i class="fas fa-sort"></i></th>
+                        <th data-sort="total_price">إجمالي الفاتورة <i class="fas fa-sort"></i></th>
                         <th class="order-status-label"> حالة الأوردر</th>
                         <th>العمليات</th>
                     </tr>
@@ -83,14 +83,14 @@
                             <td>{{ $loop->iteration }}.</td>
                             @if($order->user)
                                 <td>{{ $order->userAddress?->full_name ?:'unknown'}}</td>
-                                <td>{{$order->user->customer_type=='goomla'? 'عميل جملة' : 'عميل قطاعي'}}</td>
+                                <td>{{$order->user->customer_type=='goomla'? 'عميل جملة' : 'User'}}</td>
                             @else
                                 <td>{{ $order->guestAddress?->full_name ?:'unknown'}}</td>
                                 <td>Guest</td>
                             @endif
                             <td>{{ $order->created_at->format('Y-m-d') }}</td>
                             <td>{{ $order->total_price - $order->total_after_discount == 0 ? "لا يوجد " : ($order->total_price - $order->total_after_discount)." جنيه "}}</td>
-                            <td>{{ $order->total_after_discount }} جنيه</td>
+                            <td>{{ $order->final_total }} جنيه</td>
                             <td>
                                 @if($order->status->id != 3 && $order->status->id != 4)
                                     <form class="status-form" id="form{{$order->id}}" data-order-id="{{ $order->id }}">

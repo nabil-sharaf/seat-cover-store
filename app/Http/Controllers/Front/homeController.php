@@ -20,14 +20,14 @@ class homeController extends Controller
         $newProducts = Product::orderBy('created_at', 'desc')->take(get_last_added_count())->get();
 
         // جلب المنتجات المحددة كأكثر مبيعا ً
-        $bestProducts = Product::where('is_best_seller',1)->orderBy('updated_at', 'desc')->take(get_best_seller_count())->get();
+//        $bestProducts = Product::where('is_best_seller',1)->orderBy('updated_at', 'desc')->take(get_best_seller_count())->get();
 
      // جلب المنتجات المحددة كترند   ً
-        $trendingProducts = Product::where('is_trend',1)->orderBy('updated_at', 'desc')->take(get_trending_count())->get();
+//        $trendingProducts = Product::where('is_trend',1)->orderBy('updated_at', 'desc')->take(get_trending_count())->get();
 
         $siteImages = SiteImage::first();
         $popup = Popup::first();
-        return view('front.index', compact('categories','bestProducts','newProducts','siteImages','trendingProducts','popup'));
+        return view('front.index', compact('categories','siteImages','popup'));
     }
 
     public function productDetails($id)

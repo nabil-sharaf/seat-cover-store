@@ -54,6 +54,7 @@
                                 <label for="cover_color" class="form-label fw-bold">لون التلبيسة</label>
                                 <select name="cover_color[]" class="form-select custom-select cover-color" disabled>
                                     <option value="">اختر اللون</option>
+
                                 </select>
                             </div>
 
@@ -95,7 +96,7 @@
                             <!-- Bag Option -->
                             <div class="col-md-4">
                                 <label for="bag-option" class="form-label fw-bold">بشنطة أو بدون</label>
-                                <select name="bag-option[]" class="form-select custom-select bag-option" disabled>
+                                <select name="bag_option[]" class="form-select custom-select bag-option" disabled>
                                     <option value="" disabled selected>هل التلبيسة بشنطة !</option>
                                     <option value="0">بدون شنطة</option>
                                     <option class="bag-option-price" value="1">بشنطة</option>
@@ -122,7 +123,7 @@
                         </div>
                     </div>
                 </div>
-                <button id="addProductBtn" class="btn btn-primary mb-5 mr-2">إضافة تلبيسة  أخرى</button>
+                <button id="addProductBtn" class="btn btn-primary mb-5 mr-2" type="button">إضافة تلبيسة  أخرى</button>
 
 
                 <div id="addressSection" style="display: none;">
@@ -152,10 +153,10 @@
 
                     <div class="form-group">
                         <label for="state">المحافظة</label>
-                        <select class="form-control" id = 'state' name="state" data-user-state="{{ $user->address?->state ?? '' }}">
-                            <option value="" disabled selected>اختر اسم محافظتك</option>
+                        <select class="form-control" id ='state' name="state" data-user-state="{{ $user->address?->state ?? '' }}">
+                            <option value="" disabled  selected>اختر اسم محافظتك</option>
                             @foreach($states as $state)
-                                <option value="{{$state->state}}" {{ old('state', $user->address->state ?? '') == $state->state ? 'selected' : '' }}>{{$state->state}}</option>
+                                <option value="{{$state->state}}" {{ old('state', $user->address->state) == $state->state ? 'selected' : '' }}>{{$state->state}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -190,11 +191,11 @@
 
                 <div class="form-group" id='shipping-cost-div' style='display: block;'>
                     <label for="shipping_cost">تكلفة الشحن</label>
-                    <input type="text" class="form-control" id="shipping_cost" readonly>
+                    <input type="text" class="form-control" name='shipping_cost' value="" id="shipping_cost" readonly>
                 </div>
                 <div class="form-group"  style='display: block;'>
-                    <label for="tax-rate">ضريبة القيمة المضافة</label>
-                    <input type="text" class="form-control" id="tax-rate" value="{{\App\Models\Admin\Setting::getValue('tax_rate')}} %" readonly>
+                    <label for="tax-rate">النسبة المئوية للقيمة المضافة</label>
+                    <input type="text" name="tax_rate" class="form-control" id="tax-rate" value="{{\App\Models\Admin\Setting::getValue('tax_rate') }} %" readonly>
                 </div>
                 <div class="form-group">
                     <label for='final_total'>اجمالي الفاتورة الكلي </label>
@@ -214,7 +215,6 @@
         </form>
     </div>
 
-    <script src="{{asset('js/orderForm.js')}}"></script>
 @endsection
 
 @push('scripts')
@@ -222,8 +222,6 @@
         $(document).ready(function () {
 
             let productCount = 1;
-            let globalShippingCost = 0; // متغير لتخزين تكلفة الشحن
-
             initializeSelect2();
 
             $('#addProductBtn').click(function() {
@@ -296,7 +294,7 @@
                 var taxRate = parseFloat($('#tax-rate').val()) / 100 || 0;
                 var taxAmount = total * taxRate;
                 var finalTotal = parseFloat(total + taxAmount);
-                $('#final_total').val(finalTotal.toFixed(2));
+                $('#final_total').val(finalTotal.toFixed(2) + '  ر.س ');
 
 
             }
@@ -493,7 +491,7 @@
                         },
                         success: function(response) {
                             var bagPrice = form.find('.bag-option').val() == 1 ? parseFloat(response.bag_price.bag_price) : 0;
-                            form.find('.bag-option-price').text('بشنطة -   ' + response.bag_price.bag_price + " ر.س");
+                            form.find('.bag-option-price').text('بشنطة -   ' + response.bag_price.bag_price + " ر.س").val();
                             var coverPrice = parseFloat(response.cover_price.price);
                             var price = coverPrice + bagPrice;
 
@@ -566,7 +564,7 @@
             function calculateShippingCost(state, callback) {
                 if (!state) {
                     $('#shipping_cost').val('غير متوفر');
-                    if (callback) callback(); // استدعاء الـ callback في حالة عدم وجود حالة
+                    if (callback) callback(); // استدعاء الـ callback في حالة عدم وجود محافظة
                     return;
                 }
 
@@ -578,7 +576,7 @@
                         if (shippingCost == 0 || !shippingCost) {
                             $('#shipping_cost').val('شحن مجاني');
                         } else {
-                            $('#shipping_cost').val(shippingCost);
+                            $('#shipping_cost').val(shippingCost + ' ر.س ');
                         }
 
                         if (callback) callback(); // استدعاء الـ callback بعد تحديث القيمة
@@ -590,25 +588,15 @@
                 });
             }
 
-// استدعاء الفانكشن مع تمرير callback للتأكد من استلام القيمة بعد الانتهاء
+            // استدعاء الفانكشن مع تمرير callback للتأكد من استلام القيمة بعد الانتهاء
             stateSelect.on('change', function() {
                 const state = $(this).val();
 
                 calculateShippingCost(state, function() {
                     var discount = parseFloat($("#copounDiscountAmount").val()) || 0;
                     calculateTalbisatTotal(discount);
-                    console.log($('#shipping_cost').val()); // هنا سيتم طباعة القيمة بعد انتهاء الـ Ajax
                 });
             });
-
-            // تحقق مما إذا كان المستخدم مسجلاً ولديه محافظة مسجلة
-            const userState = stateSelect.data('user-state'); // افترض أن الحقل يحتفظ بالمحافظة المخزنة
-            if (userState) {
-                // حساب تكلفة الشحن بناءً على المحافظة المسجلة
-                calculateShippingCost(userState);
-            }
-
-
 
 
             function initializeSelect2() {
@@ -656,6 +644,11 @@
                                 $('#inputCity').val(address.city);
                                 $('#state').val(address.state);
                                 $('#full_name').val(address.full_name);
+                                calculateShippingCost(address.state, function() {
+                                    var discount = parseFloat($("#copounDiscountAmount").val()) || 0;
+                                    calculateTalbisatTotal(discount);
+                                });
+
                             }
                             else {
                                 // في حالة عدم وجود عنوان، افراغ الحقول
@@ -664,6 +657,8 @@
                                 $('#inputCity').val('');
                                 $('#state').val('');
                                 $('#full_name').val('');
+                                $('#shipping_cost').val('');
+
                             }
                         },
                         error: function () {
@@ -673,6 +668,7 @@
                             $('#inputCity').val('');
                             $('#state').val('');
                             $('#full_name').val('');
+                            $('#shipping_cost').val('');
                         }
                     });
                 } else {
@@ -681,7 +677,15 @@
                     $('#inputPhone').val('');
                     $('#inputCity').val('');
                     $('#state').val('');
+                    $('#state option[value=""]').attr('selected', 'selected');
                     $('#full_name').val('');
+                    $('#shipping_cost').val('');
+                    calculateShippingCost('', function() {
+                        var discount = parseFloat($("#copounDiscountAmount").val()) || 0;
+                        calculateTalbisatTotal(discount);
+                    });
+
+
                 }
 
             });
@@ -780,11 +784,13 @@
                         },
                         success: function (response) {
                             if (response.success) {
+                                console.log(response)
                                 toastr.success(response.message);
                                 window.location.href = '{{ route('admin.orders.index') }}';
                             }
                         },
                         error: function (xhr) {
+                            console.log(xhr)
                             if (xhr.status === 422) {
                                 let errors = xhr.responseJSON.errors;
 
@@ -800,6 +806,7 @@
                                 toastr.error(xhr.responseJSON.message || 'هناك بعض الأخطاء في البيانات.');
                             } else {
                                 toastr.error('حدث خطأ غير متوقع.');
+                                alert(xhr)
                             }
                         },
                         complete: function () {
@@ -853,6 +860,11 @@
 
                 scrollToTop(); // الانتقال لأعلى الصفحة عند الضغط على "رجوع"
             });
+
+
+            const stateSelect = document.getElementById('state');
+            stateSelect.selectedIndex = 0;
+
         });
 
     </script>

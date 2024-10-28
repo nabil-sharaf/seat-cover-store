@@ -13,11 +13,25 @@ return new class extends Migration
     {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->integer('product_quantity');
-            $table->decimal('price', 8, 2);
+            $table->unsignedBigInteger('order_id'); // BIGINT
+            $table->unsignedBigInteger('seat_cover_id'); // BIGINT
+            $table->unsignedBigInteger('color_id'); // BIGINT
+            $table->unsignedBigInteger('seat_count_id'); // BIGINT
+            $table->unsignedBigInteger('brand_id'); // BIGINT
+            $table->unsignedBigInteger('model_id');// BIGINT
+            $table->tinyInteger('bag_option'); // tinyInt
+            $table->unsignedInteger('talbisa_quantity');
+            $table->string('made_years'); // BIGINT
+            $table->decimal('unit_price', 8, 2);
+            $table->decimal('total_price', 10, 2);
             $table->timestamps();
+
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade'); // Order table
+            $table->foreign('seat_cover_id')->references('id')->on('categories');
+            $table->foreign('color_id')->references('id')->on('products');
+            $table->foreign('seat_count_id')->references('id')->on('seat_counts');
+            $table->foreign('brand_id')->references('id')->on('car_brands');
+            $table->foreign('model_id')->references('id')->on('car_models');
         });
     }
 
