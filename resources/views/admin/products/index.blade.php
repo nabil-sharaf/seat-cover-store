@@ -10,7 +10,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <!-- زر إضافة منتج جديد -->
                 <a href="{{ route('admin.products.create') }}" class="btn btn-primary mb-2">
-                    <i class="fas fa-plus mr-1"></i> إضافة منتج جديد
+                    <i class="fas fa-plus mr-1"></i> إضافة لون جديد
                 </a>
 
                 <!-- مربع البحث -->
