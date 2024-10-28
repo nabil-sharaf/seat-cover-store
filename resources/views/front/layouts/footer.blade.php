@@ -80,6 +80,4 @@
     </div>
 </footer>
 <!-- Footer END-->
-<!-- scroll top button -->
-<button class="scroltop fas fa-arrow-up style4" ></button>
 </div>
