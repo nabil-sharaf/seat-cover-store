@@ -39,6 +39,7 @@
                         <th>لون التطريز</th>
                         <th>صورة التلبيسة</th>
                         <th>نوع التلبيسة</th>
+                        <th>القسم التابع له</th>
                         <th>الحالة</th>
                         <th>العمليات</th>
                     </tr>
@@ -57,6 +58,7 @@
                                 @endif
                             </td>
                             <td>{{ $product->category->name }}</td>
+                            <td>{{ $product->category->parent?->name }}</td>
                             <td>{{ $product->status == 1 ? 'متاح' : 'غير متاح' }}</td>
                             <td>
                                 <div class="d-flex justify-content-center">
@@ -116,6 +118,7 @@
         }
     </style>
 @endpush
+
 @push('scripts')
     <script>
         $(document).ready(function() {

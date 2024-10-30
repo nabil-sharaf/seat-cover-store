@@ -40,20 +40,20 @@
                         <div class="row g-4">
                             <!-- Seat Cover Type -->
                             <div class="col-md-4">
-                                <label for="seat_cover" class="form-label fw-bold">نوع التلبيسة</label>
+                                <label for="seat_cover" class="form-label fw-bold">النوع </label>
                                 <select name="seat_cover[]" class="form-select custom-select seat-cover">
-                                    <option value="" disabled selected>اختر نوع التلبيسة</option>
-                                    @foreach($seatCovers as $cover)
-                                        <option value="{{$cover->id}}">{{$cover->name}}</option>
+                                    <option value="" disabled selected>اختر قسم المنتج </option>
+                                    @foreach($categories as $cat)
+                                        <option value="{{$cat->id}}" data-parent-id="{{ $cat->parent_id }}" >{{$cat->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
 
                             <!-- Cover Color -->
                             <div class="col-md-4">
-                                <label for="cover_color" class="form-label fw-bold">لون التلبيسة</label>
+                                <label for="cover_color" class="form-label fw-bold">المنتج </label>
                                 <select name="cover_color[]" class="form-select custom-select cover-color" disabled>
-                                    <option value="">اختر اللون</option>
+                                    <option value="">اختر المنتج أو لون التلبيسة</option>
 
                                 </select>
                             </div>
@@ -303,8 +303,9 @@
                 let form = $(this).closest('.product-form');
                 getSeatCoverPrice(form); // حساب سعر التلبيسة بناءً على الخيارات المحددة
                 calculateTalbisatTotal(); // تحديث الإجمالي
-
             });
+
+
             // Event listener for changes in quantity or price fields
             $(document).on('change,input', '.talbisa-count', function() {
                 let form = $(this).closest('.product-form');
@@ -323,6 +324,21 @@
                 let form = $(this).closest('.product-form');
                 getSeatCoverColors(form);
                 getSeatCoverPrice(form);
+
+                const selectedOption = $(this).find('option:selected');
+                const parentId = selectedOption.data('parent-id');
+
+                if (!parentId) {
+                    // إخفاء الحقول وتفريغ القيم للأقسام الرئيسية فقط من نوع Accessory
+                    $('.car-brand, .car-model, .made-year, .bag-option, .seat-count')
+                        .val('')
+                        .prop('selectedIndex', 0)
+                        .closest('.col-md-4').hide();
+                    $('.cover-color').closest('.col-md-4').show();
+                } else {
+                    // إظهار الحقول إذا لم يكن المنتج من نوع اكسسوارات أو كان قسمًا فرعيًا
+                    $('.car-brand, .car-model, .made-year, .bag-option, .seat-count').closest('.col-md-4').show().find('select').prop('disabled', true);
+                }
             });
 
             $(document).on('change', '.cover-color', function() {

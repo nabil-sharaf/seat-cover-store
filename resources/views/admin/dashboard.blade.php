@@ -20,9 +20,8 @@
             <!-- small box -->
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3> {{\App\Models\Admin\Category::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())->count()}} <sup style="font-size: 20px"></sup></h3>
-
-                    <p>الاقسام</p>
+                    <h3>{{ \App\Models\Admin\SiteView::first()->views }}</h3>
+                    <p>إجمالي عدد زيارات الموقع</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
@@ -50,9 +49,9 @@
             <!-- small box -->
             <div class="small-box bg-danger">
                 <div class="inner">
-                    <h3>{{ \App\Models\Admin\Product::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())->count() }}</h3>
+                    <h3> {{\App\Models\Admin\Category::where('created_at', '>=', \Carbon\Carbon::now()->subWeek())->count()}} <sup style="font-size: 20px"></sup></h3>
 
-                    <p>المنتجات</p>
+                    <p>الأقسام </p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-pie-graph"></i>

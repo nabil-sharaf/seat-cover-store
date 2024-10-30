@@ -40,6 +40,19 @@
                         @error('parent_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label for="" class="col-sm-2 control-label">النوع</label>
+                    <div class="col-sm-10">
+                        <select class="form-control @error('product_type') is-invalid @enderror" id="product_type" name="product_type">
+                            <option value="" disabled >اختر النوع</option>
+                            <option value="earth" {{$category->product_type == 'earth' ?'selected': ''}}>أرضيات</option>
+                            <option value="seat" {{$category->product_type == 'seat' ?'selected': ''}}>مقاعد</option>
+                            <option value="accessory" {{$category->product_type == 'accessory' ?'selected': ''}}>اكسسوار</option>
+                        </select>
+                        @error('product_type')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+                </div>
+
 
                 <div class="form-group row">
                     <label for="image" class="col-sm-2 control-label">صورة للنوع (اختياري)</label>

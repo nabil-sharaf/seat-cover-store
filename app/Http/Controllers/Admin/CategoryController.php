@@ -36,7 +36,7 @@ class CategoryController extends Controller implements HasMiddleware
 
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::whereNull('parent_id')->get();
         return view('admin.categories.add', compact('categories'));
 
     }
@@ -66,6 +66,7 @@ class CategoryController extends Controller implements HasMiddleware
                 'description' => $request->description,
                 'parent_id' => $request->parent_id,
                 'image' => $imagePath, // تخزين مسار الصورة
+                'product_type'=>$request->product_type,
             ]);
 
             return redirect()->route('admin.categories.index')
@@ -99,7 +100,7 @@ class CategoryController extends Controller implements HasMiddleware
 
     public function edit(Category $category)
     {
-        $categories = Category::where('id', '!=', $category->id)->get();
+        $categories = Category::where('id', '!=', $category->id)->whereNull('parent_id')->get();
         return view('admin.categories.edit', compact('category', 'categories'));
     }
 
@@ -124,6 +125,7 @@ class CategoryController extends Controller implements HasMiddleware
                     'description'=>$request->description,
                     'parent_id'=>$request->parent_id,
                     'image'=>$imagePath,
+                    'product_type'=>$request->product_type,
                 ]);
             }else{
                 // تحديث باقي البيانات
@@ -131,6 +133,8 @@ class CategoryController extends Controller implements HasMiddleware
                     'name'=>$request->name,
                     'description'=>$request->description,
                     'parent_id'=>$request->parent_id,
+                    'product_type'=>$request->product_type,
+
                 ]);
             }
 

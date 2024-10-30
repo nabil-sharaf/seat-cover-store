@@ -67,11 +67,11 @@ class OrderController extends Controller
     {
         $users = User::all();
         $states = ShippingRate::all();
-        $seatCovers = Category::with('products')->get();
+        $categories = Category::with('products')->get();
         $seatCounts = SeatCount::all();
         $car_brands = CarBrand::all();
         return view('admin.orders.create',
-            compact('users','states','seatCovers','seatCounts','car_brands')
+            compact('users','states','categories','seatCounts','car_brands')
         );
     }
 

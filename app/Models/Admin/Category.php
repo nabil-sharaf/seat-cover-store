@@ -10,7 +10,7 @@ class Category extends Model
     use HasFactory;
 
 
-    protected $fillable = ['name','description','parent_id','image'];
+    protected $fillable = ['name','description','parent_id','image','product_type'];
 
     public function children()
     {
@@ -34,6 +34,11 @@ class Category extends Model
     public function bagOption()
     {
         return $this->hasOne(BagOption::Class);
+    }
+
+    public function accessories()
+    {
+        return $this->hasMany(Accessory::class);
     }
 
 

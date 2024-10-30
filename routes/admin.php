@@ -37,6 +37,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
             Route::resource('/products', Adm\ProductController::class);
             Route::delete('/products/remove-image/{id}', [ProductController::class, 'removeImage'])->name('products.remove-image');
 
+ //--------------------- Accessories Routes -----------------------------
+            Route::resource('/accessories', Adm\AccessoryController::class);
+            Route::post('/accessories/delete-image/{id}', [Adm\AccessoryController::class, 'deleteImage'])->name('accessories.delete-image');
+
 //------------------------ Orders Routes -----------------------------
 
             Route::get('/get-user-discount/{user}', [Adm\OrderController::class, 'getUserDiscount'])->name('get-user-discount');
@@ -104,6 +108,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
 
             Route::get('/settings/images', [Adm\SiteImagesController::class, 'images'])->name('settings.images');
             Route::PUT('/settings/images/update', [Adm\SiteImagesController::class, 'updateImages'])->name('settings.update-images');
+
+//------------------------------- Sliders Routes  ------------------------------
+            Route::resource('/sliders', Adm\SliderController::class);
 
 //----------------------------- ShippingRates Routes  ------------------------------
             Route::get('/settings/shipping-rates', [ShippingRateController::class, 'index'])->name('shipping-rates.index');

@@ -29,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(LaravelLocalizationRedirectFilter::class);
         $middleware->web(LocaleSessionRedirect::class);
         $middleware->web(LaravelLocalizationViewPath::class);
+        $middleware->web(\App\Http\Middleware\Admin\IncrementSiteViews::class);
 
     })
     ->withProviders([

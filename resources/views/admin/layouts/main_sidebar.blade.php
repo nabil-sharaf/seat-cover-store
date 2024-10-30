@@ -47,6 +47,12 @@
                   <p>ادارة تكاليف الشحن </p>
                 </a>
               </li>
+                <li class="nav-item">
+                <a href="{{route('admin.sliders.index')}}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/sliders/') ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p> سلايدر الصفحة الرئيسية  </p>
+                </a>
+              </li>
             </ul>
           </li>
             @if(auth('admin')->user()->hasAnyRole(['superAdmin']))
@@ -79,7 +85,7 @@
             <a href="#" class="nav-link ">
               <i class="nav-icon fas fa-chart-pie"></i>
               <p class='font-weight-bold'>
-                أنواع التلبيسات
+                الأقسام و التلبيسات
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
@@ -87,13 +93,13 @@
               <li class="nav-item">
                 <a href="{{ route('admin.categories.index') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/categories') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>كل الأنواع</p>
+                  <p>كل الأقسام</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{{ route('admin.categories.create') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/categories/create') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>إضافة نوع</p>
+                  <p>إضافة قسم</p>
                 </a>
               </li>
             </ul>
@@ -268,29 +274,52 @@
                 </ul>
             </li>
 
-            <li class="nav-item has-treeview {{ Request::is(app()->getLocale() .'/admin/orders*') ? 'menu-open' : '' }}">
+            <li class="nav-item has-treeview {{ Request::is(app()->getLocale() .'/admin/accessories*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link ">
               <i class="nav-icon fas fa-chart-pie"></i>
               <p class='font-weight-bold'>
-                الأوردرات
+                الاكسسورارات
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('admin.orders.index') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/orders') ? 'active' : '' }}">
+                <a href="{{ route('admin.accessories.index') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/accessories') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>كل الأوردرات</p>
+                  <p>كل الاكسسوارات</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('admin.orders.create') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/orders/create') ? 'active' : '' }}">
+                <a href="{{ route('admin.accessories.create') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/accessories/create') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>إضافة أوردر</p>
+                  <p>إضافة اكسسوار </p>
                 </a>
               </li>
             </ul>
           </li>
+            <li class="nav-item has-treeview {{ Request::is(app()->getLocale() .'/admin/orders*') ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link ">
+                    <i class="nav-icon fas fa-chart-pie"></i>
+                    <p class='font-weight-bold'>
+                        الأوردرات
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('admin.orders.index') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/orders') ? 'active' : '' }}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>كل الأوردرات</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.orders.create') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/orders/create') ? 'active' : '' }}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>إضافة أوردر</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
 
             @if(auth('admin')->user()->hasAnyRole(['superAdmin']))

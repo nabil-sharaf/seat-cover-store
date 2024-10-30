@@ -44,7 +44,7 @@ class ProductController extends Controller implements HasMiddleware
 
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::whereNotNull('parent_id')->where('product_type','!=','accessory')->get();
         return view('admin.products.add', compact('categories'));
     }
 
@@ -97,7 +97,7 @@ class ProductController extends Controller implements HasMiddleware
 
     public function edit(Product $product)
     {
-        $categories = Category::all();
+        $categories = Category::whereNotNull('parent_id')->where('product_type','!=','accessory')->get();
         return view('admin.products.edit', compact('product', 'categories'));
     }
 

@@ -1,8 +1,65 @@
+body{
+    font-family: Cairo,sans-serif;
+}
 /*nav styles*/
 .header-nav .navbar-nav > li {
     padding-left: 26px !important;
 }
 
-body{
-    font-family: Cairo,sans-serif;
+
+/*  ـنسيق زرار الواتساب */
+.floating-whatsapp {
+    position: fixed;
+    bottom: 21px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    background-color: #25D366;
+    color: white;
+    border-radius: 50px;
+    padding: 4px 8px 4px  17px;  /* زيادة padding للتناسب مع الأيقونة الأكبر */
+    text-decoration: none;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+    z-index: 1000;
+    direction: rtl;
+    font-family: cairo, sans-serif;
+    transition: all 0.4s ease;
+}
+
+.floating-whatsapp:hover {
+    background-color: #20ba57;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.whatsapp-icon {
+    margin-left: 8px;  /* زيادة المسافة بين الأيقونة والنص */
+    display: flex;
+    align-items: center;
+}
+
+.whatsapp-icon svg {
+    width: 35px;
+    height: 35px;
+}
+
+.floating-whatsapp span {
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* للشاشات الصغيرة */
+@media screen and (max-width: 480px) {
+    .floating-whatsapp {
+        padding: 10px 24px;
+    }
+
+    .whatsapp-icon svg {
+        width: 28px;  /* حجم أصغر قليلاً للموبايل لكن أكبر من السابق */
+        height: 28px;  /* حجم أصغر قليلاً للموبايل لكن أكبر من السابق */
+    }
+
+    .floating-whatsapp span {
+        font-size: 14px;
+    }
 }

@@ -20,6 +20,7 @@ class CategoryRequest extends FormRequest
                        Rule::unique('categories','name')->ignore($Id),
             'description' => 'required|string|max:255',
             'parent_id' => '|string|nullable|exists:categories,id',
+            'product_type'=>'required|in:earth,seat,accessory',
         ];
 
         // إذا كان الطلب POST (إضافة)، نطلب الصورة، أما إذا كان التحديث فلا نجعلها مطلوبة

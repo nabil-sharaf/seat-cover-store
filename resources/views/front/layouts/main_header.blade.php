@@ -80,6 +80,8 @@
                         </li>
                         <li> <a href="javascript:;">من نحن</a>
                         </li>
+                        <li> <a href="javascript:;">فروعنا</a>
+                        </li>
                         <li> <a href="javascript:;">اتصل بنا</a>
                         </li>
                     </ul>
@@ -91,4 +93,3 @@
 </header>
 <!-- header END -->
 <div class="page-wraper">
-
