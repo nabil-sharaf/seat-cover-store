@@ -30,7 +30,7 @@ return new class extends Migration
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade'); // Order table
             $table->foreign('category_id')->references('id')->on('categories');
             $table->foreign('accessory_id')->references('id')->on('accessories');
-            $table->foreign('color_id')->references('id')->on('products');
+            $table->foreign('color_id')->references('id')->on('cover_colors');
             $table->foreign('seat_count_id')->references('id')->on('seat_counts');
             $table->foreign('brand_id')->references('id')->on('car_brands');
             $table->foreign('model_id')->references('id')->on('car_models');
