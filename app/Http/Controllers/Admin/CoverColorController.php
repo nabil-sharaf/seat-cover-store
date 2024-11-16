@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\ProductRequest;
-use App\Models\Admin\Product;
+use App\Http\Requests\Admin\CoverColorRequest;
+use App\Models\Admin\CoverColor;
 use App\Models\Admin\Image;
 use App\Models\Admin\Category;
-use App\Models\Admin\ProductDiscount;
+use App\Models\Admin\CoverColorDiscount;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
-class ProductController extends Controller implements HasMiddleware
+class CoverColorController extends Controller implements HasMiddleware
 {
 
     public static function middleware(): array
@@ -28,7 +28,7 @@ class ProductController extends Controller implements HasMiddleware
     }
     public function index(Request $request)
     {
-        $query = Product::query();
+        $query = CoverColor::query();
 
         // تحقق من وجود البحث
         if ($request->has('search')) {
@@ -36,19 +36,19 @@ class ProductController extends Controller implements HasMiddleware
         }
 
         // إضافة العلاقات المطلوبة مثل الفئات والخصومات
-        $products = $query->paginate(get_pagination_count());
+        $coverColors = $query->paginate(get_pagination_count());
 
-        return view('admin.products.index', compact('products'));
+        return view('admin.cover_colors.index', compact('coverColors'));
     }
 
 
     public function create()
     {
         $categories = Category::whereNotNull('parent_id')->where('product_type','!=','accessory')->get();
-        return view('admin.products.add', compact('categories'));
+        return view('admin.cover_colors.add',compact('categories'));
     }
 
-    public function store(ProductRequest $request)
+    public function store(CoverColorRequest $request)
     {
 
         try {
@@ -57,12 +57,12 @@ class ProductController extends Controller implements HasMiddleware
                 $image = $request->image;
                 $randomName = uniqid() . '.' . $image->getClientOriginalExtension();
                 // تخزين الصورة في المسار المحدد
-                $path = $image->storeAs('products', $randomName, 'public');
+                $path = $image->storeAs('cover_colors', $randomName, 'public');
             }else{
                 $path = null;
             }
             // إنشاء المنتج
-          Product::create([
+            CoverColor::create([
                 'name' => $request->name,
                 'description' => $request->description,
                 'image'=>$path,
@@ -91,62 +91,62 @@ class ProductController extends Controller implements HasMiddleware
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
-        return view('admin.products.show', compact('product'));
+        $coverColor = CoverColor::findOrFail($id);
+        return view('admin.cover_colors.show', compact('coverColor'));
     }
 
-    public function edit(Product $product)
+    public function edit(CoverColor $coverColor)
     {
         $categories = Category::whereNotNull('parent_id')->where('product_type','!=','accessory')->get();
-        return view('admin.products.edit', compact('product', 'categories'));
+        return view('admin.cover_colors.edit', compact('coverColor', 'categories'));
     }
 
-    public function update(ProductRequest $request, Product $product)
+    public function update(CoverColorRequest $request, CoverColor $coverColor)
     {
         try {
-                if ($request->hasFile('image')) {
-                    $image = $request->image;
-                    $randomName = uniqid() . '.' . $image->getClientOriginalExtension();
-                    // تخزين الصورة في المسار المحدد
-                    $path = $image->storeAs('products', $randomName, 'public');
+            if ($request->hasFile('image')) {
+                $image = $request->image;
+                $randomName = uniqid() . '.' . $image->getClientOriginalExtension();
+                // تخزين الصورة في المسار المحدد
+                $path = $image->storeAs('cover_colors', $randomName, 'public');
 
-                    $product->update([
-                        'name' => $request->name,
-                        'description' => $request->description,
-                        'image'=>$path,
-                        'category_id'=>$request->category_id,
-                        'tatriz_color'=>$request->tatriz_color,
-                        'status'=>$request->status,
-                    ]);
-                }else{
-                    $product->update([
-                        'name' => $request->name,
-                        'description' => $request->description,
-                        'category_id'=>$request->category_id,
-                        'tatriz_color'=>$request->tatriz_color,
-                        'status'=>$request->status,
-                    ]);
-                }
+                $coverColor->update([
+                    'name' => $request->name,
+                    'description' => $request->description,
+                    'image'=>$path,
+                    'category_id'=>$request->category_id,
+                    'tatriz_color'=>$request->tatriz_color,
+                    'status'=>$request->status,
+                ]);
+            }else{
+                $coverColor->update([
+                    'name' => $request->name,
+                    'description' => $request->description,
+                    'category_id'=>$request->category_id,
+                    'tatriz_color'=>$request->tatriz_color,
+                    'status'=>$request->status,
+                ]);
+            }
 
-                return redirect()->route('admin.products.index')->with('success', 'تم تحديث المنتج بنجاح');
+            return redirect()->route('admin.cover-colors.index')->with('success', 'تم تحديث المنتج بنجاح');
             ;
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 
-    public function destroy(Product $product)
+    public function destroy(CoverColor $coverColor)
     {
-        $this->deleteProductImages($product);
-        $product->delete();
+        $this->deleteCoverColorImages($coverColor);
+        $coverColor->delete();
 
         return response()->json(['success' => 'تم حذف المنتج بنجاح']);
     }
 
 
-    private function deleteProductImages(Product $product)
+    private function deleteCoverColorImages(CoverColor $coverColor)
     {
-        foreach ($product->images as $image) {
+        foreach ($coverColor->images as $image) {
             Storage::disk('public')->delete($image->path);
             $image->delete();
         }
@@ -176,11 +176,11 @@ class ProductController extends Controller implements HasMiddleware
     public function deleteAll(Request $request)
     {
         $ids = $request->ids;
-        $products = Product::whereIn('id', $ids)->get();
-        foreach ($products as $product) {
+        $coverColors = CoverColor::whereIn('id', $ids)->get();
+        foreach ($coverColors as $coverColor) {
 
-        $this->deleteProductImages($product);
-        $product->delete();
+            $this->deleteCoverColorImages($coverColor);
+            $coverColor->delete();
         }
 
         return response()->json(['success' => 'تم حذف العناصر المختارة بنجاح']);
@@ -188,13 +188,13 @@ class ProductController extends Controller implements HasMiddleware
     public function trendAll(Request $request)
     {
         $ids = $request->ids;
-        $products = Product::whereIn('id', $ids)->get();
-        foreach ($products as $product) {
+        $coverColors = CoverColor::whereIn('id', $ids)->get();
+        foreach ($coverColors as $coverColor) {
 
 
-       $product->update([
-           'is_trend'=>true,
-       ]);
+            $coverColor->update([
+                'is_trend'=>true,
+            ]);
 
         }
 
@@ -203,12 +203,12 @@ class ProductController extends Controller implements HasMiddleware
     public function bestSellerAll(Request $request)
     {
         $ids = $request->ids;
-        $products = Product::whereIn('id', $ids)->get();
+        $coverColors = CoverColor::whereIn('id', $ids)->get();
         $allUpdated = true; // متغير للتحقق من نجاح التحديث لجميع المنتجات
 
-        foreach ($products as $product) {
+        foreach ($coverColors as $coverColor) {
 
-            $updated = $product->update([
+            $updated = $coverColor->update([
                 'is_best_seller' => true,
             ]);
 
@@ -228,4 +228,5 @@ class ProductController extends Controller implements HasMiddleware
 
 
 }
+
 

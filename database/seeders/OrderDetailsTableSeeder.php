@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Admin\Order;
-use App\Models\Admin\Product;
+use App\Models\Admin\CoverColor;
 use App\Models\Admin\OrderDetail;
 
 class OrderDetailsTableSeeder extends Seeder

@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AccessoryRequest;
 use App\Http\Requests\Admin\ProductRequest;
 use App\Models\Admin\Accessory;
+use App\Models\Admin\AccessoryDiscount;
 use App\Models\Admin\Category;
 use App\Models\Admin\Image;
-use App\Models\Admin\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -42,6 +42,8 @@ class AccessoryController extends Controller
     {
 
         try {
+            // بدء الترانزكشن
+            DB::beginTransaction();
 
             if ($request->hasFile('images')) {
                 $images = $request->file('images');
@@ -60,7 +62,7 @@ class AccessoryController extends Controller
 
 
             // إنشاء المنتج
-            Accessory::create([
+           $accessory= Accessory::create([
                 'name' => $request->name,
                 'description' => $request->description,
                 'images' => $imagePaths,
@@ -70,11 +72,25 @@ class AccessoryController extends Controller
 
             ]);
 
+            if($request->discount_type && $request->discount_value > 0){
+
+               AccessoryDiscount::create([
+                    'accessory_id' => $accessory->id,
+                    'discount_value' => $request->discount_value,
+                    'discount_type' => $request->discount_type,
+                    'start_date' => $request->start_date,
+                    'end_date' => $request->end_date,
+                ]);
+            }
+
+            // تأكيد الترانزكشن
+            DB::commit();
 
             return redirect()->route('admin.accessories.index')->with('success', 'تم اضافة المنتج بنجاح');
 
 
         } catch (ValidationException $e) {
+            DB::rollBack();
             return redirect()->back()->with('errors', $e->validator->errors());
 
         }
@@ -97,6 +113,12 @@ class AccessoryController extends Controller
 
         try {
             if ($request->hasFile('images')) {
+                $oldImages = $accessory->images;
+                if (!empty($oldImages)) {
+                    foreach ($oldImages as $oldImage) {
+                        Storage::disk('public')->delete($oldImage);
+                    }
+                }
 
                 $images = $request->images;
                 $imagesPaths=[];
@@ -125,6 +147,28 @@ class AccessoryController extends Controller
                     'quantity'=>$request->quantity
                 ]);
             }
+
+            if($request->discount_type && $request->discount_value > 0){
+
+                AccessoryDiscount::updateOrCreate(
+                   // الشرط لتحديد إذا كان الريكورد موجودًا
+                    ['accessory_id' => $accessory->id]
+                    ,[
+                    'discount_value' => $request->discount_value,
+                    'discount_type' => $request->discount_type,
+                    'start_date' => $request->start_date,
+                    'end_date' => $request->end_date,
+                ]);
+            }else{
+                // البحث عن الريكورد الذي يحتوي على المنتج المحدد
+                $accessoryDiscount = AccessoryDiscount::where('accessory_id', $accessory->id)->first();
+
+                // التحقق من وجود الريكورد ثم حذفه
+                if ($accessoryDiscount) {
+                    $accessoryDiscount->delete();
+                }
+            }
+
 
             return redirect()->route('admin.accessories.index')->with('success', 'تم تحديث المنتج بنجاح');
         } catch (ValidationException $e) {

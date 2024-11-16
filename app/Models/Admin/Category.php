@@ -22,9 +22,9 @@ class Category extends Model
         return $this->belongsTo(Category::class, 'parent_id');
     }
 
-    public function products()
+    public function coverColors()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(CoverColor::class);
     }
     public function seatPrices()
     {

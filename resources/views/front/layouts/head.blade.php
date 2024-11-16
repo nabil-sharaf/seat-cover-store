@@ -21,7 +21,7 @@
     <title>Auto Care - Car Services Template</title>
 
     <!-- MOBILE SPECIFIC -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!--[if lt IE 9]>
     <script src="{{asset('front')}}/js/html5shiv.min.js"></script>
@@ -40,5 +40,5 @@
     <!-- Revolution Slider Css -->
     <link rel="stylesheet" type="text/css" href="{{asset('front')}}/plugins/revolution/css/settings.css">
     <link rel="stylesheet" type="text/css" href="{{asset('front')}}/plugins/revolution/css/navigation.css">
-
+@stack('styles')
 </head>

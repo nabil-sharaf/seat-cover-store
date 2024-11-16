@@ -9,12 +9,12 @@
         <div class="card-header">
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <!-- زر إضافة منتج جديد -->
-                <a href="{{ route('admin.products.create') }}" class="btn btn-primary mb-2">
+                <a href="{{ route('admin.cover-colors.create') }}" class="btn btn-primary mb-2">
                     <i class="fas fa-plus mr-1"></i> إضافة لون جديد
                 </a>
 
                 <!-- مربع البحث -->
-                <form action="{{ route('admin.products.index') }}" method="GET" class="form-inline mb-2">
+                <form action="{{ route('admin.cover-colors.index') }}" method="GET" class="form-inline mb-2">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control" placeholder="ابحث عن لون..." value="{{ request('search') }}">
                         <div class="input-group-append">
@@ -45,31 +45,31 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @forelse($products as $product)
+                    @forelse($coverColors as $color)
                         <tr>
                             <td>{{ $loop->iteration }}.</td>
-                            <td>{{ $product->name }}</td>
-                            <td>{{ $product->tatriz_color }}</td>
+                            <td>{{ $color->name }}</td>
+                            <td>{{ $color->tatriz_color }}</td>
                             <td>
-                                @if($product->image)
-                                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="img-fluid img-hover-zoom">
+                                @if($color->image)
+                                    <img src="{{ asset('storage/' . $color->image) }}" alt="{{ $color->name }}" class="img-fluid img-hover-zoom">
                                 @else
                                     <span>لا توجد صورة</span>
                                 @endif
                             </td>
-                            <td>{{ $product->category->name }}</td>
-                            <td>{{ $product->category->parent?->name }}</td>
-                            <td>{{ $product->status == 1 ? 'متاح' : 'غير متاح' }}</td>
+                            <td>{{ $color->category->name }}</td>
+                            <td>{{ $color->category->parent?->name }}</td>
+                            <td>{{ $color->status == 1 ? 'متاح' : 'غير متاح' }}</td>
                             <td>
                                 <div class="d-flex justify-content-center">
-{{--                                    <a href="{{ route('admin.products.show', $product->id) }}" class="btn btn-sm btn-warning mb-1 mr-1">--}}
+{{--                                    <a href="{{ route('admin.cover-colors.show', $color->id) }}" class="btn btn-sm btn-warning mb-1 mr-1">--}}
 {{--                                        <i class="fas fa-eye"></i>--}}
 {{--                                    </a>--}}
-                                    <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-info mb-1 mr-1">
+                                    <a href="{{ route('admin.cover-colors.edit', $color->id) }}" class="btn btn-sm btn-info mb-1 mr-1">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     @if(auth('admin')->user()->hasAnyRole(['superAdmin']))
-                                        <button type="button" class="btn btn-sm btn-danger delete-product-btn mb-1" data-id="{{ $product->id }}">
+                                        <button type="button" class="btn btn-sm btn-danger delete-product-btn mb-1" data-id="{{ $color->id }}">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     @endif
@@ -89,7 +89,7 @@
 
         <!-- Pagination -->
         <div class="card-footer">
-            {{ $products->appends(request()->input())->links('vendor.pagination.custom') }}
+            {{ $coverColors->appends(request()->input())->links('vendor.pagination.custom') }}
         </div>
     </div>
 @endsection
@@ -131,7 +131,7 @@
             $('#delete-selected').click(function() {
 
                 var selected = [];
-                url = "{{ route('admin.products.deleteAll') }}";
+                url = "{{ route('admin.cover-colors.deleteAll') }}";
 
                 $('.product-checkbox:checked').each(function() {
                     selected.push($(this).val());
@@ -163,7 +163,7 @@
             $('#trend-selected').click(function() {
 
                 var selected = [];
-                url = "{{ route('admin.products.trendAll') }}";
+                url = "{{ route('admin.cover-colors.trendAll') }}";
 
                 $('.product-checkbox:checked').each(function() {
                     selected.push($(this).val());
@@ -194,7 +194,7 @@
             $('#best-seller-selected').click(function() {
 
                 var selected = [];
-                url = "{{ route('admin.products.bestSellerAll') }}";
+                url = "{{ route('admin.cover-colors.bestSellerAll') }}";
 
                 $('.product-checkbox:checked').each(function() {
                     selected.push($(this).val());
@@ -227,7 +227,7 @@
             $('.delete-product-btn').on('click', function() {
                 if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
                     var productId = $(this).data('id');
-                    var url = "{{ route('admin.products.destroy', ':id') }}".replace(':id', productId);
+                    var url = "{{ route('admin.cover-colors.destroy', ':id') }}".replace(':id', productId);
                     var tr = $(this).closest('tr');
                     $.ajax({
                         url: url,

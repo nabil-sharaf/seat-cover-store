@@ -10,12 +10,15 @@
                         <div id="rev_slider_1014_1" class="rev_slider fullscreenbanner" style="display:none;" data-version="5.3.0.2">
                             <ul>
                                 <!-- SLIDE 1 -->
-                                <li data-index="rs-1000" data-transition="slidingoverlayhorizontal" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="default" data-thumb="{{asset('front')}}/images/main-slider/5.jpg" data-rotate="0" data-saveperformance="off" data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
+                                @foreach($sliders as $index =>$value)
+                                <li data-index="rs-{{$index+1}}000" data-transition="slidingoverlayhorizontal" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="default"
+                                    data-thumb="{{ asset('storage/' . $value->image) }}"
+                                    data-rotate="0" data-saveperformance="off" data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
                                     <!-- MAIN IMAGE -->
-                                    <img src="{{asset('front')}}/images/main-slider/3.jpg" alt="" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina/>
+                                    <img src="{{asset('storage/'.$value->image)}}" alt="" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina/>
                                     <!-- LAYER NR. 1 [ for overlay ] -->
                                     <div class="tp-caption tp-shape tp-shapewrapper"
-                                         id="slide-100-layer-1"
+                                         id="slide-{{$index+1}}00-layer-1"
                                          data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
                                          data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
                                          data-width="full"
@@ -31,11 +34,11 @@
                                          data-paddingright="[0,0,0,0]"
                                          data-paddingbottom="[0,0,0,0]"
                                          data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 12;background-color:rgba(0, 0, 0, 0.20);border-color:rgba(0, 0, 0, 0);border-width:0px;">
+                                         style="z-index: 12;background-color:rgba(0, 0, 0, 0.20);border-color:rgba(0, 0, 0, 0);border-width:0;">
                                     </div>
                                     <!-- LAYER NR. 2 [ for title ] -->
                                     <div class="tp-caption tp-resizeme"
-                                         id="slide-200-layer-2"
+                                         id="slide-{{$index+2}}00-layer-2"
                                          data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
                                          data-y="['top','top','top','top']" data-voffset="['110','110','200','110']"
                                          data-fontsize="['80','80','55','50']"
@@ -55,7 +58,7 @@
                                     </div>
                                     <!-- LAYER NR. 2 [ for title ] -->
                                     <div class="tp-caption tp-resizeme"
-                                         id="slide-100-layer-2"
+                                         id="slide-{{$index+1}}00-layer-2"
                                          data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
                                          data-y="['top','top','top','top']" data-voffset="['110','110','200','110']"
                                          data-fontsize="['80','80','55','50']"
@@ -71,11 +74,11 @@
                                          data-paddingright="[0,0,0,0]"
                                          data-paddingbottom="[0,0,0,0]"
                                          data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 13;  white-space: normal; text-transform: capitalize; font-size: 70px;  color: rgba(255, 255, 255, 1.00);"> التلبيسة  الفاخر
+                                         style="z-index: 13;  white-space: normal; text-transform: capitalize; font-size: 70px;  color: rgba(255, 255, 255, 1.00);"> {{$value->title}}
                                     </div>
                                     <!-- LAYER NR. 3 [ for paragraph] -->
                                     <div class="tp-caption tp-resizeme"
-                                         id="slide-100-layer-3"
+                                         id="slide-{{$index+1}}00-layer-3"
                                          data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
                                          data-y="['top','top','top','top']" data-voffset="['320','250','340','250']"
                                          data-fontsize="['20','20','18','18']"
@@ -93,11 +96,11 @@
                                          data-paddingright="[0,0,0,0]"
                                          data-paddingbottom="[30,30,30,30]"
                                          data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 13; font-weight: 500; color: rgba(255, 255, 255, 0.85); border-width:0px;"> <span style="padding-bottom: 20px"> جمال سيارتك تبدأ بلمسات من تلبيسة الفاخر الباهر</span>
+                                         style="z-index: 13; font-weight: 500; color: rgba(255, 255, 255, 0.85); border-width:0px;"> <span style="padding-bottom: 20px"> {{$value->description}}</span>
                                     </div>
                                     <!-- LAYER NR. 4 [ for readmore botton ] -->
                                     <div class="tp-caption tp-resizeme"
-                                         id="slide-100-layer-4"
+                                         id="slide-{{$index+1}}00-layer-4"
                                          data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
                                          data-y="['top','top','top','top']" data-voffset="['380','370','390','330']"
                                          data-fontsize="['none','none','none','none']"
@@ -115,336 +118,10 @@
                                          data-paddingright="[0,0,0,0]"
                                          data-paddingbottom="[0,0,0,0]"
                                          data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 13; margin-top: 20px"><a href="{{asset('front')}}/javascript:void(0);" class="site-button button-md radius-no">اطلب الآن</a>
+                                         style="z-index: 13; margin-top: 20px"><a href="{{$value->button_link}}" class="site-button button-md radius-no">{{$value->button_text}}</a>
                                     </div>
                                 </li>
-                                <!-- SLIDE 2 -->
-                                <li data-index="rs-2000" data-transition="slidingoverlayhorizontal" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="default" data-thumb="{{asset('front')}}/images/main-slider/4.jpg" data-rotate="0" data-saveperformance="off" data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
-                                    <!-- MAIN IMAGE -->
-                                    <img src="{{asset('front')}}/images/main-slider/5.jpg" alt="" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina/>
-                                    <!-- LAYER NR. 1 [ for overlay ] -->
-                                    <div class="tp-caption tp-shape tp-shapewrapper"
-                                         id="slide-200-layer-1"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
-                                         data-width="full"
-                                         data-height="full"
-                                         data-whitespace="nowrap"
-                                         data-type="shape"
-                                         data-basealign="slide"
-                                         data-responsive_offset="off"
-                                         data-responsive="off"
-                                         data-frames='[{"from":"opacity:0;","speed":1000,"to":"o:1;","delay":0,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"opacity:0;","ease":"Power4.easeOut"}]'
-                                         data-textAlign="['left','left','left','left']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 12;background-color:rgba(0, 0, 0, 0.20);border-color:rgba(0, 0, 0, 0);border-width:0px;">
-                                    </div>
-                                    <!-- LAYER NR. 2 [ for title ] -->
-                                    <div class="tp-caption tp-resizeme"
-                                         id="slide-200-layer-2"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['top','top','top','top']" data-voffset="['110','110','200','110']"
-                                         data-fontsize="['80','80','55','50']"
-                                         data-lineheight="['90','90','60','60']"
-                                         data-width="['800','800','800','800']"
-                                         data-height="['none','none','none','none']"
-                                         data-whitespace="['normal','normal','normal','normal']"
-                                         data-type="text"
-                                         data-responsive_offset="on"
-                                         data-frames='[{"from":"y:50px(R);opacity:0;","speed":1500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
-                                         data-textAlign="['center','center','center','center']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 12;background-color:rgba(0, 0, 0, 0.20);border-color:rgba(0, 0, 0, 0);border-width:0px;">
-                                    </div>
-                                    <!-- LAYER NR. 2 [ for title ] -->
-                                    <div class="tp-caption tp-resizeme"
-                                         id="slide-200-layer-2"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['top','top','top','top']" data-voffset="['110','110','200','110']"
-                                         data-fontsize="['80','80','55','50']"
-                                         data-lineheight="['90','90','60','60']"
-                                         data-width="['800','800','800','800']"
-                                         data-height="['none','none','none','none']"
-                                         data-whitespace="['normal','normal','normal','normal']"
-                                         data-type="text"
-                                         data-responsive_offset="on"
-                                         data-frames='[{"from":"y:50px(R);opacity:0;","speed":1500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
-                                         data-textAlign="['center','center','center','center']"
-                                         data-paddingtop="[40,40,40,40]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 13;  white-space: normal; text-transform: capitalize; font-size: 70px;  color: rgba(255, 255, 255, 1.00);"> التلبيسة  الدياموند
-                                    </div>
-                                    <!-- LAYER NR. 3 [ for paragraph] -->
-                                    <div class="tp-caption tp-resizeme"
-                                         id="slide-200-layer-3"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['top','top','top','top']" data-voffset="['320','250','340','250']"
-                                         data-fontsize="['20','20','18','18']"
-                                         data-lineheight="['30','30','30','26']"
-                                         data-width="['800','800','800','400']"
-                                         data-height="['none','none','none','none']"
-                                         data-whitespace="['normal','normal','normal','normal']"
-                                         data-type="text"
-                                         data-responsive_offset="on"
-                                         data-frames='[
-										{"from":"y:50px(R);opacity:0;","speed":1500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},
-										{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
-                                         data-textAlign="['center','center','center','center']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[30,30,30,30]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 13; font-weight: 500; color: rgba(255, 255, 255, 0.85); border-width:0px;"> <span style="padding-bottom: 20px"> جمال سيارتك تبدأ بلمسات من تلبيسة الدياموند  القيمة</span>
-                                    </div>
-                                    <!-- LAYER NR. 4 [ for readmore botton ] -->
-                                    <div class="tp-caption tp-resizeme"
-                                         id="slide-200-layer-4"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['top','top','top','top']" data-voffset="['380','370','390','330']"
-                                         data-fontsize="['none','none','none','none']"
-                                         data-lineheight="['none','none','none','none']"
-                                         data-width="['700','700','700','700']"
-                                         data-height="['none','none','none','none']"
-                                         data-whitespace="['normal','normal','normal','normal']"
-                                         data-type="text"
-                                         data-responsive_offset="on"
-                                         data-frames='[
-										{"from":"y:50px(R);opacity:0;","speed":1500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},
-										{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
-                                         data-textAlign="['center','center','center','center']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 13; margin-top: 20px"><a href="{{asset('front')}}/javascript:void(0);" class="site-button button-md radius-no">اطلب الآن</a>
-                                    </div>
-                                </li>
-                                 <!-- SLIDE 3 -->
-                                <li data-index="rs-3000" data-transition="slidingoverlayhorizontal" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="default" data-thumb="{{asset('front')}}/images/main-slider/3.jpg" data-rotate="0" data-saveperformance="off" data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
-                                    <!-- MAIN IMAGE -->
-                                    <img src="{{asset('front')}}/images/main-slider/4.jpg" alt="" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina/>
-                                    <!-- LAYER NR. 1 [ for overlay ] -->
-                                    <div class="tp-caption tp-shape tp-shapewrapper"
-                                         id="slide-300-layer-1"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
-                                         data-width="full"
-                                         data-height="full"
-                                         data-whitespace="nowrap"
-                                         data-type="shape"
-                                         data-basealign="slide"
-                                         data-responsive_offset="off"
-                                         data-responsive="off"
-                                         data-frames='[{"from":"opacity:0;","speed":1000,"to":"o:1;","delay":0,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"opacity:0;","ease":"Power4.easeOut"}]'
-                                         data-textAlign="['left','left','left','left']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 12;background-color:rgba(0, 0, 0, 0.20);border-color:rgba(0, 0, 0, 0);border-width:0px;">
-                                    </div>
-                                    <!-- LAYER NR. 2 [ for title ] -->
-                                    <div class="tp-caption tp-resizeme"
-                                         id="slide-300-layer-2"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['top','top','top','top']" data-voffset="['110','110','200','110']"
-                                         data-fontsize="['80','80','55','50']"
-                                         data-lineheight="['90','90','60','60']"
-                                         data-width="['800','800','800','800']"
-                                         data-height="['none','none','none','none']"
-                                         data-whitespace="['normal','normal','normal','normal']"
-                                         data-type="text"
-                                         data-responsive_offset="on"
-                                         data-frames='[{"from":"y:50px(R);opacity:0;","speed":1500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
-                                         data-textAlign="['center','center','center','center']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 12;background-color:rgba(0, 0, 0, 0.20);border-color:rgba(0, 0, 0, 0);border-width:0px;">
-                                    </div>
-                                    <!-- LAYER NR. 2 [ for title ] -->
-                                    <div class="tp-caption tp-resizeme"
-                                         id="slide-300-layer-2"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['top','top','top','top']" data-voffset="['110','110','200','110']"
-                                         data-fontsize="['80','80','55','50']"
-                                         data-lineheight="['90','90','60','60']"
-                                         data-width="['800','800','800','800']"
-                                         data-height="['none','none','none','none']"
-                                         data-whitespace="['normal','normal','normal','normal']"
-                                         data-type="text"
-                                         data-responsive_offset="on"
-                                         data-frames='[{"from":"y:50px(R);opacity:0;","speed":1500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
-                                         data-textAlign="['center','center','center','center']"
-                                         data-paddingtop="[40,40,40,40]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 13;  white-space: normal; text-transform: capitalize; font-size: 70px;  color: rgba(255, 255, 255, 1.00);"> التلبيسة  المثلثات
-                                    </div>
-                                    <!-- LAYER NR. 3 [ for paragraph] -->
-                                    <div class="tp-caption tp-resizeme"
-                                         id="slide-300-layer-3"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['top','top','top','top']" data-voffset="['320','250','340','250']"
-                                         data-fontsize="['20','20','18','18']"
-                                         data-lineheight="['30','30','30','26']"
-                                         data-width="['800','800','800','400']"
-                                         data-height="['none','none','none','none']"
-                                         data-whitespace="['normal','normal','normal','normal']"
-                                         data-type="text"
-                                         data-responsive_offset="on"
-                                         data-frames='[
-										{"from":"y:50px(R);opacity:0;","speed":1500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},
-										{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
-                                         data-textAlign="['center','center','center','center']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[30,30,30,30]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 13; font-weight: 500; color: rgba(255, 255, 255, 0.85); border-width:0px;"> <span style="padding-bottom: 20px"> اضف لمسة جمال مع تلبيسة المثلثات المميزة</span>
-                                    </div>
-                                    <!-- LAYER NR. 4 [ for readmore botton ] -->
-                                    <div class="tp-caption tp-resizeme"
-                                         id="slide-300-layer-4"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['top','top','top','top']" data-voffset="['380','370','390','330']"
-                                         data-fontsize="['none','none','none','none']"
-                                         data-lineheight="['none','none','none','none']"
-                                         data-width="['700','700','700','700']"
-                                         data-height="['none','none','none','none']"
-                                         data-whitespace="['normal','normal','normal','normal']"
-                                         data-type="text"
-                                         data-responsive_offset="on"
-                                         data-frames='[
-										{"from":"y:50px(R);opacity:0;","speed":1500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},
-										{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
-                                         data-textAlign="['center','center','center','center']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 13; margin-top: 20px"><a href="{{asset('front')}}/javascript:void(0);" class="site-button button-md radius-no">اطلب الآن</a>
-                                    </div>
-                                </li>
-                                <!-- SLIDE 3 -->
-                                <li data-index="rs-4000" data-transition="slidingoverlayhorizontal" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="default" data-thumb="{{asset('front')}}/images/main-slider/2.jpg" data-rotate="0" data-saveperformance="off" data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
-                                    <!-- MAIN IMAGE -->
-                                    <img src="{{asset('front')}}/images/main-slider/2.jpg" alt="" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina/>
-                                    <!-- LAYER NR. 1 [ for overlay ] -->
-                                    <div class="tp-caption tp-shape tp-shapewrapper"
-                                         id="slide-300-layer-1"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
-                                         data-width="full"
-                                         data-height="full"
-                                         data-whitespace="nowrap"
-                                         data-type="shape"
-                                         data-basealign="slide"
-                                         data-responsive_offset="off"
-                                         data-responsive="off"
-                                         data-frames='[{"from":"opacity:0;","speed":1000,"to":"o:1;","delay":0,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"opacity:0;","ease":"Power4.easeOut"}]'
-                                         data-textAlign="['left','left','left','left']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 12;background-color:rgba(0, 0, 0, 0.20);border-color:rgba(0, 0, 0, 0);border-width:0px;">
-                                    </div>
-                                    <!-- LAYER NR. 2 [ for title ] -->
-                                    <div class="tp-caption tp-resizeme"
-                                         id="slide-300-layer-2"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['top','top','top','top']" data-voffset="['110','110','200','110']"
-                                         data-fontsize="['80','80','55','50']"
-                                         data-lineheight="['90','90','60','60']"
-                                         data-width="['800','800','800','800']"
-                                         data-height="['none','none','none','none']"
-                                         data-whitespace="['normal','normal','normal','normal']"
-                                         data-type="text"
-                                         data-responsive_offset="on"
-                                         data-frames='[{"from":"y:50px(R);opacity:0;","speed":1500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
-                                         data-textAlign="['center','center','center','center']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 12;background-color:rgba(0, 0, 0, 0.20);border-color:rgba(0, 0, 0, 0);border-width:0px;">
-                                    </div>
-                                    <!-- LAYER NR. 2 [ for title ] -->
-                                    <div class="tp-caption tp-resizeme"
-                                         id="slide-300-layer-2"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['top','top','top','top']" data-voffset="['110','110','200','110']"
-                                         data-fontsize="['80','80','55','50']"
-                                         data-lineheight="['90','90','60','60']"
-                                         data-width="['800','800','800','800']"
-                                         data-height="['none','none','none','none']"
-                                         data-whitespace="['normal','normal','normal','normal']"
-                                         data-type="text"
-                                         data-responsive_offset="on"
-                                         data-frames='[{"from":"y:50px(R);opacity:0;","speed":1500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
-                                         data-textAlign="['center','center','center','center']"
-                                         data-paddingtop="[40,40,40,40]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 13;  white-space: normal; text-transform: capitalize; font-size: 70px;  color: rgba(255, 255, 255, 1.00);"> التلبيسة  الليزر
-                                    </div>
-                                    <!-- LAYER NR. 3 [ for paragraph] -->
-                                    <div class="tp-caption tp-resizeme"
-                                         id="slide-300-layer-3"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['top','top','top','top']" data-voffset="['320','250','340','250']"
-                                         data-fontsize="['20','20','18','18']"
-                                         data-lineheight="['30','30','30','26']"
-                                         data-width="['800','800','800','400']"
-                                         data-height="['none','none','none','none']"
-                                         data-whitespace="['normal','normal','normal','normal']"
-                                         data-type="text"
-                                         data-responsive_offset="on"
-                                         data-frames='[
-										{"from":"y:50px(R);opacity:0;","speed":1500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},
-										{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
-                                         data-textAlign="['center','center','center','center']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[30,30,30,30]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 13; font-weight: 500; color: rgba(255, 255, 255, 0.85); border-width:0px;"> <span style="padding-bottom: 20px"> اضف لمسة جمال مع تلبيسة الليزر المميزة</span>
-                                    </div>
-                                    <!-- LAYER NR. 4 [ for readmore botton ] -->
-                                    <div class="tp-caption tp-resizeme"
-                                         id="slide-300-layer-4"
-                                         data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                         data-y="['top','top','top','top']" data-voffset="['380','370','390','330']"
-                                         data-fontsize="['none','none','none','none']"
-                                         data-lineheight="['none','none','none','none']"
-                                         data-width="['700','700','700','700']"
-                                         data-height="['none','none','none','none']"
-                                         data-whitespace="['normal','normal','normal','normal']"
-                                         data-type="text"
-                                         data-responsive_offset="on"
-                                         data-frames='[
-										{"from":"y:50px(R);opacity:0;","speed":1500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},
-										{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
-                                         data-textAlign="['center','center','center','center']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         style="z-index: 13; margin-top: 20px"><a href="{{asset('front')}}/javascript:void(0);" class="site-button button-md radius-no">اطلب الآن</a>
-                                    </div>
-                                </li>
+                                @endforeach
                             </ul>
                             <div class="tp-bannertimer tp-bottom" style="visibility: hidden !important;"></div>
                         </div>
@@ -460,10 +137,9 @@
                 <div class="row">
                     <div class="col-lg-6 m-b30 p-r50">
                         <div class="section-head text-left">
-                            <h2 class="text-capitalize"> <span class="text-primary">من نحن </span></h2>
-                            <p>شركتنا متخصصة في تصميم وتصنيع الأرضيات -التلبيسات- الفاخرة للسيارات بجميع أنواعها وموديلاتها. مع سنوات من الخبرة العملية في السوق السعودي، والتصنيع المحلي المتقن وفائق الجودة</p>
+                            <p>{!! \App\Models\Admin\Setting::getValue('about_us') !!}</p>
                         </div>
-                        <a href="#" class="site-button button-md radius-no">المزيد</a>
+                        <a href="{{route('home.about')}}" class="site-button button-md radius-no">المزيد</a>
                     </div>
                     <div class="col-lg-6 m-b30">
                         <div class="video-box">
@@ -478,7 +154,7 @@
         </div>
         <!-- About US End -->
 
-        <!-- Our Services -->
+        <!-- Our Products -->
         <div class="section-full bg-gray content-inner">
             <div class="container">
                 <div class="section-head text-center">
@@ -486,54 +162,58 @@
                     <p>منتجاتنا ذات جودة ومتانة عالية ومطابقة لمواصفات الهيئة السعودية للمواصفات والجودة saso </p>
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-md-6 col-sm-12 m-b30">
-                        <div class="service-style2">
-                            <div class="dlab-media">
-                                <img src="{{asset('front')}}/images/3.webp" alt="">
+                    @foreach($categories as $product)
+                        @if(!$product->parent_id)
+                            <div class="col-lg-4 col-md-6 col-sm-12 m-b30">
+                                <div class="service-style2">
+                                    <div class="dlab-media">
+                                        <img src="{{asset('storage/'.$product->image)}}" alt="" style="height: 360px;">
+                                    </div>
+                                    <div class="icon-content">
+                                        <h3 class="dlab-tilte m-b15"><a href="{{route('home.category.products',$product->id)}}">{{$product->name}}</a></h3>
+                                        <p class="m-b10">{!! $product->description !!}</p>
+                                        <a href="{{route('home.category.products',$product->id)}}" class="text-primary">اعرف المزيد</a>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="icon-content">
-                                <h3 class="dlab-tilte m-b15"><a href="#">تلبيسة دياموند</a></h3>
-                                <p class="m-b10">تلبيسة مطابقة للمواصفات السعودية وعازلة للمياه والوان جذابة </p>
-                                <a href="{{asset('front')}}/#" class="text-primary">اعرف المزيد</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 m-b30">
-                        <div class="service-style2">
-                            <div class="dlab-media">
-                                <img src="{{asset('front')}}/images/2.webp" alt="">
-                            </div>
-                            <div class="icon-content">
-                                <h3 class="dlab-tilte m-b15"><a href="#">تلبيسة فاخر</a></h3>
-                                <p class="m-b10">تلبيسة مطابقة للمواصفات السعودية وعازلة للمياه والوان جذابة </p>
-                                <a href="{{asset('front')}}/#" class="text-primary">اعرف المزيد</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 m-b30">
-                        <div class="service-style2">
-                            <div class="dlab-media">
-                                <img src="{{asset('front')}}/images/1.webp" alt="">
-                            </div>
-                            <div class="icon-content">
-                                <h3 class="dlab-tilte m-b15"><a href="#">تلبيسة ليزر</a></h3>
-                                <p class="m-b10">تلبيسة مطابقة للمواصفات السعودية وعازلة للمياه والوان جذابة </p>
-                                <a href="{{asset('front')}}/#" class="text-primary">اعرف المزيد</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 m-b30">
-                        <div class="service-style2">
-                            <div class="dlab-media">
-                                <img src="{{asset('front')}}/images/4.webp" alt="">
-                            </div>
-                            <div class="icon-content">
-                                <h3 class="dlab-tilte m-b15"><a href="#">تلبيسة مثلثات</a></h3>
-                                <p class="m-b10">تلبيسة مطابقة للمواصفات السعودية وعازلة للمياه والوان جذابة </p>
-                                <a href="{{asset('front')}}/#" class="text-primary">اعرف المزيد</a>
-                            </div>
-                        </div>
-                    </div>
+                        @endif
+                    @endforeach
+{{--                    <div class="col-lg-4 col-md-6 col-sm-12 m-b30">--}}
+{{--                        <div class="service-style2">--}}
+{{--                            <div class="dlab-media">--}}
+{{--                                <img src="{{asset('front')}}/images/2.webp" alt="">--}}
+{{--                            </div>--}}
+{{--                            <div class="icon-content">--}}
+{{--                                <h3 class="dlab-tilte m-b15"><a href="#">تلبيسة فاخر</a></h3>--}}
+{{--                                <p class="m-b10">تلبيسة مطابقة للمواصفات السعودية وعازلة للمياه والوان جذابة </p>--}}
+{{--                                <a href="{{asset('front')}}/#" class="text-primary">اعرف المزيد</a>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="col-lg-4 col-md-6 col-sm-12 m-b30">--}}
+{{--                        <div class="service-style2">--}}
+{{--                            <div class="dlab-media">--}}
+{{--                                <img src="{{asset('front')}}/images/1.webp" alt="">--}}
+{{--                            </div>--}}
+{{--                            <div class="icon-content">--}}
+{{--                                <h3 class="dlab-tilte m-b15"><a href="#">تلبيسة ليزر</a></h3>--}}
+{{--                                <p class="m-b10">تلبيسة مطابقة للمواصفات السعودية وعازلة للمياه والوان جذابة </p>--}}
+{{--                                <a href="{{asset('front')}}/#" class="text-primary">اعرف المزيد</a>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="col-lg-4 col-md-6 col-sm-12 m-b30">--}}
+{{--                        <div class="service-style2">--}}
+{{--                            <div class="dlab-media">--}}
+{{--                                <img src="{{asset('front')}}/images/4.webp" alt="">--}}
+{{--                            </div>--}}
+{{--                            <div class="icon-content">--}}
+{{--                                <h3 class="dlab-tilte m-b15"><a href="#">تلبيسة مثلثات</a></h3>--}}
+{{--                                <p class="m-b10">تلبيسة مطابقة للمواصفات السعودية وعازلة للمياه والوان جذابة </p>--}}
+{{--                                <a href="{{asset('front')}}/#" class="text-primary">اعرف المزيد</a>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                 </div>
             </div>
         </div>
@@ -549,10 +229,11 @@
                 <div class="row">
                     <div class="col-lg-6 d-flex m-b30">
                         <div class="testimonial-one align-self-center testimonial-style8 owl-carousel owl-theme">
+                            @foreach($testimonials as $comment)
                             <div class="item">
                                 <div class="testimonial-8">
                                     <div class="testimonial-text quote-left">
-                                        <p>شركة رائعة وخدمة ممتازة</p>
+                                        <p>{{$comment->testimonial}}</p>
                                     </div>
                                     <ul class="rating-list list-inline">
                                         <li><i class="fas fa-star"></i></li>
@@ -562,31 +243,13 @@
                                         <li><i class="fas fa-star"></i></li>
                                     </ul>
                                     <div class="testimonial-detail clearfix">
-                                        <h4 class="testimonial-name m-tb0">فهد أحمد</h4>
+                                        <h4 class="testimonial-name m-tb0"> {{$comment->client_name}}</h4>
                                         <span class="testimonial-position">Customer</span>
                                         <div class="testimonial-pic"><img src="{{asset('front')}}/images/avatar.png" alt="" width="100" height="100"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="testimonial-8">
-                                    <div class="testimonial-text quote-left">
-                                        <p>شركة رائعة وخدمة متميزة</p>
-                                    </div>
-                                    <ul class="rating-list list-inline">
-                                        <li><i class="fas fa-star"></i></li>
-                                        <li><i class="fas fa-star"></i></li>
-                                        <li><i class="fas fa-star"></i></li>
-                                        <li><i class="fas fa-star"></i></li>
-                                        <li><i class="fas fa-star"></i></li>
-                                    </ul>
-                                    <div class="testimonial-detail clearfix">
-                                        <h4 class="testimonial-name m-tb0">زين علي</h4>
-                                        <span class="testimonial-position">Customer</span>
-                                        <div class="testimonial-pic"><img src="{{asset('front')}}/images/avatar.png" alt="" width="100" height="100"></div>
-                                    </div>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                     <div class="col-lg-6 testimonial-thumb m-b30">

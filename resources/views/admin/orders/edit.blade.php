@@ -23,7 +23,7 @@
                                 <!-- نوع التلبيسة -->
                                 <div class="col-md-4">
                                     <label for="seat_cover" class="form-label fw-bold">نوع التلبيسة</label>
-                                    <select name="seat_cover[]" class="form-select custom-select seat-cover">
+                                    <select name="seat_cover[]" class="form-select custom-select product-category">
                                         <option value="" disabled>اختر نوع التلبيسة</option>
                                         @foreach($seatCovers as $cover)
                                             <option
@@ -149,35 +149,35 @@
                     <div class="form-group">
                         <label for="full_name">الاسم بالكامل</label>
                         <input type="text" class="form-control" id="full_name" name="full_name"
-                               {{ old('full_name', $user->address?->full_name )}} required>
+                               value="{{ old('full_name', $address->full_name ?? null )}}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="inputPhone">رقم التليفون</label>
                         <input type="tel" class="form-control" id="inputPhone" name="phone"
-                               {{ old('phone', $user->address?->phone )}} required>
+                              value="{{ old('phone', $address->phone ?? null )}}"  required>
                     </div>
 
                     <div class="form-group">
                         <label for="inputAddress">العنوان</label>
                         <input type="text" class="form-control" id="inputAddress" name="address"
-                               {{ old('address', $user->address?->address )}} required>
+                               value="{{ old('address', $address->address ?? null )}}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="inputCity">المدينة</label>
                         <input type="text" class="form-control" id="inputCity" name="city"
-                               {{ old('city', $user->address?->city )}} required>
+                               value="{{ old('city', $address->city ?? null)}}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="state">المحافظة</label>
                         <select class="form-control" id='state' name="state"
-                                data-user-state="{{ $user->address?->state ?? '' }}">
+                                data-user-state="{{ $address?->state ?? '' }}">
                             <option value="" disabled selected>اختر اسم محافظتك</option>
                             @foreach($states as $state)
                                 <option
-                                    value="{{$state->state}}" {{ old('state', $user->address->state) == $state->state ? 'selected' : '' }}>{{$state->state}}</option>
+                                    value="{{$state->state}}" {{ old('state', $address->state ?? null) == $state->state ? 'selected' : '' }}>{{$state->state}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -279,7 +279,7 @@
 
                 // إعادة تمكين الحقول المعطلة
                 newForm.find('select, input').prop('disabled', true);
-                newForm.find('.seat-cover').prop('disabled', false);
+                newForm.find('.product-category').prop('disabled', false);
 
                 // إضافة زر حذف (أيقونة تراش) في أعلى النموذج
                 let removeButton = `<button type="button" class="removeProductBtn" style="position: absolute; top: 10px; left: 10px; background: transparent; border: none; font-size: 18px;">
@@ -327,7 +327,7 @@
 
             }
 
-            $(document).on('change', '.seat-cover, .bag-option, .seat-count', function () {
+            $(document).on('change', '.product-category, .bag-option, .seat-count', function () {
                 let form = $(this).closest('.product-form');
                 getSeatCoverPrice(form); // حساب سعر التلبيسة بناءً على الخيارات المحددة
                 calculateTalbisatTotal(); // تحديث الإجمالي
@@ -347,7 +347,7 @@
             });
 
             // Event delegation for dynamically added elements
-            $(document).on('change', '.seat-cover', function () {
+            $(document).on('change', '.product-category', function () {
                 let form = $(this).closest('.product-form');
                 getSeatCoverColors(form);
                 getSeatCoverPrice(form);
@@ -392,10 +392,10 @@
             });
 
             function getSeatCoverColors(form) {
-                var seatCoverId = form.find('.seat-cover').val();
+                var seatCoverId = form.find('.product-category').val();
                 if (seatCoverId) {
                     $.ajax({
-                        url: "{{route('admin.cover-colors', '')}}" + '/' + seatCoverId,
+                        url: "{{route('admin.seat-cover-colors', '')}}" + '/' + seatCoverId,
                         type: 'GET',
                         success: function (response) {
                             var $colorSelect = form.find('.cover-color');
@@ -508,7 +508,7 @@
 
             function getSeatCoverPrice(form) {
                 var $countId = form.find('.seat-count').val();
-                var $coverId = form.find('.seat-cover').val();
+                var $coverId = form.find('.product-category').val();
                 if ($countId && $coverId) {
                     $.ajax({
                         url: "{{route('admin.cover-price-change')}}",
@@ -726,7 +726,7 @@
 
                 // التحقق من اختيار نوع التلبيسة على الأقل في نموذج واحد
                 let hasSelectedCover = false;
-                $('.seat-cover').each(function () {
+                $('.product-category').each(function () {
                     if ($(this).val() !== '' && $(this).val() !== null) {
                         hasSelectedCover = true;
                     }
@@ -741,7 +741,7 @@
                 $('.product-form').each(function (index) {
                     let form = $(this);
 
-                    if (form.find('.seat-cover').val()) {
+                    if (form.find('.product-category').val()) {
                         // التحقق من اختيار جميع الحقول المطلوبة
                         if (!form.find('.cover-color').val()) {
                             hasError = true;

@@ -75,11 +75,27 @@ class SettingsTableSeeder extends Seeder
                 'hide'=>null
             ],
             [
+            'setting_key' => 'social_link',
+            'setting_value' => '',
+            'setting_type' => 'select',
+            'description' => 'لينك سوشيال متغير',
+            'hide'=>null,
+            ],
+
+            [
+                'setting_key' => 'social_link_2',
+                'setting_value' => '',
+                'setting_type' => 'select',
+                'description' => 'لينك سوشيال متغير 2',
+                'hide'=>null,
+
+            ],
+            [
                 'setting_key' => 'shipping_title',
                 'setting_value' => 'شحن سريع ',
                 'setting_type' => 'string',
                 'description' => 'رسالة الشحن ',
-                'hide'=>null
+                'hide'=>null,
             ],
             [
                 'setting_key' => 'appointments',

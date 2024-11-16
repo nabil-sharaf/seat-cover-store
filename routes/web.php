@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Front\AccessoryController;
 use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CategoryController;
 use App\Http\Controllers\Front\CheckoutController;
@@ -33,9 +34,14 @@ Route::get('/test', function(){
 
 
 Route::get('/', [HomeController::class,'index'])->name('home.index');
-Route::get('/contact', [HomeController::class,'contact'])->name('home.contact');
+//Route::get('/contact', [HomeController::class,'contact'])->name('home.contact');
 Route::get('/about', [HomeController::class,'aboutUs'])->name('home.about');
-Route::get('/product/details/{id}', [HomeController::class, 'productDetails'])->name('product.details');
+Route::get('/branches', [HomeController::class,'branches'])->name('home.branches');
+Route::get('/category/{id}', [HomeController::class,'categoryProducts'])->name('home.category.products');
+
+
+Route::get('/accessories', [AccessoryController::class, 'index'])->name('accessories.index');
+Route::get('/accessory/{accessory}', [AccessoryController::class, 'accessoryDetails'])->name('accessory.details');
 
 
 

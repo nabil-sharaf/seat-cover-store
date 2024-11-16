@@ -11,7 +11,7 @@ class CategoryController extends Controller
 {
     public function index(){
 
-        $categories = Category::with('products')->get();
+        $categories = Category::with('coverColors')->get();
 
         return view('front.categories',compact('categories'));
 

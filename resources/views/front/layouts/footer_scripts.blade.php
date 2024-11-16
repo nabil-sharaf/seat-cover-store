@@ -12,6 +12,10 @@
 <script src="{{asset('front')}}/plugins/masonry/masonry.filter.js"></script><!-- MASONRY -->
 <script src="{{asset('front')}}/plugins/owl-carousel/owl.carousel.js"></script><!-- OWL SLIDER -->
 <script src="{{asset('front')}}/plugins/rangeslider/rangeslider.js" ></script><!-- Rangeslider -->
+<script>
+    var imagesPath = "{{ asset('front/images') }}";
+    var logoWhitePath = "{{ asset('storage/'.$siteImages->footer_image) }}";
+</script>
 <script src="{{asset('front')}}/js/custom.min.js"></script><!-- CUSTOM FUCTIONS  -->
 <script src="{{asset('front')}}/js/dz.carousel.min.js"></script><!-- SORTCODE FUCTIONS  -->
 
@@ -37,5 +41,6 @@
         dz_rev_slider_1();
     });	/*ready*/
 </script>
+@stack('scripts')
 </body>
 </html>

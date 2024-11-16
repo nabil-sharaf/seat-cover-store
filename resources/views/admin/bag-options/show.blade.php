@@ -83,13 +83,13 @@
                 </div>
 
                 <div class="mt-4">
-                    <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-warning">تعديل</a>
-                    <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="d-inline">
+                    <a href="{{ route('admin.cover-colors.edit', $product->id) }}" class="btn btn-warning">تعديل</a>
+                    <form action="{{ route('admin.cover-colors.destroy', $product->id) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger" onclick="return confirm('هل أنت متأكد من حذف هذا المنتج؟')">حذف</button>
                     </form>
-                    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">العودة للقائمة</a>
+                    <a href="{{ route('admin.cover-colors.index') }}" class="btn btn-secondary">العودة للقائمة</a>
                 </div>
             </div>
         </div>

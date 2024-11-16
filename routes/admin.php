@@ -4,7 +4,7 @@ use App\Http\Controllers\Admin as Adm;
 use App\Http\Controllers\Admin\BagOptionController;
 use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\PopupController;
-use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\CoverColorController;
 use App\Http\Controllers\Admin\SeatCountController;
 use App\Http\Controllers\Admin\SeatPriceController;
 use App\Http\Controllers\Admin\ShippingRateController;
@@ -23,19 +23,21 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
 //--------------------- Categoris Routes --------------------------
 
             Route::resource('/categories', Adm\CategoryController::class);
-            Route::get('/cover-colors/{coverId}',[Adm\CategoryController::class,'getColors'])->name('cover-colors');
             Route::get('seat-count/car-brands/{seatCount}',[Adm\CategoryController::class,'getBrandsBySeatCount'])->name('seat-count.brands');
             Route::get('/brand-models',[Adm\CategoryController::class,'getModels'])->name('brand-models');
             Route::get('/cover-price-change',[Adm\CategoryController::class,'coverPriceChange'])->name('cover-price-change');
+            Route::get('/accessory-price-change',[Adm\CategoryController::class,'accessoryPriceChange'])->name('accessory-price-change');
             Route::get('/get-model-made-year',[Adm\CategoryController::class,'getMadeYears'])->name('get-model-made-years');
+            Route::get('/seat-cover-colors/{coverId}',[Adm\CategoryController::class,'getColors'])->name('seat-cover-colors');
+            Route::get('/products-by-category/{type}', [Adm\CategoryController::class, 'getProductsByCategory'])->name('getCategory-products');
 
-//--------------------- Products Routes -----------------------------
+//--------------------- cover-colors Routes -----------------------------
 
-            Route::delete('/products/delete-all', [Adm\ProductController::class, 'deleteAll'])->name('products.deleteAll');
-            Route::PUT('/products/trend-all', [Adm\ProductController::class, 'trendAll'])->name('products.trendAll');
-            Route::PUT('/products/best-all', [Adm\ProductController::class, 'bestSellerAll'])->name('products.bestSellerAll');
-            Route::resource('/products', Adm\ProductController::class);
-            Route::delete('/products/remove-image/{id}', [ProductController::class, 'removeImage'])->name('products.remove-image');
+            Route::resource('/cover-colors', Adm\CoverColorController::class);
+            Route::delete('/cover-colors/delete-all', [Adm\CoverColorController::class, 'deleteAll'])->name('cover-colors.deleteAll');
+            Route::PUT('/cover-colors/trend-all', [Adm\CoverColorController::class, 'trendAll'])->name('cover-colors.trendAll');
+            Route::PUT('/cover-colors/best-all', [Adm\CoverColorController::class, 'bestSellerAll'])->name('cover-colors.bestSellerAll');
+            Route::delete('/cover-colors/remove-image/{id}', [CoverColorController::class, 'removeImage'])->name('cover-colors.remove-image');
 
  //--------------------- Accessories Routes -----------------------------
             Route::resource('/accessories', Adm\AccessoryController::class);
@@ -109,8 +111,13 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
             Route::get('/settings/images', [Adm\SiteImagesController::class, 'images'])->name('settings.images');
             Route::PUT('/settings/images/update', [Adm\SiteImagesController::class, 'updateImages'])->name('settings.update-images');
 
+//----------------------------- Testimonials Routes  ------------------------------
+            Route::resource('settings/testimonials', Adm\TestimonialController::class);
 //------------------------------- Sliders Routes  ------------------------------
-            Route::resource('/sliders', Adm\SliderController::class);
+            Route::resource('settings/sliders', Adm\SliderController::class);
+
+  //------------------------------- Branches Routes  ------------------------------
+            Route::resource('settings/branches', Adm\BranchController::class);
 
 //----------------------------- ShippingRates Routes  ------------------------------
             Route::get('/settings/shipping-rates', [ShippingRateController::class, 'index'])->name('shipping-rates.index');

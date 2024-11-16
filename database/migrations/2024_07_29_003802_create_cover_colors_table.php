@@ -10,7 +10,7 @@ return new class extends Migration {
      * Run the migrations.
      */
     public function up(): void {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('cover_colors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('tatriz_color');

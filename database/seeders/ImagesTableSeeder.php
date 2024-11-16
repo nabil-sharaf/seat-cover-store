@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Admin\Image;
-use App\Models\Admin\Product;
+use App\Models\Admin\CoverColor;
 
 class ImagesTableSeeder extends Seeder
 {

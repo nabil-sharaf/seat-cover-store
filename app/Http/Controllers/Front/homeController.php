@@ -3,62 +3,70 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Accessory;
+use App\Models\Admin\Branch;
 use App\Models\Admin\Category;
 use App\Models\Admin\Popup;
-use App\Models\Admin\Product;
 use App\Models\Admin\Setting;
 use App\Models\Admin\SiteImage;
-use Illuminate\Http\Request;
+use App\Models\Admin\Slider;
+use App\Models\Admin\Testimonial;
 
 class homeController extends Controller
 {
-    public function index(){
+    public function index()
+    {
 
-        $categories = Category::with('products')->get();
-//        $products = Product::with('images')->get();
-        // جلب المنتجات المضافة حديثاً بترتيب تاريخ الإضافة تنازلياً
-        $newProducts = Product::orderBy('created_at', 'desc')->take(get_last_added_count())->get();
+        $categories = Category::with('accessories')->get();
 
-        // جلب المنتجات المحددة كأكثر مبيعا ً
-//        $bestProducts = Product::where('is_best_seller',1)->orderBy('updated_at', 'desc')->take(get_best_seller_count())->get();
-
-     // جلب المنتجات المحددة كترند   ً
-//        $trendingProducts = Product::where('is_trend',1)->orderBy('updated_at', 'desc')->take(get_trending_count())->get();
-
-        $siteImages = SiteImage::first();
-        $popup = Popup::first();
-        return view('front.index', compact('categories','siteImages','popup'));
+        $sliders = Slider::all();
+        $testimonials = Testimonial::all();
+        return view('front.index', compact('categories','testimonials', 'sliders'));
     }
 
-    public function productDetails($id)
+    public function accessoryDetails($id)
     {
-        $product = Product::find($id);
+        $accessory = Accessory::find($id);
 
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
+        if (!$accessory) {
+            return response()->json(['message' => 'accessory not found'], 404);
         }
 
         return response()->json([
-            'name' => $product->name,
-            'discounted_price' => $product->discounted_price,
-            'price' => $product->product_price,
-            'description' => $product->description,
-            'info' => $product->info,
-            'images' => $product->images,
-            'categories'=> $product->categories
+            'name' => $accessory->name,
+            'discounted_price' => $accessory->discounted_price,
+            'price' => $accessory->accessory_price,
+            'description' => $accessory->description,
+            'info' => $accessory->info,
+            'images' => $accessory->images,
+            'categories' => $accessory->categories
         ]);
-    }
-
-    public function contact()
-    {
-        $setting = Setting::all();
-        return view('front.contact',compact('setting'));
     }
 
     public function aboutUs()
     {
-        $siteImages = SiteImage::first();
-        return view('front.about',compact('siteImages'));
+        $testimonials = Testimonial::all();
+        return view('front.about', compact( 'testimonials'));
+    }
+    public function branches()
+    {
+        $branches = Branch::all();
+        return view('front.branches', compact( 'branches'));
     }
 
+    public function categoryProducts($id)
+    {
+        $category = Category::where('id', $id)->first();
+        $categories = Category::where("parent_id", $id)->get();
+        $type = $category->product_type;
+        if ($type == 'accessory') {
+            $accessories = Accessory::where('category_id', $id)->get();
+            return view('front.accessories', compact('accessories'));
+        } elseif ($type == 'earth') {
+            return view('front.talbisat_earth', compact('categories'));
+        } else {
+            return view('front.talbisat_seats', compact('categories'));
+        }
+
+    }
 }

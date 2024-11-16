@@ -20,46 +20,60 @@
             @csrf
             <div class="card-body">
                 <div id="productFormsContainer">
+                    <div class="row g-4">
+                        <!-- User Selection (Hidden) -->
+                        <div class="col-md-12 mb-4" style="display:block">
+                            <label for="inputUser" class="form-label fw-bold">اختر العميل</label>
+                            <select id="inputUser" class="form-select custom-select select2" name="user_id">
+                                <option value="" data-user-type="">زائر - Guest</option>
+                                @foreach($users as $user)
+                                    @if($user->status)
+                                        <option value="{{ $user->id }}">
+                                            {{ $user->name  }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="product-form border p-4 mb-4">
                         <div class="row g-4">
-                            <!-- User Selection (Hidden) -->
-                            <div class="col-md-12 mb-4" style="display:block">
-                                <label for="inputUser" class="form-label fw-bold">اختر العميل</label>
-                                <select id="inputUser" class="form-select custom-select select2" name="user_id">
-                                    <option value="" data-user-type="">زائر - Guest</option>
-                                    @foreach($users as $user)
-                                        @if($user->status)
-                                            <option value="{{ $user->id }}">
-                                                {{ $user->name  }}
-                                            </option>
+                            <!-- Product Category -->
+                            <div class="col-md-4">
+                                <label for="product_category" class="form-label fw-bold">النوع </label>
+                                <select name="product_category[]" class="form-select custom-select product-category">
+                                    <option value="" disabled selected>اختر قسم المنتج</option>
+                                    @foreach($categories as $cat)
+                                        @if(!$cat->parent_id)
+                                            <option data-product-type="{{$cat->product_type}}"
+                                                    value="{{$cat->id}}">{{$cat->name}}</option>
                                         @endif
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                    <div class="product-form border p-4 mb-4">
-                        <div class="row g-4">
-                            <!-- Seat Cover Type -->
-                            <div class="col-md-4">
-                                <label for="seat_cover" class="form-label fw-bold">النوع </label>
-                                <select name="seat_cover[]" class="form-select custom-select seat-cover">
-                                    <option value="" disabled selected>اختر قسم المنتج </option>
-                                    @foreach($categories as $cat)
-                                        <option value="{{$cat->id}}" data-parent-id="{{ $cat->parent_id }}" >{{$cat->name}}</option>
-                                    @endforeach
+
+                            <!-- Product_type Input  -->
+                            <input type="hidden" id="" name="product_type[]" class="product-type-input" value="">
+
+                            <!--  product-select -->
+                            <div class="col-md-4 product-select-div" style="display: none">
+                                <label for="product-select" class="form-label fw-bold">المنتج </label>
+                                <select name="products[]" class="form-select custom-select product-select" disabled>
+                                    <option value="">اختر المنتج</option>
                                 </select>
                             </div>
 
                             <!-- Cover Color -->
-                            <div class="col-md-4">
+                            <div class="col-md-4" style="display: none">
                                 <label for="cover_color" class="form-label fw-bold">المنتج </label>
                                 <select name="cover_color[]" class="form-select custom-select cover-color" disabled>
-                                    <option value="">اختر المنتج أو لون التلبيسة</option>
+                                    <option value="" disabled>اختر المنتج أو لون المنتج</option>
 
                                 </select>
                             </div>
 
                             <!-- Seat Count -->
-                            <div class="col-md-4">
+                            <div class="col-md-4" style="display: none">
                                 <label for="seat_count" class="form-label fw-bold">عدد المقاعد</label>
                                 <select name="seat_count[]" class="form-select custom-select seat-count" disabled>
                                     <option value="" disabled selected>اختر عدد المقاعد</option>
@@ -70,7 +84,7 @@
                             </div>
 
                             <!-- Car Brand -->
-                            <div class="col-md-4">
+                            <div class="col-md-4" style="display: none">
                                 <label for="car_brand" class="form-label fw-bold">براند السيارة</label>
                                 <select name="car_brand[]" class="form-select custom-select car-brand" disabled>
                                     <option value="" disabled selected>اختر براند السيارة</option>
@@ -78,7 +92,7 @@
                             </div>
 
                             <!-- Car Model -->
-                            <div class="col-md-4">
+                            <div class="col-md-4" style="display: none">
                                 <label for="car_model" class="form-label fw-bold">موديل السيارة</label>
                                 <select name="car_model[]" class="form-select custom-select car-model" disabled>
                                     <option value="" disabled selected>اختر موديل السيارة</option>
@@ -86,7 +100,7 @@
                             </div>
 
                             <!-- Manufacturing Year -->
-                            <div class="col-md-4">
+                            <div class="col-md-4" style="display: none">
                                 <label for="made_year" class="form-label fw-bold">تاريخ الصنع</label>
                                 <select name="made_year[]" class="form-select custom-select made-year" disabled>
                                     <option value="" disabled selected>اختر تاريخ الصنع</option>
@@ -94,10 +108,10 @@
                             </div>
 
                             <!-- Bag Option -->
-                            <div class="col-md-4">
+                            <div class="col-md-4" style="display: none">
                                 <label for="bag-option" class="form-label fw-bold">بشنطة أو بدون</label>
                                 <select name="bag_option[]" class="form-select custom-select bag-option" disabled>
-                                    <option value="" disabled selected>هل التلبيسة بشنطة !</option>
+                                    <option value="" disabled selected>هل المنتج بشنطة !</option>
                                     <option value="0">بدون شنطة</option>
                                     <option class="bag-option-price" value="1">بشنطة</option>
                                 </select>
@@ -105,25 +119,28 @@
 
                             <!-- Quantity -->
                             <div class="col-md-4">
-                                <label for="talbisa_count" class="form-label fw-bold">العدد المطلوب </label>
-                                <input type="number" class="form-control custom-input talbisa-count" name="talbisa_count[]" value="1" min="1" step="1" readonly>
+                                <label for="product_count" class="form-label fw-bold">العدد المطلوب </label>
+                                <input type="number" class="form-control custom-input product-count"
+                                       name="product_count[]" value="1" min="1" step="1" readonly>
                             </div>
 
                             <!-- Unit Price -->
                             <div class="col-md-4">
-                                <label for="talbisa_price" class="form-label fw-bold">سعر التلبيسة</label>
-                                <input type="text" class="form-control custom-input talbisa-price" name="talbisa_price[]" readonly>
+                                <label for="product_price" class="form-label fw-bold">سعر الوحدة</label>
+                                <input type="text" class="form-control custom-input product-price"
+                                       name="product_price[]" readonly>
                             </div>
 
                             <!-- Total Price -->
                             <div class="col-md-12">
-                                <label for="talbisa_count_price" class="form-label fw-bold">إجمالي  </label>
-                                <input type="text" class="form-control custom-input talbisa-count-price" name="talbisa_count_price[]" readonly>
+                                <label for="product_count_price" class="form-label fw-bold">إجمالي </label>
+                                <input type="text" class="form-control custom-input product-count-price"
+                                       name="product_count_price[]" readonly>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button id="addProductBtn" class="btn btn-primary mb-5 mr-2" type="button">إضافة تلبيسة  أخرى</button>
+                <button id="addProductBtn" class="btn btn-primary mb-5 mr-2" type="button">إضافة منتج اخر</button>
 
 
                 <div id="addressSection" style="display: none;">
@@ -153,21 +170,23 @@
 
                     <div class="form-group">
                         <label for="state">المحافظة</label>
-                        <select class="form-control" id ='state' name="state" data-user-state="{{ $user->address?->state ?? '' }}">
-                            <option value="" disabled  selected>اختر اسم محافظتك</option>
+                        <select class="form-control" id='state' name="state"
+                                data-user-state="{{ $user->address?->state ?? '' }}">
+                            <option value="" disabled selected>اختر اسم محافظتك</option>
                             @foreach($states as $state)
-                                <option value="{{$state->state}}" {{ old('state', $user->address->state) == $state->state ? 'selected' : '' }}>{{$state->state}}</option>
+                                <option
+                                    value="{{$state->state}}" {{ old('state', $user->address->state) == $state->state ? 'selected' : '' }}>{{$state->state}}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="talbisat_total">اجمالي أسعار التلبيسات</label>
-                    <input type="text" class="form-control" id="talbisat_total" readonly>
+                    <label for="product_total">اجمالي أسعار المنتجات</label>
+                    <input type="text" class="form-control" id="product_total" readonly>
                 </div>
 
-                <div class="form-group" id = "coupon-group-id" style="display: none" >
+                <div class="form-group" id="coupon-group-id" style="display: none">
                     <label for="promo_code">كوبون الخصم</label>
                     <div class="input-group coupon-input-group">
                         <input type="text" id="promo_code" name="promo_code" class="form-control"
@@ -193,13 +212,14 @@
                     <label for="shipping_cost">تكلفة الشحن</label>
                     <input type="text" class="form-control" name='shipping_cost' value="" id="shipping_cost" readonly>
                 </div>
-                <div class="form-group"  style='display: block;'>
+                <div class="form-group" style='display: block;'>
                     <label for="tax-rate">النسبة المئوية للقيمة المضافة</label>
-                    <input type="text" name="tax_rate" class="form-control" id="tax-rate" value="{{\App\Models\Admin\Setting::getValue('tax_rate') }} %" readonly>
+                    <input type="text" name="tax_rate" class="form-control" id="tax-rate"
+                           value="{{\App\Models\Admin\Setting::getValue('tax_rate') }} %" readonly>
                 </div>
                 <div class="form-group">
                     <label for='final_total'>اجمالي الفاتورة الكلي </label>
-                    <input type="text" class="form-control" id='final_total'  readonly>
+                    <input type="text" class="form-control" id='final_total' readonly>
                 </div>
 
             </div>
@@ -221,15 +241,15 @@
     <script>
         $(document).ready(function () {
 
-            let productCount = 1;
+            let productCount = 0;
             initializeSelect2();
 
-            $('#addProductBtn').click(function() {
+            $('#addProductBtn').click(function () {
                 productCount++;
                 let newForm = $('.product-form:first').clone();
 
                 // تحديث أسماء و IDs الحقول
-                newForm.find('select, input').each(function() {
+                newForm.find('select, input').each(function () {
                     let oldName = $(this).attr('name');
                     let oldId = $(this).attr('id');
                     if (oldName) {
@@ -242,7 +262,7 @@
                     }
 
                     // إذا كان الحقل هو عدد التلبيسات، اضبط القيمة الافتراضية إلى 1
-                    if ($(this).hasClass('talbisa-count')) {
+                    if ($(this).hasClass('product-count')) {
                         $(this).val(1); // قيمة الديفولت
                     } else {
                         $(this).val(''); // مسح القيم الأخرى
@@ -251,7 +271,8 @@
 
                 // إعادة تمكين الحقول المعطلة
                 newForm.find('select, input').prop('disabled', true);
-                newForm.find('.seat-cover').prop('disabled', false);
+                newForm.find('.product-category').prop('disabled', false);
+                newForm.find('.product-type-input').prop('disabled',false);
 
                 // إضافة زر حذف (أيقونة تراش) في أعلى النموذج
                 let removeButton = `<button type="button" class="removeProductBtn" style="position: absolute; top: 10px; left: 10px; background: transparent; border: none; font-size: 18px;">
@@ -266,26 +287,157 @@
                 initializeSelect2();
             });
 
+            // Event delegation for dynamically added elements
+            $(document).on('change', '.product-category', function () {
+                let form = $(this).closest('.product-form');
+                const selectedOption = $(this).find('option:selected');
+                const productType = selectedOption.data('product-type');
+
+                if (productType) {
+                    // الحقل المخفي للبروداكت تايب
+                    form.find('.product-type-input').val(productType);
+
+                    if (productType === 'earth') {
+                        // إظهار الحقول إذا لم يكن المنتج من نوع اكسسوارات أو كان قسمًا فرعيًا
+                        form.find('.car-brand, .car-model, .made-year, .bag-option,.product-price, .seat-count').closest('.col-md-4').show().find('select').prop('disabled', true);
+                        form.find('.product-count').prop('readonly',true).prop('disabled',true).val('1');
+                    } else if (productType === 'seat') {
+                        form.find('.car-brand, .car-model,.product-price, .made-year, .seat-count').closest('.col-md-4').show().find('select').prop('disabled', true);
+                        form.find('.bag-option').closest('.col-md-4').hide().find('select').val('');
+                        form.find('.product-count').prop('readonly',true).prop('disabled',true).val('1');
+
+                    } else {
+                        form.find('.car-brand,.cover-color, .car-model, .made-year, .bag-option, .seat-count').closest('.col-md-4').hide().find('select').val('');
+                        form.find('.product-count').prop('readonly',false).prop('disabled',false).val('1');
+                    }
+
+                    // جلب المنتجات بناءً على الفئة المختارة
+                    $.ajax({
+                        url: "{{route('admin.getCategory-products',':id')}}".replace(':id', productType),
+                        type: 'GET',
+                        success: function (products) {
+                            // العثور على القائمة المنسدلة التالية وتفريغها
+                            let productSelect = form.find('.product-select');
+                            let productSelectDiv = form.find('.product-select-div');
+                            productSelect.empty();
+                            productSelect.prop('disabled', false);
+                            productSelectDiv.show();
+
+
+                            // إضافة الخيارات إلى القائمة بناءً على المنتجات المسترجعة
+                            productSelect.append(`<option value="" selected disabled >اختر المنتج</option>`);
+                            products.forEach(function (product) {
+                                productSelect.append(`<option value="${product.id}" data-product-type="${product.product_type}">${product.name}</option>`);
+                            });
+                        },
+                        error: function () {
+                            console.error('Failed to fetch products.');
+                        }
+                    });
+                }
+            });
+
+            $(document).on('change', '.product-select', function () {
+
+                const selectedOption = $(this).find('option:selected');
+                const productType = selectedOption.data('product-type');
+                let form = $(this).closest('.product-form');
+                if (productType !== 'undefined') {
+                    form.find('.cover-color').prop('disabled', false).closest('.col-md-4').show();
+                    getSeatCoverColors(form);
+                    getSeatCoverPrice(form);
+                    calculateProductsTotal();
+                } else {
+                    form.find('.cover-color').prop('disabled', true).closest('.col-md-4').hide();
+                    form.find('.product-count').prop('readonly', false);
+                    getAccessoryPrice(form);
+                    calculateProductsTotal();
+                }
+
+            });
+
+            $(document).on('change', '.cover-color', function () {
+                let form = $(this).closest('.product-form');
+                form.find('.seat-count').prop('disabled', false).focus();
+            });
+
+            $(document).on('change', '.seat-count', function () {
+                let form = $(this).closest('.product-form');
+                getSeatCoverPrice(form);
+                getCarBrands(form);
+                calculateProductsTotal(); // تحديث الإجمالي
+            });
+
+            $(document).on('change', '.bag-option', function () {
+                let form = $(this).closest('.product-form');
+                getSeatCoverPrice(form); // حساب سعر المنتج بناءً على الخيارات المحددة
+                calculateProductsTotal(); // تحديث الإجمالي
+            });
+
+            $(document).on('change', '.car-brand', function () {
+                let form = $(this).closest('.product-form');
+                getCarModels(form);
+            });
+
+            $(document).on('change', '.car-model', function () {
+                let form = $(this).closest('.product-form');
+                getMadeYears(form);
+            });
+
+            $(document).on('change', '.made-year', function () {
+                let form = $(this).closest('.product-form');
+                form.find('.bag-option').prop('disabled', false);
+                form.find(' .product-count').prop('readonly', false);
+            });
+
+            $(document).on('change', '.bag-option', function () {
+                let form = $(this).closest('.product-form');
+                form.find(' .product-count').prop('readonly', false);
+                getSeatCoverPrice(form);
+            });
+
+            $(document).on('change', '.product-count', function () {
+                let form = $(this).closest('.product-form');
+                getSeatCoverPrice(form);
+                getAccessoryPrice(form);
+            });
+
+            // Event listener for changes in quantity or price fields
+            $(document).on('change,input', '.product-count', function () {
+                let form = $(this).closest('.product-form');
+                getSeatCoverPrice(form); // حساب سعر المنتج بناءً على الخيارات المحددة
+                getAccessoryPrice(form)
+                calculateproductTotal(); // تحديث الإجمالي الكلي
+            });
+
+            // عند الضغط على زر حذف النموذج
+            $(document).on('click', '.removeProductBtn', function () {
+                $(this).closest('.product-form').remove();
+                calculateproductTotal();
+            });
+
+
             // Function to calculate total price for each product
-            function calculateTalbisatTotal(coupounDiscount = 0 ) {
+            function calculateProductsTotal(coupounDiscount = 0) {
                 let totalPrice = 0;
 
                 // Loop through all product forms
-                $('.product-form').each(function() {
+                $('.product-form').each(function () {
+
                     // Get the total price for each product
-                    let productTotalPrice = parseFloat($(this).find('.talbisa-count-price').val()) || 0;
+                    let productsTotalPrice = parseFloat($(this).find('.product-count-price').val()) || 0;
 
                     // Add to total price
-                    totalPrice += productTotalPrice;
+                    totalPrice += productsTotalPrice;
                 });
 
                 $('#copounDiscountAmount').val(coupounDiscount)
-                if(coupounDiscount == 0 ){
+                if (coupounDiscount == 0) {
                     $('#promo_code').attr('readonly', false);
                     $('#applyCouponButton').attr('disabled', false);
                 }
                 // Update the total price field
-                $('#talbisat_total').val(totalPrice.toFixed(2));
+                $('#product_total').val(totalPrice.toFixed(2));
                 $('#inputTotalOrder').val((totalPrice - coupounDiscount).toFixed(2));
 
                 var shipping = parseFloat($('#shipping_cost').val()) || 0;
@@ -299,99 +451,19 @@
 
             }
 
-            $(document).on('change', '.seat-cover, .bag-option, .seat-count', function() {
-                let form = $(this).closest('.product-form');
-                getSeatCoverPrice(form); // حساب سعر التلبيسة بناءً على الخيارات المحددة
-                calculateTalbisatTotal(); // تحديث الإجمالي
-            });
-
-
-            // Event listener for changes in quantity or price fields
-            $(document).on('change,input', '.talbisa-count', function() {
-                let form = $(this).closest('.product-form');
-                getSeatCoverPrice(form); // حساب سعر التلبيسة بناءً على الخيارات المحددة
-                calculateTalbisatTotal(); // تحديث الإجمالي الكلي
-            });
-
-// عند الضغط على زر حذف النموذج
-            $(document).on('click', '.removeProductBtn', function() {
-                $(this).closest('.product-form').remove();
-                calculateTalbisatTotal();
-            });
-
-            // Event delegation for dynamically added elements
-            $(document).on('change', '.seat-cover', function() {
-                let form = $(this).closest('.product-form');
-                getSeatCoverColors(form);
-                getSeatCoverPrice(form);
-
-                const selectedOption = $(this).find('option:selected');
-                const parentId = selectedOption.data('parent-id');
-
-                if (!parentId) {
-                    // إخفاء الحقول وتفريغ القيم للأقسام الرئيسية فقط من نوع Accessory
-                    $('.car-brand, .car-model, .made-year, .bag-option, .seat-count')
-                        .val('')
-                        .prop('selectedIndex', 0)
-                        .closest('.col-md-4').hide();
-                    $('.cover-color').closest('.col-md-4').show();
-                } else {
-                    // إظهار الحقول إذا لم يكن المنتج من نوع اكسسوارات أو كان قسمًا فرعيًا
-                    $('.car-brand, .car-model, .made-year, .bag-option, .seat-count').closest('.col-md-4').show().find('select').prop('disabled', true);
-                }
-            });
-
-            $(document).on('change', '.cover-color', function() {
-                let form = $(this).closest('.product-form');
-                form.find('.seat-count').prop('disabled', false).focus();
-            });
-
-            $(document).on('change', '.seat-count', function() {
-                let form = $(this).closest('.product-form');
-                getSeatCoverPrice(form);
-                getCarBrands(form);
-            });
-
-            $(document).on('change', '.car-brand', function() {
-                let form = $(this).closest('.product-form');
-                getCarModels(form);
-            });
-
-            $(document).on('change', '.car-model', function() {
-                let form = $(this).closest('.product-form');
-                getMadeYears(form);
-            });
-
-            $(document).on('change', '.made-year', function() {
-                let form = $(this).closest('.product-form');
-                form.find('.bag-option').prop('disabled', false);
-                form.find(' .talbisa-count').prop('readonly', false);
-            });
-
-            $(document).on('change', '.bag-option', function() {
-                let form = $(this).closest('.product-form');
-                form.find(' .talbisa-count').prop('readonly', false);
-                getSeatCoverPrice(form);
-            });
-
-            $(document).on('change', '.talbisa-count', function() {
-                let form = $(this).closest('.product-form');
-                getSeatCoverPrice(form);
-            });
-
             function getSeatCoverColors(form) {
-                var seatCoverId = form.find('.seat-cover').val();
+                var seatCoverId = form.find('.product-select').val();
                 if (seatCoverId) {
                     $.ajax({
-                        url: "{{route('admin.cover-colors', '')}}" + '/' + seatCoverId,
+                        url: "{{route('admin.seat-cover-colors', ':id')}}".replace(':id', seatCoverId),
                         type: 'GET',
-                        success: function(response) {
+                        success: function (response) {
                             var $colorSelect = form.find('.cover-color');
                             $colorSelect.empty();
 
                             if (response.length > 0) {
-                                $colorSelect.append('<option value="" selected disabled>اختر لون التلبيسة</option>');
-                                $.each(response, function(key, color) {
+                                $colorSelect.append('<option value="" selected disabled>اختر لون المنتج</option>');
+                                $.each(response, function (key, color) {
                                     $colorSelect.append('<option value="' + color.id + '">' + color.name + ' ' + color.tatriz_color + '</option>');
                                 });
                                 $colorSelect.prop('disabled', false).focus();
@@ -399,7 +471,7 @@
                                 $colorSelect.prop('disabled', true);
                             }
                         },
-                        error: function(xhr) {
+                        error: function (xhr) {
                             console.log(xhr);
                         }
                     });
@@ -410,15 +482,15 @@
                 var seatCount = form.find('.seat-count').val();
                 if (seatCount) {
                     $.ajax({
-                        url: "{{route('admin.seat-count.brands', '')}}" + '/' + seatCount,
+                        url: "{{route('admin.seat-count.brands', ':id')}}".replace(':id', seatCount),
                         type: 'GET',
-                        success: function(response) {
+                        success: function (response) {
                             var $brandsSelect = form.find('.car-brand');
                             $brandsSelect.empty();
 
                             if (response.length > 0) {
                                 $brandsSelect.append('<option value="" selected disabled>اختر براند السيارة</option>');
-                                $.each(response, function(key, brand) {
+                                $.each(response, function (key, brand) {
                                     $brandsSelect.append('<option value="' + brand.id + '">' + brand.brand_name + '</option>');
                                 });
                                 $brandsSelect.prop('disabled', false).focus();
@@ -426,7 +498,7 @@
                                 $brandsSelect.prop('disabled', true);
                             }
                         },
-                        error: function(xhr) {
+                        error: function (xhr) {
                             console.log(xhr);
                         }
                     });
@@ -445,13 +517,13 @@
                             brand_id: brandId,
                             seat_count_id: seatCountId,
                         },
-                        success: function(response) {
+                        success: function (response) {
                             var $modelSelect = form.find('.car-model');
                             $modelSelect.empty();
 
                             if (response.length > 0) {
                                 $modelSelect.append('<option value="" selected disabled>اختر موديل السيارة</option>');
-                                $.each(response, function(key, model) {
+                                $.each(response, function (key, model) {
                                     $modelSelect.append('<option value="' + model.id + '">' + model.model_name + '</option>');
                                 });
                                 $modelSelect.prop('disabled', false).focus();
@@ -459,7 +531,7 @@
                                 $modelSelect.prop('disabled', true);
                             }
                         },
-                        error: function(xhr) {
+                        error: function (xhr) {
                             console.log(xhr);
                         }
                     });
@@ -475,19 +547,19 @@
                         data: {
                             model_id: modelId,
                         },
-                        success: function(response) {
+                        success: function (response) {
                             var $yearSelect = form.find('.made-year');
                             $yearSelect.empty();
 
                             if (response) {
-                                $yearSelect.append('<option value="'+response+'" selected>' + response + '</option>');
+                                $yearSelect.append('<option value="' + response + '" selected>' + response + '</option>');
                                 $yearSelect.prop('disabled', false);
-                                form.find('.bag-option, .talbisa-count').prop('disabled', false);
+                                form.find('.bag-option, .product-count').prop('disabled', false);
                             } else {
                                 $yearSelect.prop('disabled', true);
                             }
                         },
-                        error: function(xhr) {
+                        error: function (xhr) {
                             console.log(xhr);
                         }
                     });
@@ -496,7 +568,7 @@
 
             function getSeatCoverPrice(form) {
                 var $countId = form.find('.seat-count').val();
-                var $coverId = form.find('.seat-cover').val();
+                var $coverId = form.find('.product-select').val();
                 if ($countId && $coverId) {
                     $.ajax({
                         url: "{{route('admin.cover-price-change')}}",
@@ -505,24 +577,54 @@
                             seat_count_id: $countId,
                             cover_id: $coverId,
                         },
-                        success: function(response) {
+                        success: function (response) {
                             var bagPrice = form.find('.bag-option').val() == 1 ? parseFloat(response.bag_price.bag_price) : 0;
-                            form.find('.bag-option-price').text('بشنطة -   ' + response.bag_price.bag_price + " ر.س").val();
+                            form.find('.bag-option-price').text('بشنطة -   ' + response.bag_price.bag_price + " ر.س");
                             var coverPrice = parseFloat(response.cover_price.price);
                             var price = coverPrice + bagPrice;
 
                             if (price > 0) {
-                                form.find('.talbisa-price').val(price);
-                                var $count = form.find('.talbisa-count').val();
-                                form.find('.talbisa-count-price').val($count * price);
+                                form.find('.product-price').val(price);
+                                var $count = form.find('.product-count').val();
+                                form.find('.product-count-price').val($count * price);
                             } else {
-                                form.find('.talbisa-price').val('');
+                                form.find('.product-price').val('');
                             }
 
                             // تحديث الإجمالي الكلي عند كل تعديل
-                            calculateTalbisatTotal();
+                            calculateProductsTotal();
                         },
-                        error: function(xhr) {
+                        error: function (xhr) {
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+
+            function getAccessoryPrice(form) {
+                var AccessoryId = form.find('.product-select').val();
+                if (AccessoryId) {
+                    $.ajax({
+                        url: "{{route('admin.accessory-price-change')}}",
+                        type: 'GET',
+                        data: {
+                            accessory_id: AccessoryId,
+                        },
+                        success: function (response) {
+                            var price = parseFloat(response);
+                            console.log(response)
+                            if (price > 0) {
+                                form.find('.product-price').val(price);
+                                var $count = form.find('.product-count').val();
+                                form.find('.product-count-price').val($count * price);
+                            } else {
+                                form.find('.product-price').val('');
+                            }
+
+                            // تحديث الإجمالي الكلي عند كل تعديل
+                            calculateProductsTotal();
+                        },
+                        error: function (xhr) {
                             console.log(xhr);
                         }
                     });
@@ -533,10 +635,9 @@
                 applyCopoun();
             });
 
-
-            function applyCopoun(){
+            function applyCopoun() {
                 var couponCode = $('#promo_code').val(); // الكود المُدخل للكوبون
-                var totalOrder = $('#talbisat_total').val(); // إجمالي الطلب
+                var totalOrder = $('#product_total').val(); // إجمالي الطلب
                 var userId = $('#inputUser').val();
                 $.ajax({
                     url: "{{ route('admin.check-promo-code') }}",
@@ -554,7 +655,7 @@
                             $('#copounDiscountAmount').val(response.discount);
                             $('#promo_code').attr('readonly', true);
                             $('#applyCouponButton').attr('disabled', 'disabled');
-                            calculateTalbisatTotal(discount);
+                            calculateProductsTotal(discount);
                             toastr.success(response.success);
                         } else {
                             toastr.error('حدث خطأ غير متوقع. حاول مرة أخرى.');
@@ -587,7 +688,7 @@
                 $.ajax({
                     url: "{{ route('admin.checkout.getShippingCost', ':state') }}".replace(':state', state),
                     method: 'GET',
-                    success: function(response) {
+                    success: function (response) {
                         const shippingCost = parseFloat(response.shipping_cost);
                         if (shippingCost == 0 || !shippingCost) {
                             $('#shipping_cost').val('شحن مجاني');
@@ -597,7 +698,7 @@
 
                         if (callback) callback(); // استدعاء الـ callback بعد تحديث القيمة
                     },
-                    error: function() {
+                    error: function () {
                         $('#shipping_cost').val('خطأ في جلب تكلفة الشحن');
                         if (callback) callback(); // استدعاء الـ callback في حالة حدوث خطأ
                     }
@@ -605,15 +706,13 @@
             }
 
             // استدعاء الفانكشن مع تمرير callback للتأكد من استلام القيمة بعد الانتهاء
-            stateSelect.on('change', function() {
+            stateSelect.on('change', function () {
                 const state = $(this).val();
-
-                calculateShippingCost(state, function() {
+                calculateShippingCost(state, function () {
                     var discount = parseFloat($("#copounDiscountAmount").val()) || 0;
-                    calculateTalbisatTotal(discount);
+                    calculateProductsTotal(discount);
                 });
             });
-
 
             function initializeSelect2() {
                 $('.select2').select2({
@@ -627,7 +726,6 @@
                 });
             }
 
-
             // تحديث الخصم عند تغيير المستخدم
             $('#inputUser').change(function () {
                 initializeSelect2()
@@ -636,18 +734,18 @@
                 // الحصول على الـ user_id المختار
                 const userId = $(this).val();
                 // أظهار كود كوبون الخصم للاعضاء فقط
-                if(userId){
+                if (userId) {
                     $('#coupon-group-id').show();
                     $('#promo_code').removeAttr('readonly');
                     $('#applyCouponButton').removeAttr('disabled');
-                }else{
+                } else {
                     $('#coupon-group-id').hide();
                 }
 
                 // إرسال طلب AJAX لجلب العناوين الخاصة بالمستخدم
                 if (userId) {
                     $.ajax({
-                        url: "{{route('admin.get-customer-address',':userId')}}".replace(':userId',userId), // رابط الـ API لجلب العناوين
+                        url: "{{route('admin.get-customer-address',':userId')}}".replace(':userId', userId), // رابط الـ API لجلب العناوين
                         method: 'GET',
                         success: function (response) {
                             // تأكد من أن الاستجابة تحتوي على بيانات العنوان
@@ -660,13 +758,12 @@
                                 $('#inputCity').val(address.city);
                                 $('#state').val(address.state);
                                 $('#full_name').val(address.full_name);
-                                calculateShippingCost(address.state, function() {
+                                calculateShippingCost(address.state, function () {
                                     var discount = parseFloat($("#copounDiscountAmount").val()) || 0;
-                                    calculateTalbisatTotal(discount);
+                                    calculateproductTotal(discount);
                                 });
 
-                            }
-                            else {
+                            } else {
                                 // في حالة عدم وجود عنوان، افراغ الحقول
                                 $('#inputAddress').val('');
                                 $('#inputPhone').val('');
@@ -696,9 +793,9 @@
                     $('#state option[value=""]').attr('selected', 'selected');
                     $('#full_name').val('');
                     $('#shipping_cost').val('');
-                    calculateShippingCost('', function() {
+                    calculateShippingCost('', function () {
                         var discount = parseFloat($("#copounDiscountAmount").val()) || 0;
-                        calculateTalbisatTotal(discount);
+                        calculateproductTotal(discount);
                     });
 
 
@@ -707,16 +804,15 @@
             });
 
 
-
             $('#orderForm').on('submit', function (e) {
                 e.preventDefault();
 
                 let hasError = false;
                 let errorMessage = '';
 
-                // التحقق من اختيار نوع التلبيسة على الأقل في نموذج واحد
+                // التحقق من اختيار نوع المنتج على الأقل في نموذج واحد
                 let hasSelectedCover = false;
-                $('.seat-cover').each(function () {
+                $('.product-category').each(function () {
                     if ($(this).val() !== '' && $(this).val() !== null) {
                         hasSelectedCover = true;
                     }
@@ -724,38 +820,45 @@
 
                 if (!hasSelectedCover) {
                     hasError = true;
-                    errorMessage += 'يجب اختيار نوع تلبيسة واحدة على الأقل.\n';
+                    errorMessage += 'يجب اختيار نوع منتج واحدة على الأقل.\n';
                 }
 
-                // التحقق من جميع الحقول المطلوبة في كل نموذج تلبيسة
-                $('.product-form').each(function(index) {
+                // التحقق من جميع الحقول المطلوبة في كل نموذج منتج
+                $('.product-form').each(function (index) {
                     let form = $(this);
+                    let category = form.find('.product-category');
+                    let categoryValue = category.val();
+                    const selectedOption = category.find('option:selected');
+                    const productType = selectedOption.data('product-type');
+                    if (categoryValue) {
+                        if (productType === 'accessory') {
 
-                    if (form.find('.seat-cover').val()) {
-                        // التحقق من اختيار جميع الحقول المطلوبة
-                        if (!form.find('.cover-color').val()) {
-                            hasError = true;
-                            errorMessage += `الرجاء اختيار لون التلبيسة للتلبيسة رقم ${index + 1}.\n`;
-                        }
-                        if (!form.find('.seat-count').val()) {
-                            hasError = true;
-                            errorMessage += `الرجاء اختيار عدد المقاعد للتلبيسة رقم ${index + 1}.\n`;
-                        }
-                        if (!form.find('.car-brand').val()) {
-                            hasError = true;
-                            errorMessage += `الرجاء اختيار براند السيارة للتلبيسة رقم ${index + 1}.\n`;
-                        }
-                        if (!form.find('.car-model').val()) {
-                            hasError = true;
-                            errorMessage += `الرجاء اختيار موديل السيارة للتلبيسة رقم ${index + 1}.\n`;
-                        }
-                        if (!form.find('.made-year').val()) {
-                            hasError = true;
-                            errorMessage += `الرجاء اختيار سنة الصنع للتلبيسة رقم ${index + 1}.\n`;
-                        }
-                        if (!form.find('.bag-option').val()) {
-                            hasError = true;
-                            errorMessage += `الرجاء تحديد خيار الشنطة للتلبيسة رقم ${index + 1}.\n`;
+                        } else {
+                            // التحقق من اختيار جميع الحقول المطلوبة
+                            if (!form.find('.cover-color').val()) {
+                                hasError = true;
+                                errorMessage += `الرجاء اختيار لون المنتج للمنتج رقم ${index + 1}.\n`;
+                            }
+                            if (!form.find('.seat-count').val()) {
+                                hasError = true;
+                                errorMessage += `الرجاء اختيار عدد المقاعد للمنتج رقم ${index + 1}.\n`;
+                            }
+                            if (!form.find('.car-brand').val()) {
+                                hasError = true;
+                                errorMessage += `الرجاء اختيار براند السيارة للمنتج رقم ${index + 1}.\n`;
+                            }
+                            if (!form.find('.car-model').val()) {
+                                hasError = true;
+                                errorMessage += `الرجاء اختيار موديل السيارة للمنتج رقم ${index + 1}.\n`;
+                            }
+                            if (!form.find('.made-year').val()) {
+                                hasError = true;
+                                errorMessage += `الرجاء اختيار سنة الصنع للمنتج رقم ${index + 1}.\n`;
+                            }
+                            if (!form.find('.bag-option').val()) {
+                                hasError = true;
+                                errorMessage += `الرجاء تحديد خيار الشنطة للمنتج رقم ${index + 1}.\n`;
+                            }
                         }
                     }
                 });
@@ -788,6 +891,10 @@
                     toastr.error(errorMessage);
                 } else {
                     let formData = new FormData(this);
+                    // لعرض كل البيانات التي يتم إرسالها
+                    for (let [key, value] of formData.entries()) {
+                        console.log(key, value);
+                    }
 
                     $.ajax({
                         type: 'POST',
@@ -806,9 +913,10 @@
                             }
                         },
                         error: function (xhr) {
-                            console.log(xhr)
+                            console.log(formData)
                             if (xhr.status === 422) {
                                 let errors = xhr.responseJSON.errors;
+
 
                                 $('.invalid-feedback').remove();
                                 $('.is-invalid').removeClass('is-invalid');
@@ -822,7 +930,6 @@
                                 toastr.error(xhr.responseJSON.message || 'هناك بعض الأخطاء في البيانات.');
                             } else {
                                 toastr.error('حدث خطأ غير متوقع.');
-                                alert(xhr)
                             }
                         },
                         complete: function () {
@@ -871,7 +978,6 @@
                 goBackButton.style.display = 'none'; // إخفاء زر الرجوع عند الرجوع
                 ShippingDiv.style.display = 'none';  // اخفاء تكلفة الشحن
                 submitOrderButton.style.display = 'none';
-
 
 
                 scrollToTop(); // الانتقال لأعلى الصفحة عند الضغط على "رجوع"
@@ -925,9 +1031,10 @@
             }
 
         }
-            #talbisa_count_div{
-                margin-top:50px !important;
-            }
+
+        #product_count_div {
+            margin-top: 50px !important;
+        }
 
         .form-select:disabled {
             background-color: #e9ecef;

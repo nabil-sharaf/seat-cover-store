@@ -11,7 +11,7 @@
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form id="product-form" class="form-horizontal" enctype="multipart/form-data" dir="rtl">
+        <form id="color-form" class="form-horizontal" enctype="multipart/form-data" dir="rtl">
             @csrf
             <div class="card-body">
                 <!-- لون  التلبيسة -->
@@ -115,13 +115,13 @@
 
         $(document).ready(function() {
             // تقديم النموذج عبر AJAX
-            $('#product-form').submit(function(event) {
+            $('#color-form').submit(function(event) {
                 event.preventDefault(); // منع إرسال النموذج بالطريقة التقليدية
 
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('admin.products.store') }}",
+                    url: "{{ route('admin.cover-colors.store') }}",
                     type: 'POST',
                     data: formData,
                     contentType: false,
@@ -146,12 +146,12 @@
             });
 
             function resetForm() {
-                $('#product-form')[0].reset();
+                $('#color-form')[0].reset();
                 $('.select2').val(null).trigger('change');
                 $('#imagePreviewContainer').empty();
 
                 $('html, body').animate({
-                    scrollTop: $("#product-form").offset().top
+                    scrollTop: $("#color-form").offset().top
                 }, 500);
             }
         });

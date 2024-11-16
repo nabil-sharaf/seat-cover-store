@@ -83,6 +83,8 @@ class SiteImagesController extends Controller
 
         if ($updated) {
             $siteImages->save();
+            // مسح الكاش
+//            cache()->forget('siteImages');
             return redirect()->back()->with('success', 'تم تحديث الصور بنجاح');
         } else {
             return redirect()->back()->with('error', 'لم يتم تحديث أي صورة');

@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CategoryRequest;
+use App\Models\Admin\Accessory;
 use App\Models\Admin\BagOption;
 use App\Models\Admin\CarBrand;
 use App\Models\Admin\CarModel;
 use App\Models\Admin\Category;
-use App\Models\Admin\Product;
+use App\Models\Admin\CoverColor;
 use App\Models\Admin\SeatPrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -170,10 +171,23 @@ class CategoryController extends Controller implements HasMiddleware
         }
     }
 
+    public function getProductsByCategory($type)
+    {
+        if ($type == 'accessory') {
+            $products = Accessory::all();
+        } elseif ($type == 'earth') {
+            $products = Category::whereNotNull('parent_id')->where('product_type','earth')->get();
+        } else {
+            $products = Category::whereNotNull('parent_id')->where('product_type','seat')->get();
+        }
+        return response()->json($products);
+    }
+
+
     public function getColors($CoverId)
     {
         // افترض أن جدول الألوان يحتوي على حقل seat_cover_id لربطه بالتلبيسة
-        $colors = Product::where('category_id', $CoverId)->get();
+        $colors = CoverColor::where('category_id', $CoverId)->get();
 
         // ارجع الألوان كـ JSON
         return response()->json($colors);
@@ -230,9 +244,15 @@ class CategoryController extends Controller implements HasMiddleware
         return response()->json($data);
     }
 
+    public function accessoryPriceChange(Request $request)
+    {
+        $id = $request->input('accessory_id');
 
+        $price = Accessory::where('id',$id)->first()->discounted_price;
 
-
+        // ارجع السعر كـ JSON
+        return response()->json([$price]);
+    }
 
 
 }

@@ -5,11 +5,11 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ProductsTableSeeder extends Seeder
+class CoverColorsTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('products')->insert([
+        DB::table('cover_colors')->insert([
             [
                 'id' => 2,
                 'name' => 'أسود',
@@ -17,7 +17,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/67087478ce0f5.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 1,
+                'category_id' => 4,
             ],
             [
                 'id' => 3,
@@ -26,7 +26,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/6708777753b29.jpg',
                 'description' => 'qqqqqqqq',
                 'status' => 1,
-                'category_id' => 1,
+                'category_id' => 4,
             ],
             [
                 'id' => 4,
@@ -35,7 +35,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/670877a82f4a3.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 1,
+                'category_id' => 4,
             ],
             [
                 'id' => 5,
@@ -44,7 +44,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/670877c49bfe1.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 1,
+                'category_id' => 4,
             ],
             [
                 'id' => 6,
@@ -53,7 +53,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/670877dce6f72.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 1,
+                'category_id' => 4,
             ],
             [
                 'id' => 7,
@@ -62,7 +62,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/6708780399873.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 1,
+                'category_id' => 4,
             ],
             [
                 'id' => 8,
@@ -71,7 +71,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/67087823759c4.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 1,
+                'category_id' => 4,
             ],
             [
                 'id' => 9,
@@ -80,7 +80,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/670878406181b.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 1,
+                'category_id' => 4,
             ],
             [
                 'id' => 10,
@@ -89,7 +89,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/6708785b96684.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 1,
+                'category_id' => 4,
             ],
             [
                 'id' => 11,
@@ -98,7 +98,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/670aae2604d95.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 2,
+                'category_id' => 5,
             ],
             [
                 'id' => 12,
@@ -107,7 +107,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/670aae3912e76.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 2,
+                'category_id' => 5,
             ],
             [
                 'id' => 13,
@@ -116,7 +116,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/670aae67b1f16.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 2,
+                'category_id' => 5,
             ],
             [
                 'id' => 14,
@@ -125,7 +125,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/670aae7738d97.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 2,
+                'category_id' => 5,
             ],
             [
                 'id' => 15,
@@ -134,7 +134,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/670aaf445f880.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 3,
+                'category_id' => 6,
             ],
             [
                 'id' => 16,
@@ -143,7 +143,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/670aaf615ee12.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 3,
+                'category_id' => 6,
             ],
             [
                 'id' => 17,
@@ -152,7 +152,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/670aaf751c565.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 3,
+                'category_id' => 6,
             ],
             [
                 'id' => 18,
@@ -161,7 +161,7 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/670aaf909d7e3.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 3,
+                'category_id' => 7,
             ],
             [
                 'id' => 19,
@@ -170,8 +170,35 @@ class ProductsTableSeeder extends Seeder
                 'image' => 'products/670aafb29214e.jpg',
                 'description' => null,
                 'status' => 1,
-                'category_id' => 4,
-            ]
+                'category_id' => 8,
+            ] ,
+            [
+                'id' => 20,
+                'name' => 'بني',
+                'tatriz_color' => 'مطرز نبي',
+                'image' => 'products/670aaf909d7e3.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 8,
+            ],
+            [
+                'id' => 21,
+                'name' => 'بيج',
+                'tatriz_color' => 'مطرز بيج',
+                'image' => 'products/670aafb29214e.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 9,
+            ],
+            [
+                'id' => 22,
+                'name' => 'بيج',
+                'tatriz_color' => 'مطرز جملي',
+                'image' => 'products/670aafb29214e.jpg',
+                'description' => null,
+                'status' => 1,
+                'category_id' => 9,
+            ],
         ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\OrderRequest;
+use App\Models\Admin\Accessory;
 use App\Models\Admin\BagOption;
 use App\Models\Admin\CarBrand;
 use App\Models\Admin\CarModel;
@@ -11,8 +12,8 @@ use App\Models\Admin\Category;
 use App\Models\Admin\GuestAddress;
 use App\Models\Admin\Order;
 use App\Models\Admin\OrderDetail;
-use App\Models\Admin\Product;
-use App\Models\Admin\ProductDiscount;
+use App\Models\Admin\CoverColor;
+use App\Models\Admin\AccessoryDiscount;
 use App\Models\Admin\PromoCode;
 use App\Models\Admin\SeatCount;
 use App\Models\Admin\SeatPrice;
@@ -48,11 +49,11 @@ class OrderController extends Controller
         }
         // البحث باسم العميل
         if ($request->has('customer_name') && $request->customer_name != '') {
-            $query->where(function($q) use ($request) {
-                $q->whereHas('userAddress', function($subQuery) use ($request) {
+            $query->where(function ($q) use ($request) {
+                $q->whereHas('userAddress', function ($subQuery) use ($request) {
                     $subQuery->where('full_name', 'like', '%' . $request->customer_name . '%');
                 })
-                    ->orWhereHas('guestAddress', function($subQuery) use ($request) {
+                    ->orWhereHas('guestAddress', function ($subQuery) use ($request) {
                         $subQuery->where('full_name', 'like', '%' . $request->customer_name . '%');
                     });
             });
@@ -67,15 +68,16 @@ class OrderController extends Controller
     {
         $users = User::all();
         $states = ShippingRate::all();
-        $categories = Category::with('products')->get();
+        $categories = Category::with('coverColors')->get();
         $seatCounts = SeatCount::all();
         $car_brands = CarBrand::all();
+        $accessories = Accessory::with('discount')->get();
         return view('admin.orders.create',
-            compact('users','states','categories','seatCounts','car_brands')
+            compact('users', 'states', 'categories', 'seatCounts', 'car_brands', 'accessories')
         );
     }
 
-    public function store(OrderRequest $request)
+    public function store(Request $request)
     {
         try {
             return DB::transaction(function () use ($request) {
@@ -132,34 +134,51 @@ class OrderController extends Controller
 
                 $totalPrice = 0;
 
-
-                foreach ($request->seat_cover as $index => $seatCoverId) {
-
-                    $bagBrice = $this->getBagPrice($seatCoverId,$request->bag_option[$index]);
-                    $talbisaPrice = $this->getTalbisaPrice($seatCoverId,$request->seat_count[$index]);
-
-                    $unitPrice = $bagBrice + $talbisaPrice;
-                    $count =$request->talbisa_count[$index];
-                    $countPrice = $unitPrice * $count;
+                foreach ($request->products as $index => $productId) {
+                    $productType = $request->product_type[$index];
+                    $count = $request->product_count[$index];
 
                     $orderDetail = new OrderDetail();
 
+                    if ($productType !== 'accessory') {
+
+                        if ($productType === 'earth') {
+                            $bagPrice = $this->getBagPrice($productId, $request->bag_option[$index]);
+                        } else {
+                            $bagPrice = 0;
+                        }
+
+                        $productPrice = $this->getTalbisaPrice($productId, $request->seat_count[$index]);
+                        $orderDetail->category_id = $productId;
+                        $orderDetail->accessory_id=null;
+
+                    } else {
+                        $bagPrice = 0;
+                        $productPrice = $this->getAccessoryPrice($productId);
+                        $orderDetail->category_id = null;
+                        $orderDetail->accessory_id=$productId;
+
+
+                    }
+
+                    $unitPrice = $bagPrice + $productPrice;
+                    $countPrice = $unitPrice * $count;
                     $orderDetail->order_id = $order->id;
-                    $orderDetail->color_id = $request->cover_color[$index];
-                    $orderDetail->seat_cover_id = $seatCoverId;
-                    $orderDetail->seat_count_id = $request->seat_count[$index];
-                    $orderDetail->brand_id = $request->car_brand[$index];
-                    $orderDetail->model_id = $request->car_model[$index];
-                    $orderDetail->made_years = $request->made_year[$index];
-                    $orderDetail->bag_option = $request->bag_option[$index];
-                    $orderDetail->talbisa_quantity = $count;
+                    $orderDetail->product_type = $productType;
+                    $orderDetail->color_id = $request->cover_color[$index] ?? null;
+                    $orderDetail->seat_count_id = $request->seat_count[$index] ?? null;
+                    $orderDetail->brand_id = $request->car_brand[$index] ?? null;
+                    $orderDetail->model_id = $request->car_model[$index] ?? null;
+                    $orderDetail->made_years = $request->made_year[$index] ?? null;
+                    $orderDetail->bag_option = $request->bag_option[$index] ?? null;
+                    $orderDetail->quantity = $count;
                     $orderDetail->unit_price = $unitPrice;
                     $orderDetail->total_price = $countPrice;
 
                     $orderDetail->save();
 
-
                     $totalPrice += $countPrice;
+
                 }
 
                 // التحقق من كود الخصم
@@ -195,7 +214,7 @@ class OrderController extends Controller
                 }
 
                 $tax_rate = Setting::getValue('tax_rate');
-                $tax_amount = ($totalPrice + $shippingCost - $promoDiscount) * ($tax_rate /100);
+                $tax_amount = ($totalPrice + $shippingCost - $promoDiscount) * ($tax_rate / 100);
                 $order->total_price = $totalPrice;
                 $order->promo_discount = $promoDiscount;
                 $order->total_after_discount = $totalPrice - $promoDiscount;
@@ -216,7 +235,7 @@ class OrderController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'req'=>$request->cover_color,
+                    'req' => $request->cover_color,
                     'message' => 'تم إنشاء الطلب بنجاح',
                 ]);
             });
@@ -229,7 +248,6 @@ class OrderController extends Controller
     }
 
 
-
     public function edit(Order $order)
     {
         if ($order->status->id == 1) { // تعديل الطلب في حالة اذا لم  يتم شحنه
@@ -239,42 +257,38 @@ class OrderController extends Controller
             $user = $order->user;
             $address = $order->userAddress ?? $order->guestAddress;
 
+            $accessories = Accessory::with('discount')->get();
             $states = ShippingRate::all();
-            $seatCovers = Category::with('products')->get();
+            $seatCovers = Category::with('coverColors')->get();
             $seatCounts = SeatCount::all();
             $carBrands = CarBrand::all();
             $carModels = CarModel::all()->groupBy('brand_id');
 
             // جلب الألوان الخاصة بكل نوع تلبيسة
-            $coverColors = Product::all()->groupBy('category_id');
+            $coverColors = CoverColor::all()->groupBy('category_id');
 
             return view('admin.orders.edit', compact(
-                'order',
-                'coverColors',
-                'user',
-                'address',
-                'states',
-                'seatCounts',
-                'seatCovers',
-                'carBrands',
-                'carModels',
-            )
+                    'order',
+                    'coverColors',
+                    'user',
+                    'address',
+                    'states',
+                    'seatCounts',
+                    'seatCovers',
+                    'carBrands',
+                    'carModels',
+                    'accessories'
+                )
             );
         }
         return redirect(route('admin.orders.index'));
     }
 
-    public function getProductField(Request $request)
-    {
-        $index = $request->get('index');
-        $products = Product::all();
-        return view('admin.orders.partials.product-field', compact('index', 'products'));
-    }
 
     public function update(OrderRequest $request, Order $order)
     {
         try {
-            return DB::transaction(function () use ($request,$order) {
+            return DB::transaction(function () use ($request, $order) {
                 $user = null;
                 $isGuest = false;
 
@@ -330,11 +344,11 @@ class OrderController extends Controller
 
                 foreach ($request->seat_cover as $index => $seatCoverId) {
 
-                    $bagBrice = $this->getBagPrice($seatCoverId,$request->bag_option[$index]);
-                    $talbisaPrice = $this->getTalbisaPrice($seatCoverId,$request->seat_count[$index]);
+                    $bagBrice = $this->getBagPrice($seatCoverId, $request->bag_option[$index]);
+                    $productPrice = $this->getTalbisaPrice($seatCoverId, $request->seat_count[$index]);
 
-                    $unitPrice = $bagBrice + $talbisaPrice;
-                    $count =$request->talbisa_count[$index];
+                    $unitPrice = $bagBrice + $productPrice;
+                    $count = $request->product_count[$index];
                     $countPrice = $unitPrice * $count;
 
                     $orderDetail = new OrderDetail();
@@ -347,7 +361,7 @@ class OrderController extends Controller
                     $orderDetail->model_id = $request->car_model[$index];
                     $orderDetail->made_years = $request->made_year[$index];
                     $orderDetail->bag_option = $request->bag_option[$index];
-                    $orderDetail->talbisa_quantity = $count;
+                    $orderDetail->quantity = $count;
                     $orderDetail->unit_price = $unitPrice;
                     $orderDetail->total_price = $countPrice;
 
@@ -390,7 +404,7 @@ class OrderController extends Controller
                 }
 
                 $tax_rate = Setting::getValue('tax_rate');
-                $tax_amount = ($totalPrice + $shippingCost - $promoDiscount) * ($tax_rate /100);
+                $tax_amount = ($totalPrice + $shippingCost - $promoDiscount) * ($tax_rate / 100);
                 $order->total_price = $totalPrice;
                 $order->promo_discount = $promoDiscount;
                 $order->total_after_discount = $totalPrice - $promoDiscount;
@@ -411,7 +425,7 @@ class OrderController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'req'=>$request->cover_color,
+                    'req' => $request->cover_color,
                     'message' => 'تم إنشاء الطلب بنجاح',
                 ]);
             });
@@ -555,19 +569,22 @@ class OrderController extends Controller
         return response()->json(['shipping_cost' => $shippingCost]);
     }
 
-    private function getBagPrice($seat_cover_id,$bagOption)
+    private function getBagPrice($seat_cover_id, $bagOption)
     {
-        if($bagOption==1){
-        return  BagOption::where('category_id',$seat_cover_id)->first()->bag_price;
-        }else{
+        if ($bagOption == 1) {
+            return BagOption::where('category_id', $seat_cover_id)->first()->bag_price;
+        } else {
             return 0;
         }
     }
 
-    private function getTalbisaPrice($coverId,$countId)
+    private function getTalbisaPrice($coverId, $countId)
     {
-        return SeatPrice::where('category_id',$coverId)->where('seat_count_id',$countId)->first()->price;
-
+        return SeatPrice::where('category_id', $coverId)->where('seat_count_id', $countId)->first()->price;
+    }
+    private function getAccessoryPrice($productId)
+    {
+        return Accessory::where('id', $productId)->first()->discounted_price;
     }
 
 }

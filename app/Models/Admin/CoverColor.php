@@ -5,10 +5,10 @@ namespace App\Models\Admin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class CoverColor extends Model
 {
     use HasFactory;
-
+protected $table = 'cover_colors';
     protected $fillable = [
         'name',
         'category_id',
@@ -22,18 +22,6 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
-
-    public function orderDetails()
-    {
-        return $this->hasMany(OrderDetail::class);
-    }
-
-
-    public function offers()
-    {
-        return $this->hasMany(Offer::class);
-    }
-
 
 }
 

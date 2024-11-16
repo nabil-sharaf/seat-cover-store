@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('site_images', function (Blueprint $table) {
             $table->id();
             $table->string('logo')->nullable(); // مسار صورة اللوجو
+            $table->string('logo_white')->nullable(); // مسار صورة اللوجو
             $table->string('footer_image')->nullable(); // مسار صورة الفوتر
             $table->string('payment_image')->nullable(); // مسار صورة وسائل الدفع
             $table->string('about_us_image')->nullable(); // مسار صورة من نحن

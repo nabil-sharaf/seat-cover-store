@@ -1,97 +1,115 @@
 @extends('admin.layouts.app')
-
 @section('page-title')
-    slider
+    السلايدرز
 @endsection
 
 @section('content')
-    <div class="container mt-5">
-        <h2 class="mb-4">إدارة الـ slider</h2>
+    <!-- /.card -->
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                <!-- زر إضافة سلايدر جديد -->
+                <a href="{{ route('admin.sliders.create') }}" class="btn btn-primary mb-2">
+                    <i class="fas fa-plus mr-1"></i> إضافة سلايدر
+                </a>
 
-        <!-- عرض الرسائل -->
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
             </div>
-        @endif
+        </div>
+        <!-- /.card-header -->
 
-        <!-- نموذج إدارة السلايدر -->
-        <form action="{{ route('admin.sliders.update',$slider->id) }}" method="POST" enctype="multipart/form-data" class="row g-4">
-            @csrf
-            @method('PUT')
-
-            <!-- العنوان -->
-            <div class="col-md-6">
-                <label for="title" class="form-label">العنوان:</label>
-                <input type="text" name="title" value="{{ old('title', $slider->title ?? '') }}" class="form-control @error('title') is-invalid @enderror" placeholder="أدخل عنوان السلايدر">
-                @error('title')
-                <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+        <!-- .card-body -->
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center table-sm">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>#</th>
+                        <th>الصورة</th>
+                        <th>العنوان</th>
+                        <th>النص</th>
+                        <th>نص الزر</th>
+                        <th>رابط الزر</th>
+                        <th>العمليات</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @forelse($sliders as $slider)
+                        <tr>
+                            <td class="align-middle">{{ $loop->iteration }}.</td>
+                            <td class="align-middle">
+                                @if($slider->image)
+                                    <img src="{{ asset('storage/' . $slider->image) }}" alt="صورة السلايدر" class="img-fluid img-hover-zoom" style="height:40px">
+                                @else
+                                    <span>لا توجد صورة</span>
+                                @endif
+                            </td>
+                            <td class="align-middle"> {{ \Str::limit($slider->title, 20, '...') }}</td>
+                            <td class="align-middle">{{ \Str::limit($slider->description, 30, '...') }}</td>
+                            <td class="align-middle">{{ $slider->button_text }}</td>
+                            <td class="align-middle"><a href="{{ $slider->button_link }}" target="_blank">{{ $slider->button_link }}</a></td>
+                            <td class="align-middle">
+                                <div class="d-flex justify-content-center">
+                                    <a href="{{ route('admin.sliders.edit', $slider->id) }}" class="btn btn-sm btn-info mb-1 mr-1">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    @if(auth('admin')->user()->hasAnyRole(['superAdmin']))
+                                        <form action="{{ route('admin.sliders.destroy', $slider->id) }}" method="POST" class="d-inline delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-sm btn-danger delete-slider-btn mb-1" data-id="{{ $slider->id }}">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7">لا يوجد سلايدرز حاليا</td>
+                        </tr>
+                    @endforelse
+                    </tbody>
+                </table>
             </div>
+        </div>
+        <!-- /.card-body -->
 
-            <!-- النص -->
-            <div class="col-md-12">
-                <label for="slider-text" class="form-label">النص:</label>
-                <textarea id='slider-text' name="text" class="form-control @error('text') is-invalid @enderror" rows="4" placeholder="أدخل نص السلايدر">{{ old('text', $slider->description ?? '') }}</textarea>
-                @error('text')
-                <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <!-- الصورة -->
-            <div class="col-md-6">
-                <label for="image" class="form-label">الصورة:</label>
-                <input type="file" name="image" class="form-control @error('image') is-invalid @enderror" id="imageInput" onchange="previewImage(event)">
-                @error('image')
-                <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-                @if(isset($slider->image))
-                    <img id="imagePreview" src="{{ asset('storage/' . $slider->image) }}" alt="صورة السلايدر" class="img-fluid mt-3" style="max-height: 150px;">
-                @else
-                    <img id="imagePreview" alt="معاينة الصورة" class="img-fluid mt-3" style="max-height: 150px; display: none;">
-                @endif
-            </div>
-
-            <!-- نص الزر -->
-            <div class="col-md-6">
-                <label for="button_text" class="form-label">نص الزر:</label>
-                <input type="text" name="button_text" value="{{ old('button_text', $slider->button_text ?? '') }}" class="form-control @error('button_text') is-invalid @enderror" placeholder="أدخل نص الزر">
-                @error('button_text')
-                <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <!-- رابط الزر -->
-            <div class="col-md-6">
-                <label for="button_link" class="form-label">رابط الزر:</label>
-                <input type="text" name="button_link" value="{{ old('button_link', $slider->button_link ?? '') }}" class="form-control @error('button_link') is-invalid @enderror" placeholder="أدخل رابط الزر">
-                @error('button_link')
-                <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <!-- زر الحفظ -->
-            <div class="col-12 text-center">
-                <button type="submit" class="btn btn-primary mt-4">حفظ التعديلات</button>
-            </div>
-        </form>
+        <!-- Pagination -->
+        <div class="card-footer">
+        </div>
     </div>
 @endsection
-
+@push('styles')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+@endpush
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
     <script>
-        function previewImage(event) {
-            var imagePreview = document.getElementById('imagePreview');
-            var file = event.target.files[0];
+        $(document).ready(function() {
+            $('.delete-slider-btn').on('click', function(e) {
+                e.preventDefault();
+                let id = $(this).data('id');
 
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
-        }
+                if (confirm('هل أنت متأكد من حذف هذا السلايدر؟')) {
+                    $(this).closest('form').submit();
+                }
+                // Swal.fire({
+                //     title: 'هل أنت متأكد؟',
+                //     text: "لن تتمكن من التراجع عن هذا الإجراء!",
+                //     icon: 'warning',
+                //     showCancelButton: true,
+                //     confirmButtonColor: '#3085d6',
+                //     cancelButtonColor: '#d33',
+                //     confirmButtonText: 'نعم، احذف!',
+                //     cancelButtonText: 'إلغاء'
+                // }).then((result) => {
+                //     if (result.isConfirmed) {
+                //         // في حالة التأكيد، قم بتقديم نموذج الحذف
+                //         $(this).closest('form').submit();
+                //     }
+                // });
+            });
+        });
     </script>
 @endpush

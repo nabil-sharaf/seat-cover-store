@@ -10,7 +10,7 @@
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form class="form-horizontal" action="{{ route('admin.products.update', $product->id) }}" method="POST"
+        <form class="form-horizontal" action="{{ route('admin.cover-colors.update', $coverColor->id) }}" method="POST"
               enctype="multipart/form-data" dir="rtl">
             @method('PUT')
             @csrf
@@ -20,7 +20,7 @@
                     <label for="inputName" class="col-sm-2 control-label">اسم المنتج</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control @error('name') is-invalid @enderror" id="inputName"
-                               placeholder="أدخل اسم المنتج" name='name' value="{{ old('name', $product->name) }}">
+                               placeholder="أدخل اسم المنتج" name='name' value="{{ old('name', $coverColor->name) }}">
                         @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
@@ -29,7 +29,7 @@
                 <div class="form-group row">
                     <label for="inputTatriz" class="col-sm-2 control-label">لون التطريز</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control @error('tatriz_color') is-invalid @enderror" id="inputTatriz" placeholder="أدخل لون التطريز" name='tatriz_color' value="{{ old('tatriz_color',$product->tatriz_color) }}">
+                        <input type="text" class="form-control @error('tatriz_color') is-invalid @enderror" id="inputTatriz" placeholder="أدخل لون التطريز" name='tatriz_color' value="{{ old('tatriz_color',$coverColor->tatriz_color) }}">
                         @error('tatriz_color')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                 <div class="form-group row mt-4">
                     <label for="inputDesc" class="col-sm-2 control-label">الوصف </label>
                     <div class="col-sm-10">
-                        <textarea class="form-control @error('description') is-invalid @enderror" id="inputDesc" rows="3" placeholder="أدخل وصف اللون او اتركه فارغا" name='description'>{{ old('description',$product->description) }}</textarea>
+                        <textarea class="form-control @error('description') is-invalid @enderror" id="inputDesc" rows="3" placeholder="أدخل وصف اللون او اتركه فارغا" name='description'>{{ old('description',$coverColor->description) }}</textarea>
                         @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                     <div class="col-sm-10">
                         <select class="form-control select2 @error('category_id') is-invalid @enderror" id="inputCategory" name="category_id" style="width: 100%">
                             @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{$product->category_id == $category->id ?'selected':''}}>
+                                <option value="{{ $category->id }}" {{$coverColor->category_id == $category->id ?'selected':''}}>
                                     {{ $category->name }}
                                 </option>
                             @endforeach
@@ -63,8 +63,8 @@
                     <label for="inputStatus" class="col-sm-2 control-label">الحالة</label>
                     <div class="col-sm-10">
                         <select class="form-control select2 @error('status') is-invalid @enderror" id="inputStatus" name="status" style="width: 100%">
-                                <option value="1" {{$product->status == 1 ?'selected':''}}>متاح</option>
-                                <option value="0" {{$product->status == 0 ?'selected':''}}>غير متاح</option>
+                                <option value="1" {{$coverColor->status == 1 ?'selected':''}}>متاح</option>
+                                <option value="0" {{$coverColor->status == 0 ?'selected':''}}>غير متاح</option>
                         </select>
                         @error('status')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
@@ -86,7 +86,7 @@
                     <div class="col-sm-10">
                         <div id="imagePreviewContainer" class="d-flex flex-wrap">
                                 <div class="m-2">
-                                    <img src="{{ asset('storage/' . $product->image) }}" class="img-thumbnail"
+                                    <img src="{{ asset('storage/' . $coverColor->image) }}" class="img-thumbnail"
                                          style="height: 100px; width: 100px; object-fit: cover;">
 
                                 </div>
@@ -128,7 +128,7 @@
             }
         }
 
-        var removeImageUrl = "{{ route('admin.products.remove-image', ':id') }}";
+        var removeImageUrl = "{{ route('admin.cover-colors.remove-image', ':id') }}";
 
         function removeImage(button, imageId) {
             let csrfToken = $('input[name="_token"]').val();

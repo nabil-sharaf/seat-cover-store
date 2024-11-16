@@ -38,6 +38,7 @@
                         <th>اسم المنتج</th>
                         <th>صورة المنتج</th>
                         <th>السعر</th>
+                        <th>قيمة الخصم</th>
                         <th> القسم</th>
                         <th>العمليات</th>
                     </tr>
@@ -56,6 +57,7 @@
                                 @endif
                             </td>
                             <td>{{ $accessory->price }}</td>
+                            <td>{{$accessory->discount ? $accessory->discount->discount_value.($accessory->discount->discount_type == 'fixed' ? ' ر.س  ':' % ') : 'لا يوجد' }}</td>
                             <td>{{ $accessory->category->name }}</td>
                             <td>
                                 <div class="d-flex justify-content-center">
