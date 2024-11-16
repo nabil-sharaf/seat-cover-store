@@ -19,12 +19,6 @@ return new class extends Migration
             $table->string('payment_image')->nullable(); // مسار صورة وسائل الدفع
             $table->string('about_us_image')->nullable(); // مسار صورة من نحن
             $table->json('sponsor_images')->nullable();  // Add this column for multiple
-
-
-
-
-
-
             $table->timestamps();
         });
     }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->datetime('start_date');
             $table->datetime('end_date');
             $table->enum('customer_type', ['goomla', 'regular','all']);  // نوع العميل
-            $table->foreignId('product_id')->constrained()->onDelete('cascade'); // ربط بالمنتج
+//            $table->foreignId('product_id')->constrained()->onDelete('cascade'); // ربط بالمنتج
             $table->timestamps();
         });
     }

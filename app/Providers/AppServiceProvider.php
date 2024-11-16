@@ -29,11 +29,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // جلب صور الموقع ومشاركتها في جميع القوالب، مع استخدام التخزين المؤقت
-        $siteImages = cache()->remember('siteImages', now()->addHours(24), function () {
-            return SiteImage::first();
-        });
-        View::share('siteImages', $siteImages);
+//        // جلب صور الموقع ومشاركتها في جميع القوالب، مع استخدام التخزين المؤقت
+//        $siteImages = cache()->remember('siteImages', now()->addHours(24), function () {
+//            return SiteImage::first();
+//        });
+//        View::share('siteImages', $siteImages);
 
     }
 }
