@@ -49,13 +49,13 @@
                                 <li>
                                     <a href="{{ $social->setting_value }}" target="_blank"
                                         @if($social->social_type == 'tiktok')
-                                             class="fab- fa-tiktok"
+                                             class="fab fa-tiktok"
                                         @elseif($social->social_type == 'youtube')
                                            class="fab fa-youtube"
                                        @elseif($social->social_type == 'twitter')
                                            class="fab fa-twitter"
                                        @elseif($social->social_type == 'telegram')
-                                           class="fa-brands fa-telegram"
+                                           class="fab fa-telegram"
                                         @endif
                                     >
                                     </a>
