@@ -27,36 +27,41 @@
             <div class="container">
                 @foreach($branches as $branch)
                     <div class="row branch-section">
-                    <!-- right part start -->
-                    <div class="col-lg-4 col-md-6 d-md-flex d-lg-flex">
-                        <div class="p-a30 m-b30 border contact-area border-1">
-                            <h2 class="m-b10">{{$branch->name}}</h2>
-                            <p></p>
-                            <ul class="no-margin">
-                                <li class="icon-bx-wraper left m-b30">
-                                    <div class="icon-bx-xs border-1"> <a href="#" class="icon-cell"><i class="ti-location-pin"></i></a> </div>
-                                    <div class="icon-content">
-                                        <h6 class="text-uppercase m-tb0 dlab-tilte">عنوان الفرع:</h6>
-                                        <p>{{$branch->address}}</p>
-                                    </div>
-                                </li>
-                                <li class="icon-bx-wraper left">
-                                    <div class="icon-bx-xs border-1"> <a href="#" class="icon-cell"><i class="ti-mobile"></i></a> </div>
-                                    <div class="icon-content">
-                                        <h6 class="text-uppercase m-tb0 dlab-tilte">تليفون الفرع</h6>
-                                        <p><a href="https://wa.me/966{{$branch->phone}}" target="_blank"><i class="fab branch-whats fa-whatsapp"></i>{{$branch->phone}} </a></p>
-                                    </div>
-                                </li>
-                            </ul>
+                        <!-- right part start -->
+                        <div class="col-lg-4 col-md-6 d-md-flex d-lg-flex">
+                            <div class="p-a30 m-b30 border contact-area border-1">
+                                <h2 class="m-b10">{{$branch->name}}</h2>
+                                <p></p>
+                                <ul class="no-margin">
+                                    <li class="icon-bx-wraper left m-b30">
+                                        <div class="icon-bx-xs border-1"><a href="#" class="icon-cell"><i
+                                                    class="ti-location-pin"></i></a></div>
+                                        <div class="icon-content">
+                                            <h6 class="text-uppercase m-tb0 dlab-tilte">عنوان الفرع:</h6>
+                                            <p>{{$branch->address}}</p>
+                                        </div>
+                                    </li>
+                                    <li class="icon-bx-wraper left">
+                                        <div class="icon-bx-xs border-1"><a href="#" class="icon-cell"><i
+                                                    class="ti-mobile"></i></a></div>
+                                        <div class="icon-content">
+                                            <h6 class="text-uppercase m-tb0 dlab-tilte">تليفون الفرع</h6>
+                                            <p><a href="https://wa.me/966{{$branch->phone}}" target="_blank"><i
+                                                        class="fab branch-whats fa-whatsapp"></i>{{$branch->phone}} </a>
+                                            </p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
+                        <!-- right part END -->
+                        <!-- Left part start -->
+                        <div class="col-lg-8 col-md-6 d-flex align-items-center">
+                            <iframe src="{{$branch->map}}" style="border:0; width:100%;; height:300px;"
+                                    allowfullscreen></iframe>
+                        </div>
+                        <!-- Left part END -->
                     </div>
-                    <!-- right part END -->
-                    <!-- Left part start -->
-                    <div class="col-lg-8 col-md-6 d-flex align-items-center">
-                        <iframe src="{{$branch->map}}" style="border:0; width:100%;; height:300px;" allowfullscreen></iframe>
-                    </div>
-                    <!-- Left part END -->
-                </div>
                 @endforeach
             </div>
         </div>
@@ -65,15 +70,23 @@
 @endsection
 @push('styles')
     <style>
-        iframe{
+        iframe {
             margin-top: -10px;
         }
-        .branch-section{
+
+        .branch-section {
             margin-bottom: 40px;
         }
-        .branch-whats{
-            color:green;
+
+        .branch-whats {
+            color: green;
             padding-left: 5px;
+        }
+        .branch-section .contact-area {
+            width: 100%; /* يجعل العنصر يأخذ عرض العمود بالكامل */
+            box-sizing: border-box; /* لضمان أن البوردر يتم حسابه ضمن العرض */
+            display: flex;
+            flex-direction: column; /* إذا كان لديك محتوى داخلي يتم ترتيبه عموديًا */
         }
     </style>
 @endpush
