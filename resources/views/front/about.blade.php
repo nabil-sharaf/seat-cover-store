@@ -4,7 +4,7 @@
     <div class="page-content">
         <!-- inner page banner -->
         <div class="dlab-bnr-inr overlay-black-middle"
-             style="background-image:url({{asset('storage/'.$siteImages->about_us_image)}}); opacity: .91">
+             style="background-image:url({{asset('storage/'.$siteImages?->about_us_image)}}); opacity: .91">
             <div class="container">
                 <div class="dlab-bnr-inr-entry">
                     <h1 class="text-white">من نحن</h1>
@@ -132,7 +132,7 @@
 
             <!-- What peolpe are saying -->
             <div class="section-full overlay-black-middle bg-img-fix content-inner-1"
-                 style="background-image:url({{asset('storage/'.$siteImages->about_us_image)}});">
+                 style="background-image:url({{asset('storage/'.$siteImages?->about_us_image)}});">
                 <div class="container">
                     <div class="section-head text-white text-center">
                         <h2 class="text-uppercase">ماذا يقول عملائنا </h2>

@@ -175,7 +175,7 @@
                             <option value="" disabled selected>اختر اسم محافظتك</option>
                             @foreach($states as $state)
                                 <option
-                                    value="{{$state->state}}" {{ old('state', $user->address->state) == $state->state ? 'selected' : '' }}>{{$state->state}}</option>
+                                    value="{{$state?->state}}" {{ old('state', $user?->address?->state) == $state?->state ? 'selected' : '' }}>{{$state?->state}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -272,7 +272,7 @@
                 // إعادة تمكين الحقول المعطلة
                 newForm.find('select, input').prop('disabled', true);
                 newForm.find('.product-category').prop('disabled', false);
-                newForm.find('.product-type-input').prop('disabled',false);
+                newForm.find('.product-type-input').prop('disabled', false);
 
                 // إضافة زر حذف (أيقونة تراش) في أعلى النموذج
                 let removeButton = `<button type="button" class="removeProductBtn" style="position: absolute; top: 10px; left: 10px; background: transparent; border: none; font-size: 18px;">
@@ -293,6 +293,8 @@
                 const selectedOption = $(this).find('option:selected');
                 const productType = selectedOption.data('product-type');
 
+                form.find('.product-price,.product-count-price').val('');
+
                 if (productType) {
                     // الحقل المخفي للبروداكت تايب
                     form.find('.product-type-input').val(productType);
@@ -300,15 +302,15 @@
                     if (productType === 'earth') {
                         // إظهار الحقول إذا لم يكن المنتج من نوع اكسسوارات أو كان قسمًا فرعيًا
                         form.find('.car-brand, .car-model, .made-year, .bag-option,.product-price, .seat-count').closest('.col-md-4').show().find('select').prop('disabled', true);
-                        form.find('.product-count').prop('readonly',true).prop('disabled',true).val('1');
+                        form.find('.product-count').prop('readonly', true).prop('disabled', true).val('1');
                     } else if (productType === 'seat') {
                         form.find('.car-brand, .car-model,.product-price, .made-year, .seat-count').closest('.col-md-4').show().find('select').prop('disabled', true);
                         form.find('.bag-option').closest('.col-md-4').hide().find('select').val('');
-                        form.find('.product-count').prop('readonly',true).prop('disabled',true).val('1');
+                        form.find('.product-count').prop('readonly', true).prop('disabled', true).val('1');
 
                     } else {
                         form.find('.car-brand,.cover-color, .car-model, .made-year, .bag-option, .seat-count').closest('.col-md-4').hide().find('select').val('');
-                        form.find('.product-count').prop('readonly',false).prop('disabled',false).val('1');
+                        form.find('.product-count').prop('readonly', false).prop('disabled', false).val('1');
                     }
 
                     // جلب المنتجات بناءً على الفئة المختارة
@@ -334,6 +336,7 @@
                             console.error('Failed to fetch products.');
                         }
                     });
+                    calculateProductsTotal();
                 }
             });
 
@@ -363,6 +366,7 @@
 
             $(document).on('change', '.seat-count', function () {
                 let form = $(this).closest('.product-form');
+                $(form).find('.product-count').prop('readonly', false).prop('disabled', false).val('1');
                 getSeatCoverPrice(form);
                 getCarBrands(form);
                 calculateProductsTotal(); // تحديث الإجمالي
@@ -579,8 +583,8 @@
                         },
                         success: function (response) {
                             var bagPrice = form.find('.bag-option').val() == 1 ? parseFloat(response.bag_price.bag_price) : 0;
-                            form.find('.bag-option-price').text('بشنطة -   ' + response.bag_price.bag_price + " ر.س");
-                            var coverPrice = parseFloat(response.cover_price.price);
+                            form.find('.bag-option-price').text('بشنطة -   ' + bagPrice + " ر.س");
+                            var coverPrice = parseFloat(response.cover_price ? response.cover_price.price : '0');
                             var price = coverPrice + bagPrice;
 
                             if (price > 0) {
@@ -589,6 +593,7 @@
                                 form.find('.product-count-price').val($count * price);
                             } else {
                                 form.find('.product-price').val('');
+                                form.find('.product-count-price').val('');
                             }
 
                             // تحديث الإجمالي الكلي عند كل تعديل
@@ -619,6 +624,7 @@
                                 form.find('.product-count-price').val($count * price);
                             } else {
                                 form.find('.product-price').val('');
+                                form.find('.product-count-price').val('');
                             }
 
                             // تحديث الإجمالي الكلي عند كل تعديل
@@ -832,7 +838,10 @@
                     const productType = selectedOption.data('product-type');
                     if (categoryValue) {
                         if (productType === 'accessory') {
-
+                            if(!form.find('.product-select').val()){
+                                hasError=true;
+                                errorMessage+=`الرجاء اختيار اسم المنتج رقم ${index+1}.\n`;
+                            }
                         } else {
                             // التحقق من اختيار جميع الحقول المطلوبة
                             if (!form.find('.cover-color').val()) {
@@ -855,9 +864,11 @@
                                 hasError = true;
                                 errorMessage += `الرجاء اختيار سنة الصنع للمنتج رقم ${index + 1}.\n`;
                             }
-                            if (!form.find('.bag-option').val()) {
-                                hasError = true;
-                                errorMessage += `الرجاء تحديد خيار الشنطة للمنتج رقم ${index + 1}.\n`;
+                            if (productType === 'earth') {
+                                if (!form.find('.bag-option').val()) {
+                                    hasError = true;
+                                    errorMessage += `الرجاء تحديد خيار الشنطة للمنتج رقم ${index + 1}.\n`;
+                                }
                             }
                         }
                     }

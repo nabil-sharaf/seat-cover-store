@@ -19,7 +19,7 @@ class SeatPriceController extends Controller
 
     public function create()
     {
-        $seatCovers = Category::all(); // لجلب seat covers
+        $seatCovers = Category::whereIn('product_type',['earth','seat'])->whereNotNull('parent_id')->get(); // لجلب seat covers
         $seatCounts = SeatCount::all();
         return view('admin.seat_prices.create', compact('seatCovers','seatCounts'));
     }
@@ -46,7 +46,7 @@ class SeatPriceController extends Controller
 
     public function edit(SeatPrice $seatPrice)
     {
-        $seatCovers = Category::all();
+        $seatCovers = Category::whereIn('product_type',['earth','seat'])->whereNotNull('parent_id')->get(); // لجلب seat covers
         $seatCounts = SeatCount::all();
         return view('admin.seat_prices.edit', compact('seatPrice', 'seatCovers','seatCounts'));
     }

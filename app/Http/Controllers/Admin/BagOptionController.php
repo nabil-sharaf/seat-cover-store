@@ -17,7 +17,7 @@ class BagOptionController extends Controller
 
     public function create()
     {
-        $seatCovers =Category::all();
+        $seatCovers =Category::where('product_type','earth')->whereNotnull('parent_id')->get();
         return view('admin.bag-options.create',compact('seatCovers'));
     }
 
@@ -40,7 +40,6 @@ class BagOptionController extends Controller
         return redirect()->route('admin.bag-options.index')->with('success', 'تمت الإضافة بنجاح.');
 
     }
-
 
     public function edit(BagOption $bagOption)
     {

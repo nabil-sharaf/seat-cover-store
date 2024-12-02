@@ -4,7 +4,7 @@
     <div class="page-content bg-white">
         <!-- inner page banner -->
         <div class="dlab-bnr-inr overlay-black-middle"
-             style="background-image:url({{asset('storage/'.$siteImages->about_us_image)}});">
+             style="background-image:url({{asset('storage/'.$siteImages?->about_us_image)}});">
             <div class="container">
                 <div class="dlab-bnr-inr-entry">
                     <h1 class="text-white">تسوق منتجاتنا </h1>

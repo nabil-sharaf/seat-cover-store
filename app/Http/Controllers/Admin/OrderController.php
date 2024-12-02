@@ -80,166 +80,187 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         try {
-            return DB::transaction(function () use ($request) {
-                $user = null;
-                $isGuest = false;
+            DB::beginTransaction();
+            $user = null;
+            $isGuest = false;
 
-                if ($request->user_id) {
-                    $user = User::findOrFail($request->user_id);
-                } else {
-                    $isGuest = true;
-                }
+            if ($request->user_id) {
+                $user = User::findOrFail($request->user_id);
+            } else {
+                $isGuest = true;
+            }
 
-                $order = new Order();
+            $order = new Order();
 
-                if ($isGuest) {
-                    // حفظ معلومات الزائر في الطلب
-                    $guest = new GuestAddress();
-                    $guest->full_name = $request->full_name;
-                    $guest->phone = $request->phone;
-                    $guest->address = $request->address;
-                    $guest->city = $request->city;
-                    $guest->state = $request->state;
-                    $guest->save();
-                    $order->guest_address_id = $guest->id;
-                } else {
-                    $order->user_id = $user->id;
-                    // انشاء  أو تحديث عنوان المستخدم
-                    $userAddress = UserAddress::updateOrCreate(
+            if ($isGuest) {
+                // حفظ معلومات الزائر في الطلب
+                $guest = new GuestAddress();
+                $guest->full_name = $request->full_name;
+                $guest->phone = $request->phone;
+                $guest->address = $request->address;
+                $guest->city = $request->city;
+                $guest->state = $request->state;
+                $guest->save();
+                $order->guest_address_id = $guest->id;
+            } else {
+                $order->user_id = $user->id;
+                // انشاء  أو تحديث عنوان المستخدم
+                $userAddress = UserAddress::updateOrCreate(
 
-                        ['user_id' => $user->id],
-                        [
-                            'full_name' => $request->full_name,
-                            'phone' => $request->phone,
-                            'address' => $request->address,
-                            'city' => $request->city,
-                            'state' => $request->state,
-                        ]
-                    );
-                    $order->user_address_id = $userAddress->id;
+                    ['user_id' => $user->id],
+                    [
+                        'full_name' => $request->full_name,
+                        'phone' => $request->phone,
+                        'address' => $request->address,
+                        'city' => $request->city,
+                        'state' => $request->state,
+                    ]
+                );
+                $order->user_address_id = $userAddress->id;
+            }
 
+            // إضافة تكلفة الشحن
+            $shippingCost = ShippingRate::where('state', $request->state)->first()->shipping_cost;
 
-                }
+            $order->shipping_cost = $shippingCost;
 
-                // إضافة تكلفة الشحن
-                $shippingCost = ShippingRate::where('state', $request->state)->first()->shipping_cost;
+            $order->total_price = 0;
+            $order->promo_discount = 0;
+            $order->total_after_discount = 0;
+            $order->final_total = 0;
+            $order->tax_amount = 0;
+            $order->save();
 
-                $order->shipping_cost = $shippingCost;
+            $totalPrice = 0;
 
-                $order->total_price = 0;
-                $order->promo_discount = 0;
-                $order->total_after_discount = 0;
-                $order->final_total = 0;
-                $order->save();
+            foreach ($request->products as $index => $productId) {
+                $parentCategory = $request->product_category[$index];
+                $productType = $request->product_type[$index];
+                $count = $request->product_count[$index];
 
-                $totalPrice = 0;
+                $orderDetail = new OrderDetail();
 
-                foreach ($request->products as $index => $productId) {
-                    $productType = $request->product_type[$index];
-                    $count = $request->product_count[$index];
+                if ($productType !== 'accessory') {
 
-                    $orderDetail = new OrderDetail();
-
-                    if ($productType !== 'accessory') {
-
-                        if ($productType === 'earth') {
-                            $bagPrice = $this->getBagPrice($productId, $request->bag_option[$index]);
-                        } else {
-                            $bagPrice = 0;
-                        }
-
-                        $productPrice = $this->getTalbisaPrice($productId, $request->seat_count[$index]);
-                        $orderDetail->category_id = $productId;
-                        $orderDetail->accessory_id=null;
-
+                    if ($productType === 'earth') {
+                        $bagPrice = $this->getBagPrice($productId, $request->bag_option[$index]);
                     } else {
                         $bagPrice = 0;
-                        $productPrice = $this->getAccessoryPrice($productId);
-                        $orderDetail->category_id = null;
-                        $orderDetail->accessory_id=$productId;
-
-
                     }
 
-                    $unitPrice = $bagPrice + $productPrice;
-                    $countPrice = $unitPrice * $count;
-                    $orderDetail->order_id = $order->id;
-                    $orderDetail->product_type = $productType;
-                    $orderDetail->color_id = $request->cover_color[$index] ?? null;
-                    $orderDetail->seat_count_id = $request->seat_count[$index] ?? null;
-                    $orderDetail->brand_id = $request->car_brand[$index] ?? null;
-                    $orderDetail->model_id = $request->car_model[$index] ?? null;
-                    $orderDetail->made_years = $request->made_year[$index] ?? null;
-                    $orderDetail->bag_option = $request->bag_option[$index] ?? null;
-                    $orderDetail->quantity = $count;
-                    $orderDetail->unit_price = $unitPrice;
-                    $orderDetail->total_price = $countPrice;
+                    $productPrice = $this->getTalbisaPrice($productId, $request->seat_count[$index]);
+                    $orderDetail->category_id = $productId;
+                    $orderDetail->accessory_id = null;
 
-                    $orderDetail->save();
-
-                    $totalPrice += $countPrice;
-
-                }
-
-                // التحقق من كود الخصم
-                if ($request->filled('promo_code')) {
-                    $promoCode = PromoCode::where('code', $request->promo_code)
-                        ->where('active', 1)
-                        ->where('start_date', '<=', now())
-                        ->where('end_date', '>=', now())
-                        ->first();
-
-                    if (!$promoCode) {
-                        throw new \Exception('كود الخصم غير صالح أو منتهي الصلاحية.');
-                    }
-
-                    $promoCodeUsed = DB::table('user_promocode')
-                        ->where('user_id', $user ? $user->id : null)
-                        ->where('promo_code_id', $promoCode->id)
-                        ->exists();
-
-                    if ($promoCodeUsed) {
-                        throw new \Exception('لقد استخدمت هذا الكود من قبل.');
-                    }
-
-                    if ($totalPrice < $promoCode->min_amount) {
-                        throw new \Exception('يجب أن يكون إجمالي الطلب أكبر من ' . $promoCode->min_amount . ' لاستخدام هذا الكوبون.');
-                    }
-
-                    $promoDiscount = $promoCode->discount_type === 'percentage'
-                        ? ($totalPrice * $promoCode->discount) / 100
-                        : $promoCode->discount;
                 } else {
-                    $promoDiscount = 0;
+                    $bagPrice = 0;
+                    $productPrice = $this->getAccessoryPrice($productId);
+                    $orderDetail->category_id = null;
+                    $orderDetail->accessory_id = $productId;
+
+                    //خصم الكمية من الاكسسوارارت
+                    $accessoryModel = Accessory::find($productId);
+                    if ($accessoryModel) {
+                        // إنقاص الكمية
+                        if ($accessoryModel->quantity < $count) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'الكمية المطلوبة غير موجودة في الستوك من: ' . $accessoryModel->name,
+                            ], 422); // HTTP 400: Bad Request
+
+                        } else {
+                            $accessoryModel->quantity -= $count;
+                            $accessoryModel->save();
+                        };
+                    } else {
+                        // في حال لم يتم العثور على Accessory
+                        throw new Exception("Accessory not found with ID: " . $productId);
+                    }
+
+
                 }
 
-                $tax_rate = Setting::getValue('tax_rate');
-                $tax_amount = ($totalPrice + $shippingCost - $promoDiscount) * ($tax_rate / 100);
-                $order->total_price = $totalPrice;
-                $order->promo_discount = $promoDiscount;
-                $order->total_after_discount = $totalPrice - $promoDiscount;
-                $order->tax_amount = $tax_amount;
-                $order->final_total = $totalPrice + $tax_amount + $shippingCost - $promoDiscount;
-                $order->save();
+                $unitPrice = $bagPrice + $productPrice;
+                $countPrice = $unitPrice * $count;
+                $orderDetail->order_id = $order->id;
+                $orderDetail->parent_id = $parentCategory;
+                $orderDetail->product_type = $productType;
+                $orderDetail->color_id = $request->cover_color[$index] ?? null;
+                $orderDetail->seat_count_id = $request->seat_count[$index] ?? null;
+                $orderDetail->brand_id = $request->car_brand[$index] ?? null;
+                $orderDetail->model_id = $request->car_model[$index] ?? null;
+                $orderDetail->made_years = $request->made_year[$index] ?? null;
+                $orderDetail->bag_option = $request->bag_option[$index] ?? null;
+                $orderDetail->quantity = $count;
+                $orderDetail->unit_price = $unitPrice;
+                $orderDetail->total_price = $countPrice;
 
-                if ($promoDiscount) {
-                    DB::table('user_promocode')->insert([
-                        'user_id' => $user ? $user->id : null,
-                        'promo_code_id' => $promoCode->id,
-                        'order_id' => $order->id,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                    $order->update(['promocode_id' => $promoCode->id]);
+                $orderDetail->save();
+
+                $totalPrice += $countPrice;
+
+            }
+
+            // التحقق من كود الخصم
+            if ($request->filled('promo_code')) {
+                $promoCode = PromoCode::where('code', $request->promo_code)
+                    ->where('active', 1)
+                    ->where('start_date', '<=', now())
+                    ->where('end_date', '>=', now())
+                    ->first();
+
+                if (!$promoCode) {
+                    throw new \Exception('كود الخصم غير صالح أو منتهي الصلاحية.');
                 }
 
-                return response()->json([
-                    'success' => true,
-                    'req' => $request->cover_color,
-                    'message' => 'تم إنشاء الطلب بنجاح',
+                $promoCodeUsed = DB::table('user_promocode')
+                    ->where('user_id', $user ? $user->id : null)
+                    ->where('promo_code_id', $promoCode->id)
+                    ->exists();
+
+                if ($promoCodeUsed) {
+                    throw new \Exception('لقد استخدمت هذا الكود من قبل.');
+                }
+
+                if ($totalPrice < $promoCode->min_amount) {
+                    throw new \Exception('يجب أن يكون إجمالي الطلب أكبر من ' . $promoCode->min_amount . ' لاستخدام هذا الكوبون.');
+                }
+
+                $promoDiscount = $promoCode->discount_type === 'percentage'
+                    ? ($totalPrice * $promoCode->discount) / 100
+                    : $promoCode->discount;
+            } else {
+                $promoDiscount = 0;
+            }
+
+            $tax_rate = Setting::getValue('tax_rate');
+            $tax_amount = ($totalPrice + $shippingCost - $promoDiscount) * ($tax_rate / 100);
+            $order->total_price = $totalPrice;
+            $order->promo_discount = $promoDiscount;
+            $order->total_after_discount = $totalPrice - $promoDiscount;
+            $order->tax_amount = $tax_amount;
+            $order->final_total = $totalPrice + $tax_amount + $shippingCost - $promoDiscount;
+            $order->save();
+
+            if ($promoDiscount) {
+                DB::table('user_promocode')->insert([
+                    'user_id' => $user ? $user->id : null,
+                    'promo_code_id' => $promoCode->id,
+                    'order_id' => $order->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
-            });
+                $order->update(['promocode_id' => $promoCode->id]);
+            }
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'req' => $request->cover_color,
+                'message' => 'تم إنشاء الطلب بنجاح',
+            ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
@@ -259,7 +280,9 @@ class OrderController extends Controller
 
             $accessories = Accessory::with('discount')->get();
             $states = ShippingRate::all();
-            $seatCovers = Category::with('coverColors')->get();
+            $categories = Category::with('coverColors')->get();
+            $earthCategories = Category::where('product_type', 'earth')->whereNotNull('parent_id')->get();
+            $seatCategories = Category::where('product_type', 'seat')->whereNotNull('parent_id')->get();
             $seatCounts = SeatCount::all();
             $carBrands = CarBrand::all();
             $carModels = CarModel::all()->groupBy('brand_id');
@@ -274,10 +297,12 @@ class OrderController extends Controller
                     'address',
                     'states',
                     'seatCounts',
-                    'seatCovers',
+                    'categories',
                     'carBrands',
                     'carModels',
-                    'accessories'
+                    'accessories',
+                    'earthCategories',
+                    'seatCategories',
                 )
             );
         }
@@ -285,151 +310,215 @@ class OrderController extends Controller
     }
 
 
-    public function update(OrderRequest $request, Order $order)
+    public function update(Request $request, Order $order)
     {
         try {
-            return DB::transaction(function () use ($request, $order) {
-                $user = null;
-                $isGuest = false;
+            DB::beginTransaction();
 
-                if ($request->user_id) {
-                    $user = User::findOrFail($request->user_id);
-                } else {
-                    $isGuest = true;
-                }
+            $user = $order->user ?? null;
+            $guestAddressId = $order->guest_address_id ?? null;
 
 
-                if ($isGuest) {
-                    // حفظ معلومات الزائر في الطلب
+            if ($guestAddressId) {
+                // حفظ معلومات الزائر في الطلب
+                $guest = GuestAddress::find($guestAddressId);
+                if (!$guest) {
                     $guest = new GuestAddress();
-                    $guest->full_name = $request->full_name;
-                    $guest->phone = $request->phone;
-                    $guest->address = $request->address;
-                    $guest->city = $request->city;
-                    $guest->state = $request->state;
-                    $guest->save();
-                    $order->guest_address_id = $guest->id;
+                }
+                $guest->full_name = $request->full_name;
+                $guest->phone = $request->phone;
+                $guest->address = $request->address;
+                $guest->city = $request->city;
+                $guest->state = $request->state;
+                $guest->save();
+            } else {
+                // انشاء  أو تحديث عنوان المستخدم
+                $userAddress = UserAddress::updateOrCreate(
+
+                    ['user_id' => $user?->id],
+                    [
+                        'full_name' => $request->full_name,
+                        'phone' => $request->phone,
+                        'address' => $request->address,
+                        'city' => $request->city,
+                        'state' => $request->state,
+                    ]
+                );
+                $order->user_address_id = $userAddress->id;
+            }
+
+            // إضافة تكلفة الشحن
+            $shippingCost = ShippingRate::where('state', $request->state)->first()->shipping_cost;
+
+            $order->shipping_cost = $shippingCost;
+
+            // حذف تفاصيل الطلب القديمة
+            // إعادة الكمية للاكسسوارات قبل الحذف
+            foreach ($order->orderDetails as $detail) {
+                if ($detail->accessory_id) {
+                    $accessory = Accessory::find($detail->accessory_id);
+                    if ($accessory) {
+                        $accessory->quantity += $detail->quantity;
+                        $accessory->save();
+                    }
+                }
+            }
+            $order->orderDetails()->delete();
+
+
+            $totalPrice = 0;
+
+            foreach ($request->products as $index => $productId) {
+                $parentCategory = $request->product_category[$index];
+                $productType = $request->product_type[$index];
+                $count = $request->product_count[$index];
+
+                $orderDetail = new OrderDetail();
+
+                if ($productType !== 'accessory') {
+
+                    if ($productType === 'earth') {
+                        $bagPrice = $this->getBagPrice($productId, $request->bag_option[$index]);
+                    } else {
+                        $bagPrice = 0;
+                    }
+
+                    $productPrice = $this->getTalbisaPrice($productId, $request->seat_count[$index]);
+                    $orderDetail->category_id = $productId;
+                    $orderDetail->accessory_id = null;
+
                 } else {
-                    $order->user_id = $user->id;
-                    // انشاء  أو تحديث عنوان المستخدم
-                    $userAddress = UserAddress::updateOrCreate(
+                    $bagPrice = 0;
+                    $productPrice = $this->getAccessoryPrice($productId);
+                    $orderDetail->category_id = null;
+                    $orderDetail->accessory_id = $productId;
 
-                        ['user_id' => $user->id],
-                        [
-                            'full_name' => $request->full_name,
-                            'phone' => $request->phone,
-                            'address' => $request->address,
-                            'city' => $request->city,
-                            'state' => $request->state,
-                        ]
-                    );
-                    $order->user_address_id = $userAddress->id;
+                    //خصم الكمية من الاكسسوارارت
+                    $accessoryModel = Accessory::find($productId);
+                    if ($accessoryModel) {
+                        // إنقاص الكمية
+                        if ($accessoryModel->quantity < $count) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'الكمية المطلوبة غير موجودة في الستوك من: ' . $accessoryModel->name,
+                            ], 422); // HTTP 400: Bad Request
 
-
-                }
-
-                // إضافة تكلفة الشحن
-                $shippingCost = ShippingRate::where('state', $request->state)->first()->shipping_cost;
-
-                $order->shipping_cost = $shippingCost;
-
-                $order->total_price = 0;
-                $order->promo_discount = 0;
-                $order->total_after_discount = 0;
-                $order->final_total = 0;
-                $order->save();
-
-                $totalPrice = 0;
-
-
-                foreach ($request->seat_cover as $index => $seatCoverId) {
-
-                    $bagBrice = $this->getBagPrice($seatCoverId, $request->bag_option[$index]);
-                    $productPrice = $this->getTalbisaPrice($seatCoverId, $request->seat_count[$index]);
-
-                    $unitPrice = $bagBrice + $productPrice;
-                    $count = $request->product_count[$index];
-                    $countPrice = $unitPrice * $count;
-
-                    $orderDetail = new OrderDetail();
-
-                    $orderDetail->order_id = $order->id;
-                    $orderDetail->color_id = $request->cover_color[$index];
-                    $orderDetail->seat_cover_id = $seatCoverId;
-                    $orderDetail->seat_count_id = $request->seat_count[$index];
-                    $orderDetail->brand_id = $request->car_brand[$index];
-                    $orderDetail->model_id = $request->car_model[$index];
-                    $orderDetail->made_years = $request->made_year[$index];
-                    $orderDetail->bag_option = $request->bag_option[$index];
-                    $orderDetail->quantity = $count;
-                    $orderDetail->unit_price = $unitPrice;
-                    $orderDetail->total_price = $countPrice;
-
-                    $orderDetail->save();
-
-
-                    $totalPrice += $countPrice;
-                }
-
-                // التحقق من كود الخصم
-                if ($request->filled('promo_code')) {
-                    $promoCode = PromoCode::where('code', $request->promo_code)
-                        ->where('active', 1)
-                        ->where('start_date', '<=', now())
-                        ->where('end_date', '>=', now())
-                        ->first();
-
-                    if (!$promoCode) {
-                        throw new \Exception('كود الخصم غير صالح أو منتهي الصلاحية.');
+                        } else {
+                            $accessoryModel->quantity -= $count;
+                            $accessoryModel->save();
+                        };
+                    } else {
+                        // في حال لم يتم العثور على Accessory
+                        throw new Exception("Accessory not found with ID: " . $productId);
                     }
 
-                    $promoCodeUsed = DB::table('user_promocode')
-                        ->where('user_id', $user ? $user->id : null)
-                        ->where('promo_code_id', $promoCode->id)
-                        ->exists();
-
-                    if ($promoCodeUsed) {
-                        throw new \Exception('لقد استخدمت هذا الكود من قبل.');
-                    }
-
-                    if ($totalPrice < $promoCode->min_amount) {
-                        throw new \Exception('يجب أن يكون إجمالي الطلب أكبر من ' . $promoCode->min_amount . ' لاستخدام هذا الكوبون.');
-                    }
-
-                    $promoDiscount = $promoCode->discount_type === 'percentage'
-                        ? ($totalPrice * $promoCode->discount) / 100
-                        : $promoCode->discount;
-                } else {
-                    $promoDiscount = 0;
                 }
 
-                $tax_rate = Setting::getValue('tax_rate');
-                $tax_amount = ($totalPrice + $shippingCost - $promoDiscount) * ($tax_rate / 100);
-                $order->total_price = $totalPrice;
-                $order->promo_discount = $promoDiscount;
-                $order->total_after_discount = $totalPrice - $promoDiscount;
-                $order->tax_amount = $tax_amount;
-                $order->final_total = $totalPrice + $tax_amount + $shippingCost - $promoDiscount;
-                $order->save();
+                $unitPrice = $bagPrice + $productPrice;
+                $countPrice = $unitPrice * $count;
+                $orderDetail->order_id = $order->id;
+                $orderDetail->parent_id = $parentCategory;
+                $orderDetail->product_type = $productType;
+                $orderDetail->color_id = $request->cover_color[$index] ?? null;
+                $orderDetail->seat_count_id = $request->seat_count[$index] ?? null;
+                $orderDetail->brand_id = $request->car_brand[$index] ?? null;
+                $orderDetail->model_id = $request->car_model[$index] ?? null;
+                $orderDetail->made_years = $request->made_year[$index] ?? null;
+                $orderDetail->bag_option = $request->bag_option[$index] ?? null;
+                $orderDetail->quantity = $count;
+                $orderDetail->unit_price = $unitPrice;
+                $orderDetail->total_price = $countPrice;
 
-                if ($promoDiscount) {
-                    DB::table('user_promocode')->insert([
-                        'user_id' => $user ? $user->id : null,
-                        'promo_code_id' => $promoCode->id,
-                        'order_id' => $order->id,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                    $order->update(['promocode_id' => $promoCode->id]);
+                $orderDetail->save();
+
+                $totalPrice += $countPrice;
+
+            }
+
+            // التحقق من كود الخصم
+            if ($request->filled('promo_code')) {
+                // حذف الكود القديم إن وجد
+                if ($order->promocode_id) {
+                    DB::table('user_promocode')
+                        ->where('order_id', $order->id)
+                        ->delete();
                 }
 
-                return response()->json([
-                    'success' => true,
-                    'req' => $request->cover_color,
-                    'message' => 'تم إنشاء الطلب بنجاح',
+                $promoCode = PromoCode::where('code', $request->promo_code)
+                    ->where('active', 1)
+                    ->where('start_date', '<=', now())
+                    ->where('end_date', '>=', now())
+                    ->first();
+
+                if (!$promoCode) {
+                    throw new \Exception('كود الخصم غير صالح أو منتهي الصلاحية.');
+                }
+
+                $promoCodeUsed = DB::table('user_promocode')
+                    ->where('user_id', $user ? $user->id : null)
+                    ->where('promo_code_id', $promoCode->id)
+                    ->where('order_id', '!=', $order->id)
+                    ->exists();
+
+                if ($promoCodeUsed) {
+                    throw new \Exception('لقد استخدمت هذا الكود من قبل.');
+                }
+
+                if ($totalPrice < $promoCode->min_amount) {
+                    throw new \Exception('يجب أن يكون إجمالي الطلب أكبر من ' . $promoCode->min_amount . ' لاستخدام هذا الكوبون.');
+                }
+
+                $promoDiscount = $promoCode->discount_type === 'percentage'
+                    ? ($totalPrice * $promoCode->discount) / 100
+                    : $promoCode->discount;
+
+                DB::table('user_promocode')->insert([
+                    'user_id' => $user ? $user->id : null,
+                    'promo_code_id' => $promoCode->id,
+                    'order_id' => $order->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
-            });
+                $order->promocode_id = $promoCode->id;
+            } else {
+                $promoDiscount = 0;
+                $order->promocode_id = null;
+                // حذف الكود القديم إن وجد
+                DB::table('user_promocode')
+                    ->where('order_id', $order->id)
+                    ->delete();
+            }
+
+
+            $tax_rate = Setting::getValue('tax_rate');
+            $tax_amount = ($totalPrice + $shippingCost - $promoDiscount) * ($tax_rate / 100);
+            $order->total_price = $totalPrice;
+            $order->promo_discount = $promoDiscount;
+            $order->total_after_discount = $totalPrice - $promoDiscount;
+            $order->tax_amount = $tax_amount;
+            $order->final_total = $totalPrice + $tax_amount + $shippingCost - $promoDiscount;
+            $order->save();
+
+            if ($promoDiscount) {
+                DB::table('user_promocode')->insert([
+                    'user_id' => $user ? $user->id : null,
+                    'promo_code_id' => $promoCode->id,
+                    'order_id' => $order->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                $order->update(['promocode_id' => $promoCode->id]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'req' => $request->cover_color,
+                'message' => 'تم إنشاء الطلب بنجاح',
+            ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
@@ -458,9 +547,11 @@ class OrderController extends Controller
         if ($request->input('status') == 4) {
 
             foreach ($order->orderDetails as $orderDetail) {
-                $product = $orderDetail->product;
-                $product->quantity += $orderDetail->product_quantity;
-                $product->save();
+                if ($orderDetail->accessory_id) {
+                    $accessory = $orderDetail->accessory;
+                    $accessory->quantity += $orderDetail->quantity;
+                    $accessory->save();
+                }
             }
 
         }
@@ -582,6 +673,7 @@ class OrderController extends Controller
     {
         return SeatPrice::where('category_id', $coverId)->where('seat_count_id', $countId)->first()->price;
     }
+
     private function getAccessoryPrice($productId)
     {
         return Accessory::where('id', $productId)->first()->discounted_price;

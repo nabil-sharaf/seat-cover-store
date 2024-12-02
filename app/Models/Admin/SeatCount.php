@@ -14,6 +14,9 @@ class SeatCount extends Model
         return $this->hasMany(SeatPrice::class);
     }
 
+    public function seatPrice($coverId){
+        return $this->seatPrices()->where('category_id',$coverId)->first()->price;
+    }
     public function carModels()
     {
         return $this->hasMany(CarModel::class);

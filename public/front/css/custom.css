@@ -11,27 +11,29 @@ body {
 /* زرار الواتساب */
 @media (min-width: 481px) {
 
-.floating-whatsapp-head {
-    display: flex;
-    position: fixed;
-    bottom: 22px;
-    right: 14px;
-    align-items: center;
-    background-color: #25D366;
-    color: white;
-    border-radius: 50px;
-    padding: 4px 8px 4px 11px; /* تقليل الـ padding قليلاً */
-    text-decoration: none;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
-    z-index: 9999; /* رفع قيمة الـ z-index */
-    direction: rtl;
-    font-family: cairo, sans-serif;
-    transition: all 0.4s ease;
-}
-    .floating-whatsapp-head span{
-        font-size:16px;
+    .floating-whatsapp-head {
+        display: flex;
+        position: fixed;
+        bottom: 22px;
+        right: 14px;
+        align-items: center;
+        background-color: #25D366;
+        color: white;
+        border-radius: 50px;
+        padding: 4px 8px 4px 11px; /* تقليل الـ padding قليلاً */
+        text-decoration: none;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+        z-index: 9999; /* رفع قيمة الـ z-index */
+        direction: rtl;
+        font-family: cairo, sans-serif;
+        transition: all 0.4s ease;
     }
- .whatsapp-icon svg {
+
+    .floating-whatsapp-head span {
+        font-size: 16px;
+    }
+
+    .whatsapp-icon svg {
         width: 28px; /* تقليل الحجم ليكون مناسب للشاشات الصغيرة */
         height: 28px;
     }
@@ -58,8 +60,9 @@ body {
         font-family: cairo, sans-serif;
         transition: all 0.4s ease;
     }
-    .floating-whatsapp-head span{
-        font-size:10px;
+
+    .floating-whatsapp-head span {
+        font-size: 10px;
     }
 
     .whatsapp-icon svg {
@@ -74,6 +77,28 @@ body {
     align-items: center;
 }
 
+/*اللوجو*/
+@media (min-width: 768px) {
 
+    .header-style-7 .logo-header {
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
+        border-right: 0;
+        padding: 1px 0 0 0;
+        height: 75px;
+        width: 250px;
+    }
 
+    .logo-header img {
+        max-width: 100%;
+        width: 100%;
+        height: 75px;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .header-style-7 .logo-header, .header-style-7 .is-fixed .logo-header {
+        padding: 0 0 0 13px;
+        width: 170px;
+    }
+}
 

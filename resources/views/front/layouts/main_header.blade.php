@@ -74,7 +74,7 @@
             <div class="container-fluid clearfix">
                 <!-- website logo -->
                 <div class="logo-header mostion logo-dark"><a href="{{asset('front')}}/index.html"><img
-                            src="{{asset('storage').'/'.$siteImages->logo}}" width="193" height="89" alt=""></a></div>
+                            src="{{asset('storage').'/'.$siteImages?->logo}}" width="193" height="89" alt=""></a></div>
     <a href="https://wa.me/{{\App\Models\Admin\Setting::getValue('phone')}}" class="floating-whatsapp-head " target="_blank" >
         <div class="whatsapp-icon">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" class="wa-messenger-svg-whatsapp">

@@ -47,29 +47,29 @@
             </div>
         </section>
 
-        <section class="mb-5">
-            <h2 class="block-title text-center bg-info text-white py-2">أفضل 10 منتجات مبيعًا</h2>
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped bg-white">
-                    <thead class="bg-primary text-white">
-                    <tr>
-                        <th class="text-center">المنتج</th>
-                        <th class="text-center">الكمية</th>
-                        <th class="text-center">إجمالي المبيعات </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($report['top_products'] as $product)
-                        <tr>
-                            <td class="text-center">{{ $product['name'] }}</td>
-                            <td class="text-center">{{ $product['quantity'] }}</td>
-                            <td class="text-center">{{ number_format($product['total'], 2) }} جنيه</td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </section>
+{{--        <section class="mb-5">--}}
+{{--            <h2 class="block-title text-center bg-info text-white py-2">أفضل 10 منتجات مبيعًا</h2>--}}
+{{--            <div class="table-responsive">--}}
+{{--                <table class="table table-bordered table-striped bg-white">--}}
+{{--                    <thead class="bg-primary text-white">--}}
+{{--                    <tr>--}}
+{{--                        <th class="text-center">المنتج</th>--}}
+{{--                        <th class="text-center">الكمية</th>--}}
+{{--                        <th class="text-center">إجمالي المبيعات </th>--}}
+{{--                    </tr>--}}
+{{--                    </thead>--}}
+{{--                    <tbody>--}}
+{{--                    @foreach($report['top_products'] as $product)--}}
+{{--                        <tr>--}}
+{{--                            <td class="text-center">{{ $product['name'] }}</td>--}}
+{{--                            <td class="text-center">{{ $product['quantity'] }}</td>--}}
+{{--                            <td class="text-center">{{ number_format($product['total'], 2) }} جنيه</td>--}}
+{{--                        </tr>--}}
+{{--                    @endforeach--}}
+{{--                    </tbody>--}}
+{{--                </table>--}}
+{{--            </div>--}}
+{{--        </section>--}}
 
         <section>
             <h2 class="block-title text-center bg-info text-white py-2">أفضل 10 عملاء</h2>

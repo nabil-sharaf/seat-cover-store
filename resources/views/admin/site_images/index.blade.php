@@ -36,8 +36,8 @@
                 <label for="sponsor_images" class="col-md-4 col-form-label text-md-right">صور الشركات الراعية   :</label>
                 <div class="col-md-6">
                     <div id="sponsor-images-preview"></div>
-                @if($siteImages && $siteImages->sponsor_images)
-                        @foreach($siteImages->sponsor_images as $image)
+                @if($siteImages && $siteImages?->sponsor_images)
+                        @foreach($siteImages?->sponsor_images as $image)
                             <img src="{{ asset('storage/' . $image) }}" alt="Sponsor Image" class="img-thumbnail" style="display: inline; width:90px; height:60px;">
                         @endforeach
                     @else

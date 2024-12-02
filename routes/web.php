@@ -8,6 +8,7 @@ use App\Http\Controllers\Front\homeController;
 use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\ProductController;
 use App\Http\Controllers\Front\ProfileController;
+use App\Http\Controllers\Front\TalbisaController;
 use App\Http\Controllers\Front\WishlistController;
 use App\Http\Middleware\CheckMaintenanceMode;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +45,7 @@ Route::get('/accessories', [AccessoryController::class, 'index'])->name('accesso
 Route::get('/accessory/{accessory}', [AccessoryController::class, 'accessoryDetails'])->name('accessory.details');
 
 
+Route::get('/talbisa',[TalbisaController::class,'index']);
 
 //--------------------------- Cart Shopping Routes -----------------------------
 

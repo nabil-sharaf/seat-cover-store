@@ -6,7 +6,7 @@
     @isset($slot)
         {{$slot}}
     @endisset
-</div>>
+</div>
 
 @include('front.layouts.footer')
 @include('front.layouts.footer_scripts')

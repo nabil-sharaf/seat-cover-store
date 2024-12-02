@@ -5,7 +5,7 @@
         <!-- inner page banner -->
         <!-- inner page banner -->
         <div class="dlab-bnr-inr overlay-black-middle"
-             style="background-image:url({{asset('storage/'.$siteImages->about_us_image)}}); opacity: .91">
+             style="background-image:url({{asset('storage/'.$siteImages?->about_us_image)}}); opacity: .91">
             <div class="container">
                 <div class="dlab-bnr-inr-entry">
                     <h1 class="text-white"> فروعنا</h1>
@@ -44,7 +44,7 @@
                                     <div class="icon-bx-xs border-1"> <a href="#" class="icon-cell"><i class="ti-mobile"></i></a> </div>
                                     <div class="icon-content">
                                         <h6 class="text-uppercase m-tb0 dlab-tilte">تليفون الفرع</h6>
-                                        <p>{{$branch->phone}}</p>
+                                        <p><a href="https://wa.me/966{{$branch->phone}}" target="_blank"><i class="fab branch-whats fa-whatsapp"></i>{{$branch->phone}} </a></p>
                                     </div>
                                 </li>
                             </ul>
@@ -70,6 +70,10 @@
         }
         .branch-section{
             margin-bottom: 40px;
+        }
+        .branch-whats{
+            color:green;
+            padding-left: 5px;
         }
     </style>
 @endpush

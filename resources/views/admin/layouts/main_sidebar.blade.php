@@ -334,77 +334,77 @@
                     </ul>
                 </li>
 
-{{--                <li class="nav-item has-treeview {{ Request::is(app()->getLocale() .'/admin/orders*') ? 'menu-open' : '' }}">--}}
-{{--                    <a href="#" class="nav-link ">--}}
-{{--                        <i class="nav-icon fas fa-chart-pie"></i>--}}
-{{--                        <p class='font-weight-bold'>--}}
-{{--                            الأوردرات--}}
-{{--                            <i class="right fas fa-angle-left"></i>--}}
-{{--                        </p>--}}
-{{--                    </a>--}}
-{{--                    <ul class="nav nav-treeview">--}}
-{{--                        <li class="nav-item">--}}
-{{--                            <a href="{{ route('admin.orders.index') }}"--}}
-{{--                               class="nav-link {{ Request::is(app()->getLocale() .'/admin/orders') ? 'active' : '' }}">--}}
-{{--                                <i class="far fa-circle nav-icon"></i>--}}
-{{--                                <p>كل الأوردرات</p>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-{{--                        <li class="nav-item">--}}
-{{--                            <a href="{{ route('admin.orders.create') }}"--}}
-{{--                               class="nav-link {{ Request::is(app()->getLocale() .'/admin/orders/create') ? 'active' : '' }}">--}}
-{{--                                <i class="far fa-circle nav-icon"></i>--}}
-{{--                                <p>إضافة أوردر</p>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-{{--                    </ul>--}}
-{{--                </li>--}}
+                <li class="nav-item has-treeview {{ Request::is(app()->getLocale() .'/admin/orders*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link ">
+                        <i class="nav-icon fas fa-chart-pie"></i>
+                        <p class='font-weight-bold'>
+                            الأوردرات
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.orders.index') }}"
+                               class="nav-link {{ Request::is(app()->getLocale() .'/admin/orders') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>كل الأوردرات</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.orders.create') }}"
+                               class="nav-link {{ Request::is(app()->getLocale() .'/admin/orders/create') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>إضافة أوردر</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
 
-                {{--            @if(auth('admin')->user()->hasAnyRole(['superAdmin']))--}}
-                {{--          <li class="nav-item has-treeview {{ Request::is(app()->getLocale() .'/admin/promo-codes*') ? 'menu-open' : '' }}">--}}
-                {{--            <a href="#" class="nav-link ">--}}
-                {{--              <i class="nav-icon fas fa-chart-pie"></i>--}}
-                {{--              <p class='font-weight-bold'>--}}
-                {{--                  كوبونات الخصم--}}
-                {{--                <i class="right fas fa-angle-left"></i>--}}
-                {{--              </p>--}}
-                {{--            </a>--}}
-                {{--            <ul class="nav nav-treeview">--}}
-                {{--              <li class="nav-item">--}}
-                {{--                <a href="{{ route('admin.promo-codes.index') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/promo-codes') ? 'active' : '' }}">--}}
-                {{--                  <i class="far fa-circle nav-icon"></i>--}}
-                {{--                  <p>كل الكوبونات</p>--}}
-                {{--                </a>--}}
-                {{--              </li>--}}
-                {{--              <li class="nav-item">--}}
-                {{--                <a href="{{ route('admin.promo-codes.create') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/promo-codes/create') ? 'active' : '' }}">--}}
-                {{--                  <i class="far fa-circle nav-icon"></i>--}}
-                {{--                  <p>إضافة  كوبون</p>--}}
-                {{--                </a>--}}
-                {{--              </li>--}}
-                {{--            </ul>--}}
-                {{--          </li>--}}
-                {{--            @endif--}}
+                            @if(auth('admin')->user()->hasAnyRole(['superAdmin']))
+                          <li class="nav-item has-treeview {{ Request::is(app()->getLocale() .'/admin/promo-codes*') ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link ">
+                              <i class="nav-icon fas fa-chart-pie"></i>
+                              <p class='font-weight-bold'>
+                                  كوبونات الخصم
+                                <i class="right fas fa-angle-left"></i>
+                              </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                              <li class="nav-item">
+                                <a href="{{ route('admin.promo-codes.index') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/promo-codes') ? 'active' : '' }}">
+                                  <i class="far fa-circle nav-icon"></i>
+                                  <p>كل الكوبونات</p>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a href="{{ route('admin.promo-codes.create') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/promo-codes/create') ? 'active' : '' }}">
+                                  <i class="far fa-circle nav-icon"></i>
+                                  <p>إضافة  كوبون</p>
+                                </a>
+                              </li>
+                            </ul>
+                          </li>
+                            @endif
 
 
-                {{--          <li class="nav-item has-treeview {{ Request::is(app()->getLocale() .'/admin/reports*') ? 'menu-open' : '' }}">--}}
-                {{--            <a href="#" class="nav-link ">--}}
-                {{--              <i class="nav-icon fas fa-chart-pie"></i>--}}
-                {{--              <p class='font-weight-bold'>--}}
-                {{--               التقارير--}}
-                {{--                <i class="right fas fa-angle-left"></i>--}}
-                {{--              </p>--}}
-                {{--            </a>--}}
-                {{--            <ul class="nav nav-treeview">--}}
-                {{--              <li class="nav-item">--}}
-                {{--                <a href="{{ route('admin.reports.index') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/reports') ? 'active' : '' }}">--}}
-                {{--                  <i class="far fa-circle nav-icon"></i>--}}
-                {{--                  <p>تقارير المبيعات</p>--}}
-                {{--                </a>--}}
-                {{--              </li>--}}
-                {{--            </ul>--}}
-                {{--          </li>--}}
+                          <li class="nav-item has-treeview {{ Request::is(app()->getLocale() .'/admin/reports*') ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link ">
+                              <i class="nav-icon fas fa-chart-pie"></i>
+                              <p class='font-weight-bold'>
+                               التقارير
+                                <i class="right fas fa-angle-left"></i>
+                              </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                              <li class="nav-item">
+                                <a href="{{ route('admin.reports.index') }}" class="nav-link {{ Request::is(app()->getLocale() .'/admin/reports') ? 'active' : '' }}">
+                                  <i class="far fa-circle nav-icon"></i>
+                                  <p>تقارير المبيعات</p>
+                                </a>
+                              </li>
+                            </ul>
+                          </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
