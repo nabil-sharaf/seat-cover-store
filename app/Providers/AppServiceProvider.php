@@ -4,12 +4,9 @@ namespace App\Providers;
 
 use App\Models\Admin\SiteImage;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use Livewire\Livewire;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
+
     {
         // تحقق إذا كان جدول الكاش موجودًا
         if (Schema::hasTable('cache')) {
