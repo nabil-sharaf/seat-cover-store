@@ -6,7 +6,8 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header @if($order->status->id == 3) bg-success pb-0 @elseif($order->status->id == 4) pb-0 bg-danger @endif">
+        <div
+            class="card-header @if($order->status->id == 3) bg-success pb-0 @elseif($order->status->id == 4) pb-0 bg-danger @endif">
             <h3 class="card-title pb-0 float-left">تفاصيل الطلب رقم #{{ $order->id }}</h3>
             @if($order->status->id == 3)
                 <span class="badge badge-light float-right mr-4">   &nbsp;الطلب مكتمل &nbsp;✅</span>
@@ -22,8 +23,9 @@
                     <p><strong>اسم العميل:</strong> {{ $address->full_name ?? null}}</p>
                     <p><strong>رقم التليفون:</strong> {{ $address->phone ?? null }}</p>
                     <p><strong>العنوان:</strong> {{ $address->address ?? null }}</p>
-                    <p><strong>المدينة :</strong> {{ $address->city ?? null }} &nbsp;-<strong> &nbsp;المحافظة :</strong> {{ $address->state ?? null }} </p>
-                    <p><strong> إجمالي الطلب :</strong> {{ $order->total_after_discount }} ج  {{$order->shipping_cost > 0 ?  ' + '.$order->shipping_cost.'ج  شحن' : ''}} </p>
+                    <p><strong>المدينة :</strong> {{ $address->city ?? null }} &nbsp;-<strong> &nbsp;المحافظة
+                            :</strong> {{ $address->state ?? null }} </p>
+                    <p><strong> إجمالي الطلب :</strong> {{$order->final_total}} ر.س </p>
                     <p class="status-now"><strong>حالة الطلب :</strong> {{ ucfirst($order->status->name) }}</p>
                 </div>
                 <div class="col-md-6 status-now">
@@ -34,9 +36,13 @@
                             <div class="form-group" id="statusGroup">
                                 <label for="status">تغيير حالة الطلب:</label>
                                 <select name="status" id="status" class="select2 form-control" style="width: 60%">
-                                    <option id="processing" value="1" {{ $order->status->id == 1 ? 'selected' : '' }}>جاري المعالجة</option>
-                                    <option value="2" {{ $order->status->id == 2 ? 'selected' : '' }}>جاري الشحن</option>
-                                    <option value="3" {{ $order->status->id == 3 ? 'selected' : '' }}>تم التسليم</option>
+                                    <option id="processing" value="1" {{ $order->status->id == 1 ? 'selected' : '' }}>
+                                        جاري المعالجة
+                                    </option>
+                                    <option value="2" {{ $order->status->id == 2 ? 'selected' : '' }}>جاري الشحن
+                                    </option>
+                                    <option value="3" {{ $order->status->id == 3 ? 'selected' : '' }}>تم التسليم
+                                    </option>
                                     <option value="4" {{ $order->status->id == 4 ? 'selected' : '' }}>ملغي</option>
                                 </select>
                             </div>
@@ -59,39 +65,56 @@
                 <thead>
                 <tr>
                     <th>المنتج</th>
-                    <th>الكمية</th>
-                    <th>السعر</th>
-                    <th>الإجمالي</th>
+                    <th class="text-center">النوع</th>
+                    <th class="text-center">الكمية</th>
+                    <th class="text-center">السعر</th>
+                    <th class="text-center">الإجمالي</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($order->orderDetails as $detail)
                     <tr>
-                        <td>{{ $detail->product->name }}</td>
-                        @if($detail->free_quantity > 0)
-                            <td>{{ $detail->product_quantity }} + {{$detail->free_quantity .' هدية '}}</td>
+                        @if($detail->product_type == 'accessory')
+                            <td>{{ $detail->accessory->name }}</td>
+                            <td class="text-center">اكسسوار</td>
+                        @elseif($detail->product_type =='earth')
+                            <td>{{$detail->category->name.' - '.
+                             $detail->coverColor->name .' '.
+                             $detail->coverColor->tatriz_color.' - '.
+                             ' نوع السيارة '.
+                             '('.$detail->brand->brand_name . ' : '.$detail->model->model_name.') '}}<br/>
+                                سنة الصنع:({{$detail->made_years}}) -
+                                {{$detail->seatCount->name.' - '}}
+                                {{$detail->bag_option ==1?'  بشنطة ' : ' بدون شنطة '}}
+                            </td>
+                            <td class="text-center">أرضيات</td>
                         @else
-                            <td>{{ $detail->product_quantity }}</td>
+                            <td>{{$detail->category->name.' - '.
+                             $detail->coverColor->name .' '.
+                             $detail->coverColor->tatriz_color.' - '.
+                             ' نوع السيارة '.
+                             '('.$detail->brand->brand_name . ' : '.$detail->model->model_name.') '}}<br/>
+                                سنة الصنع:({{$detail->made_years}}) -
+                            {{$detail->seatCount->name}}
+                            <td class="text-center">مقاعد</td>
                         @endif
-                        <td>{{ $detail->price }} ج</td>
-                        <td>{{ $detail->product_quantity * $detail->price }} ج</td>
+                        <td class="text-center">{{ $detail->quantity }}</td>
+                        <td class="text-center">{{ $detail->unit_price }} ر.س</td>
+                        <td class="text-center">{{ $detail->quantity * $detail->unit_price }} ر.س</td>
                     </tr>
                 @endforeach
 
                 @if($order->user_id)
-                    @if(($order->vip_discount + $order->promo_discount) > 0)
+                    @if(($order->promo_discount) > 0)
                         <tr class="">
                             <td colspan="3" class="text-left font-weight-bold">اجمالي سعر المنتجات</td>
-                            <td class="table-active">{{ $order->total_price }} ج</td>
+                            <td class="table-active">{{ $order->total_price }} ر.س</td>
                         </tr>
                         <tr>
-                            <td colspan="1" class="text-left font-weight-bold">قيمة الخصم</td>
-                            <td colspan="1">خصم
-                                كوبون: {{$order->promo_discount > 0 ? $order->promo_discount.'  ج ' : ' --- '}}</td>
-                            <td colspan="1">
-                                خصم
-                                (vip): {{$order->vip_discount > 0 ? $order->vip_discount.'  ج ' : ' --- '}}</td>
-                            <td>{{ $order->vip_discount + $order->promo_discount }} ج</td>
+                            <td colspan="2" class="text-left font-weight-bold">قيمة الخصم</td>
+                            <td colspan="2">خصم
+                                كوبون: {{$order->promo_discount > 0 ? $order->promo_discount.'  ر.س ' : ' --- '}}
+                            </td>
                         </tr>
                     @endif
                 @endif
@@ -99,13 +122,21 @@
                     <td colspan="3" class="text-left font-weight-bold">
                         تكاليف الشحن
                     </td>
-                    <td class="font-weight-bold">{{$order->shipping_cost > 0 ? $order->shipping_cost.' ج ' :'لا يوجد' }}</td>
+                    <td colspan="2"
+                        class="font-weight-bold text-center">{{$order->shipping_cost > 0 ? $order->shipping_cost.' ر.س ' :'لا يوجد' }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="text-left font-weight-bold">
+                        ضريبة القيمة المضافة {{\App\Models\Admin\Setting::getValue('tax_rate') . ' %'}}
+                    </td>
+                    <td colspan="2"
+                        class="font-weight-bold text-center">{{$order->tax_amount > 0 ? $order->tax_amount.' ر.س ' :'لا يوجد' }}</td>
                 </tr>
                 <tr class="table-info">
                     <td colspan="3" class="text-left font-weight-bold">
-                        {{ ($order->vip_discount > 0 || $order->promo_discount > 0) ? 'السعر الإجمالي للاوردر' : 'إجمالي الطلب' }}
+                        {{ ( $order->promo_discount > 0) ? 'السعر الإجمالي للاوردر' : 'إجمالي الطلب' }}
                     </td>
-                    <td class="font-weight-bold">{{ $order->final_total }} ج</td>
+                    <td colspan="2" class="font-weight-bold text-center">{{ $order->final_total }} ر.س</td>
                 </tr>
                 </tbody>
             </table>
@@ -113,15 +144,15 @@
         <div class="card-footer">
             <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">رجوع إلى قائمة الطلبات</a>
             <button onclick="window.print()" class="btn btn-outline-primary float-right">
-                طباعة  <i class="fas fa-print"></i>
+                طباعة <i class="fas fa-print"></i>
             </button>
         </div>
     </div>
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            $('#status').on('change', function() {
+        $(document).ready(function () {
+            $('#status').on('change', function () {
                 var formData = $('#statusForm').serialize();
                 var url = '{{ route("admin.orders.updatestatus", $order->id) }}';
                 let status = $('#status').val();
@@ -130,20 +161,20 @@
                     url: url,
                     type: 'POST',
                     data: formData,
-                    success: function(response) {
+                    success: function (response) {
                         toastr.success('تم تحديث الحالة بنجاح!');
-                    if(status==2){
-                        $('#processing').remove();
-                    }
-                    if(status==3){
-                        $('#statusForm').replaceWith('<div class="alert alert-success p-1">تم تسليم الاوردر ✅</div>')
-                    }
-                    if(status==4){
-                        $('#statusForm').replaceWith('<div class="alert alert-danger p-1"> تم الغاء الطلب ❌</div>')
-                    }
+                        if (status == 2) {
+                            $('#processing').remove();
+                        }
+                        if (status == 3) {
+                            $('#statusForm').replaceWith('<div class="alert alert-success p-1">تم تسليم الاوردر ✅</div>')
+                        }
+                        if (status == 4) {
+                            $('#statusForm').replaceWith('<div class="alert alert-danger p-1"> تم الغاء الطلب ❌</div>')
+                        }
 
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         toastr.error('حدث خطأ أثناء تحديث الحالة.');
                     }
                 });
@@ -154,12 +185,14 @@
 @push('styles')
     <style>
         @media print {
-            .btn, .card-footer , #statusGroup ,title ,.customerName,.status-now  {
+            .btn, .card-footer, #statusGroup, title, .customerName, .status-now {
                 display: none !important;
             }
+
             .card {
                 border: none;
             }
+
             /* نقل الوقت إلى اليمين */
             body::before {
                 content: '';
@@ -169,6 +202,7 @@
                 right: 10px; /* تحريك الوقت إلى اليمين */
                 text-align: right;
             }
+
             /* يمكنك إضافة تنسيقات أخرى للطباعة هنا */
         }
 
