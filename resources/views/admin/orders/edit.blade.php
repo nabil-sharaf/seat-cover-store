@@ -12,7 +12,7 @@
         <div class="card-header">
             <h3 class="card-title" style="float:none">تعديل الطلب</h3>
         </div>
-        <form id="orderForm"  method="POST" novalidate dir="rtl"  dir="rtl">
+        <form id="orderForm" method="POST" novalidate dir="rtl" dir="rtl">
             @csrf
             <div class="card-body">
                 <div id="productFormsContainer">
@@ -21,21 +21,21 @@
                         <div class="col-md-12 mb-4" style="display:block">
                             <label for="inputUser" class="form-label fw-bold"> العميل</label>
                             <select id="inputUser" class="form-select custom-select select2" name="user_id">
-                               @if($order->user_id)
-                                   <option value="{{$order->user->id}}">{{$order->user->name}}</option>
-                                   @else
-                                   <option value="">Guest زائر</option>
+                                @if($order->user_id)
+                                    <option value="{{$order->user->id}}">{{$order->user->name}}</option>
+                                @else
+                                    <option value="">Guest زائر</option>
                                 @endif
                             </select>
                         </div>
                     </div>
-                    @foreach($order->orderDetails as $index => $detail)
+                    @foreach($order->orderDetails as $Index => $detail)
                         <div class="product-form border p-4 mb-4">
                             <div class="row g-4">
                                 <!-- Product Category -->
                                 <div class="col-md-4">
                                     <label for="product_category" class="form-label fw-bold">النوع </label>
-                                    <select name="product_category[]"
+                                    <select name="product_category[{{$Index}}]"
                                             class="form-select custom-select product-category">
                                         <option value="" disabled selected>اختر قسم المنتج</option>
                                         @foreach($categories as $cat)
@@ -51,13 +51,13 @@
                                 </div>
 
                                 <!-- Product_type Input  -->
-                                <input type="hidden" id="" name="product_type[]" class="product-type-input"
+                                <input type="hidden" id="" name="product_type[{{$Index}}]" class="product-type-input"
                                        value="{{$detail->product_type}}">
 
                                 <!--  product-select -->
                                 <div class="col-md-4 product-select-div">
                                     <label for="product-select" class="form-label fw-bold">المنتج </label>
-                                    <select name="products[]"
+                                    <select name="products[{{$Index}}]"
                                             class="form-select custom-select product-select">
                                         <option value="" disabled>اختر المنتج</option>
                                         @if($detail->accessory_id)
@@ -87,7 +87,7 @@
                                 <!-- Cover Color -->
                                 <div class="col-md-4" style="display:{{!$detail->accessory_id ?'block':'none'}}">
                                     <label for="cover_color" class="form-label fw-bold">لون التلبيسة </label>
-                                    <select name="cover_color[]"
+                                    <select name="cover_color[{{$Index}}]"
                                             class="form-select custom-select cover-color" {{$detail->accessory_id ?'disabled':''}}>
                                         <option value="" disabled>اختر اللون</option>
                                         @if(!$detail->accessory_id)
@@ -104,7 +104,7 @@
                                 <!-- Seat Count -->
                                 <div class="col-md-4" style="display:{{$detail->accessory_id ?'none':'block'}}">
                                     <label for="seat_count" class="form-label fw-bold">عدد المقاعد</label>
-                                    <select name="seat_count[]"
+                                    <select name="seat_count[{{$Index}}]"
                                             class="form-select custom-select seat-count" {{$detail->accessory_id ?'disabled':''}}>
                                         <option value="" disabled selected>اختر عدد المقاعد</option>
                                         @foreach($seatCounts as $count)
@@ -117,7 +117,7 @@
                                 <!-- Car Brand -->
                                 <div class="col-md-4" style="display:{{!$detail->accessory_id ?'block':'none'}}">
                                     <label for="car_brand" class="form-label fw-bold">براند السيارة</label>
-                                    <select name="car_brand[]"
+                                    <select name="car_brand[{{$Index}}]"
                                             class="form-select custom-select car-brand" {{$detail->accessory_id ?'disabled':''}}>
                                         <option value="" disabled selected>اختر براند السيارة</option>
                                         @if($detail->brand_id)
@@ -134,7 +134,7 @@
                                 <!-- Car Model -->
                                 <div class="col-md-4" style="display:{{!$detail->accessory_id ?'block':'none'}}">
                                     <label for="car_model" class="form-label fw-bold">موديل السيارة</label>
-                                    <select name="car_model[]"
+                                    <select name="car_model[{{$Index}}]"
                                             class="form-select custom-select car-model" {{$detail->accessory_id ?'disabled':''}}>
                                         <option value="" disabled selected>اختر موديل السيارة</option>
                                         @if($detail->model_id)
@@ -156,7 +156,7 @@
                                 <!-- Manufacturing Year -->
                                 <div class="col-md-4" style="display:{{!$detail->accessory_id ?'block':'none'}}">
                                     <label for="made_year" class="form-label fw-bold">تاريخ الصنع</label>
-                                    <select name="made_year[]"
+                                    <select name="made_year[{{$Index}}]"
                                             class="form-select custom-select made-year" {{!$detail->made_years?'disabled':''}}>
                                         <option value="" disabled {{!$detail->made_yer ?'selected':''}}>اختر تاريخ
                                             الصنع
@@ -170,9 +170,9 @@
                                 <div class="col-md-4"
                                      style="display:{{$detail->product_type =='earth' ?'block':'none'}}">
                                     <label for="bag-option" class="form-label fw-bold">بشنطة أو بدون</label>
-                                    <select name="bag_option[]"
+                                    <select name="bag_option[{{$Index}}]"
                                             class="form-select custom-select bag-option" {{$detail->product_type!="earth" ?'disabled':''}}>
-                                        <option value="" disabled selected>هل المنتج بشنطة !</option>
+                                        <option value="" disabled>هل المنتج بشنطة !</option>
                                         <option value="0" {{$detail->bag_option !=1 ?'':'selected'}}>بدون شنطة</option>
                                         <option class="bag-option-price"
                                                 value="1" {{$detail->bag_option==1 ?'selected':''}}>بشنطة
@@ -184,21 +184,22 @@
                                 <div class="col-md-4">
                                     <label for="product_count" class="form-label fw-bold">العدد المطلوب </label>
                                     <input type="number" class="form-control custom-input product-count"
-                                           name="product_count[]" value="{{$detail->quantity}}" min="1" step="1">
+                                           name="product_count[{{$Index}}]" value="{{$detail->quantity}}" min="1" step="1">
                                 </div>
 
                                 <!-- Unit Price -->
                                 <div class="col-md-4">
                                     <label for="product_price" class="form-label fw-bold">سعر الوحدة</label>
                                     <input type="text" class="form-control custom-input product-price"
-                                           name="product_price[]" readonly value="{{$detail->unit_price}}">
+                                           name="product_price[{{$Index}}]" readonly value="{{$detail->unit_price}}">
                                 </div>
 
                                 <!-- Total Price -->
                                 <div class="col-md-12">
                                     <label for="product_count_price" class="form-label fw-bold">إجمالي </label>
                                     <input type="text" class="form-control custom-input product-count-price"
-                                           name="product_count_price[]" readonly value="{{$detail->unit_price * $detail->quantity}}">
+                                           name="product_count_price[{{$Index}}]" readonly
+                                           value="{{$detail->unit_price * $detail->quantity}}">
                                 </div>
                             </div>
                         </div>
@@ -265,17 +266,20 @@
 
                 <div class="form-group">
                     <label for="copounDiscountAmount">قيمة خصم الكوبون</label>
-                    <input type="text" class="form-control" id="copounDiscountAmount" value="{{$order->promo_discount}}" readonly>
+                    <input type="text" class="form-control" id="copounDiscountAmount" value="{{$order->promo_discount}}"
+                           readonly>
                 </div>
 
                 <div class="form-group">
                     <label for="inputTotalOrder">الاجمالي بعد الخصم</label>
-                    <input type="text" class="form-control" id="inputTotalOrder" readonly value="{{$order->total_after_discount}}">
+                    <input type="text" class="form-control" id="inputTotalOrder" readonly
+                           value="{{$order->total_after_discount}}">
                 </div>
 
                 <div class="form-group" id='shipping-cost-div' style='display: block;'>
                     <label for="shipping_cost">تكلفة الشحن</label>
-                    <input type="text" class="form-control" name='shipping_cost' value="{{$order->shipping_cost}}" id="shipping_cost" readonly>
+                    <input type="text" class="form-control" name='shipping_cost' value="{{$order->shipping_cost}}"
+                           id="shipping_cost" readonly>
                 </div>
 
                 <div class="form-group" style='display: block;'>
@@ -307,51 +311,88 @@
     <script>
         $(document).ready(function () {
 
-            let productCount = 0;
+            // تحديد عدد المنتجات الحالية في الأوردر
+            let productCount = $('.product-form').length - 1;
             initializeSelect2();
 
+            // إضافة زر الحذف للمنتجات الموجودة
+            $('.product-form').each(function (index) {
+                if (index > 0) {
+                    $(this).css('position', 'relative');
+                    addRemoveButton($(this));
+                }
+            });
+
+            // إضافة منتج جديد
             $('#addProductBtn').click(function () {
                 productCount++;
                 let newForm = $('.product-form:first').clone();
 
-                // تحديث أسماء و IDs الحقول
+                // إعادة تعيين القيم وتحديث الindexes
                 newForm.find('select, input').each(function () {
                     let oldName = $(this).attr('name');
-                    let oldId = $(this).attr('id');
                     if (oldName) {
-                        let newName = oldName.replace('[]', '[' + productCount + ']');
-                        $(this).attr('name', newName);
-                    }
-                    if (oldId) {
-                        let newId = oldId + '_' + productCount;
-                        $(this).attr('id', newId);
+                        // استخراج اسم الحقل الأساسي
+                        let baseName = oldName.match(/\[(.*?)\]/);
+                        if (baseName) {
+                            let newName = oldName.replace(/\[.*?\]/, '[' + productCount + ']');
+                            $(this).attr('name', newName);
+                        }
                     }
 
-                    // إذا كان الحقل هو عدد التلبيسات، اضبط القيمة الافتراضية إلى 1
-                    if ($(this).hasClass('product-count')) {
-                        $(this).val(1); // قيمة الديفولت
+                    // تفريغ القيم
+                    if ($(this).is('select')) {
+                        $(this).find('option:first').prop('selected', true);
+                    } else if ($(this).hasClass('product-count')) {
+                        $(this).val(1);
                     } else {
-                        $(this).val(''); // مسح القيم الأخرى
+                        $(this).val('');
                     }
                 });
 
-                // إعادة تمكين الحقول المعطلة
+                // إعادة تهيئة الحقول
                 newForm.find('select, input').prop('disabled', true);
                 newForm.find('.product-category').prop('disabled', false);
                 newForm.find('.product-type-input').prop('disabled', false);
 
-                // إضافة زر حذف (أيقونة تراش) في أعلى النموذج
-                let removeButton = `<button type="button" class="removeProductBtn" style="position: absolute; top: 10px; left: 10px; background: transparent; border: none; font-size: 18px;">
-                            <i class="fas fa-trash-alt" style="color: #dc3545;"></i>
-                        </button>`;
+                // إضافة زر الحذف
+                newForm.css('position', 'relative');
+                addRemoveButton(newForm);
 
-                newForm.css('position', 'relative'); // تأكد من أن النموذج يحتوي على position relative
-                newForm.prepend(removeButton); // إضافة الزر في أعلى النموذ
-
-                // إضافة النموذج الجديد
+                // إضافة النموذج للصفحة
                 $('#productFormsContainer').append(newForm);
                 initializeSelect2();
             });
+
+            // Function لإضافة زر الحذف
+            function addRemoveButton(form) {
+                const removeButton = $(`
+            <button type="button" class="removeProductBtn"
+                style="position: absolute; top: 10px; left: 10px; background: transparent; border: none; font-size: 18px;">
+                <i class="fas fa-trash-alt" style="color: #dc3545;"></i>
+            </button>`);
+
+                removeButton.click(function() {
+                    form.remove();
+                    updateFormIndexes();
+                });
+
+                form.prepend(removeButton);
+            }
+
+            // Function لتحديث indexes النماذج
+            function updateFormIndexes() {
+                $('.product-form').each(function(index) {
+                    $(this).find('select, input').each(function() {
+                        let oldName = $(this).attr('name');
+                        if (oldName) {
+                            let newName = oldName.replace(/\[\d+\]/, '[' + index + ']');
+                            $(this).attr('name', newName);
+                        }
+                    });
+                });
+            }
+
 
             // Event delegation for dynamically added elements
             $(document).on('change', '.product-category', function () {
@@ -478,12 +519,6 @@
                 getSeatCoverPrice(form); // حساب سعر المنتج بناءً على الخيارات المحددة
                 getAccessoryPrice(form)
                 calculateproductTotal(); // تحديث الإجمالي الكلي
-            });
-
-            // عند الضغط على زر حذف النموذج
-            $(document).on('click', '.removeProductBtn', function () {
-                $(this).closest('.product-form').remove();
-                calculateproductTotal();
             });
 
 
@@ -984,7 +1019,7 @@
 
                     $.ajax({
                         type: 'POST',
-                        url: '{{ route('admin.orders.update',':id') }}'.replace(':id',{{$order->id}}),
+                        url: '{{ route('admin.orders.update',':id') }}'.replace(':id', {{$order->id}}),
                         data: formData,
                         processData: false,
                         contentType: false,

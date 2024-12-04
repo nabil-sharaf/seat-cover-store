@@ -416,10 +416,14 @@
 
             // عند الضغط على زر حذف النموذج
             $(document).on('click', '.removeProductBtn', function () {
-                $(this).closest('.product-form').remove();
-                calculateproductTotal();
+                // التأكد من وجود أكثر من منتج واحد قبل الحذف
+                if ($('.product-form').length > 1) {
+                    $(this).closest('.product-form').remove();
+                    calculateProductsTotal();
+                }else{
+                    alert('يجب ان يحتوي الاوردر على منتج واحد على الأقل')
+                }
             });
-
 
             // Function to calculate total price for each product
             function calculateProductsTotal(coupounDiscount = 0) {

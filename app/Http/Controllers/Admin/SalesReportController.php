@@ -12,7 +12,7 @@ class SalesReportController extends Controller
 
     private function calculateTotalSales($orders)
     {
-        return $orders->where('status_id',3)->sum('total_after_discount');
+        return $orders->where('status_id',3)->sum('final_total');
     }
 
     private function calculateStatusBreakdown($orders)
@@ -22,22 +22,9 @@ class SalesReportController extends Controller
 
     private function calculateDailySales($orders)
     {
-        return $orders->where('status_id',3)->groupBy('order_date')->map->sum('total_after_discount')->take(3);
+        return $orders->where('status_id',3)->groupBy('order_date')->map->sum('final_total')->take(30);
     }
 
-//    private function calculateTopProducts($orders)
-//    {
-//
-//        return $orders->where('status_id',3)->flatMap->orderDetails->groupBy('product_id')->map(function ($details) {
-//            return [
-//                'name' => $details->first()->product->name,
-//                'quantity' => $details->sum('product_quantity'),
-//                'total' => $details->sum(function ($detail) {
-//                    return ($detail->price * $detail->product_quantity);
-//                }),
-//            ];
-//        })->sortByDesc('total')->take(10);
-//    }
 
     private function calculateTopCustomers($orders)
     {
@@ -49,7 +36,7 @@ class SalesReportController extends Controller
             $user = $orders->first()->user;
             return [
                 'name' => $user->name?? "unknown-user",
-                'total_spent' => $orders->sum('total_after_discount'),
+                'total_spent' => $orders->sum('final_total'),
                 'order_count' => $orders->count(),
             ];
         })->sortByDesc('total_spent')->take(10);
@@ -58,7 +45,7 @@ class SalesReportController extends Controller
     public function salesReport()
     {
         $orders = Order::with(['user', 'status', 'orderDetails.accessory'])
-            ->select('id', 'total_after_discount', 'user_id', 'status_id',
+            ->select('id', 'final_total', 'user_id', 'status_id',
                 DB::raw('DATE(created_at) as order_date'))
             ->orderBy('created_at', 'desc')
             ->get();
@@ -69,7 +56,6 @@ class SalesReportController extends Controller
             'completed_orders' => $orders->where('status_id',3)->count(),
             'status_breakdown' => $this->calculateStatusBreakdown($orders),
             'daily_sales' => $this->calculateDailySales($orders),
-//            'top_products' => $this->calculateTopProducts($orders),
             'top_customers' => $this->calculateTopCustomers($orders),
         ];
 
