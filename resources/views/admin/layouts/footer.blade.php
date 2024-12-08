@@ -49,7 +49,8 @@
 <script src="{{asset('admin/js/pages/dashboard.js')}}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset('admin/js/demo.js')}}"></script>
-<!-- Toastr Cdn -->
+
+ <!-- Toastr Cdn -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>

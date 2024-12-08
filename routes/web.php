@@ -51,14 +51,17 @@ Route::get('/talbisa',[TalbisaController::class,'index']);
 
 
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update'); // راوت تحديث الكمية في صفحة السلة
-Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
-Route::get('/cart/details', [CartController::class, 'getCartDetails'])->name('cart.details');  // تفاصيل السلة في السايد مينيو
-
 Route::get('/cart/shop-cart/{order?}',[CartController::class,'shoppingCartDetails'])->name('home.shop-cart'); //جلب المحتويات والتفاصيل  في صفحة السلة
+Route::post('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+//Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update'); // راوت تحديث الكمية في صفحة السلة
+//Route::get('/cart/details', [CartController::class, 'getCartDetails'])->name('cart.details');  // تفاصيل السلة في السايد مينيو
+//
 
 //---------------------------------------------------------------------------------
-
+Route::get('/get-brands',[TalbisaController::class,'getBrandsBySeatCount'])->name('get-brands');
+Route::get('/get-brand-models',[TalbisaController::class,'getModels'])->name('get-car-models');
+Route::get('/get-models-years',[TalbisaController::class,'getMadeYears'])->name('get-made-years');
+Route::get('/get-bag-price',[TalbisaController::class,'getBagPrice'])->name('get-bag-price');
 
 //-----------------------------------checkout Routes-----------------------------------------
 

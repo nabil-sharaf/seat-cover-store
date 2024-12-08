@@ -10,20 +10,16 @@ class AccessoryController extends Controller
 {
     public function index()
     {
-        $accessories = Accessory::with([ 'discount'])->get();
+        $accessories = Accessory::with(['discount'])->get();
 
-        return view('front.accessories',compact('accessories'));
+        return view('front.accessories', compact('accessories'));
     }
 
     public function accessoryDetails(Accessory $accessory)
     {
-        return view('front.accessory_details',compact('accessory'));
-    }
-
-    public function showAccessory(Accessory $accessory)
-    {
-        $accessory->load('categories','images');
-        return view('front.Accessory-show',compact('accessory'));
+        $relatedProducts = Accessory::where('id','!=',$accessory->id)
+            ->where('category_id',$accessory->category_id)->take(10)->get();
+        return view('front.accessory_details', compact('accessory','relatedProducts'));
     }
 
 
@@ -45,6 +41,7 @@ class AccessoryController extends Controller
         // عرض النتائج في عرض مخصص
         return view('front.search-results', compact('accessories', 'query'));
     }
+
     public function filterAccessories(Request $request, $category_id = null)
     {
 
@@ -67,10 +64,9 @@ class AccessoryController extends Controller
             });
         }
         // تحقق من وجود قيمة في حقل البحث
-        if (session()->has('search') &&  session('search') !== '') {
+        if (session()->has('search') && session('search') !== '') {
             $query->where('name', 'like', '%' . session('search') . '%')
-                ->orWhere('description', 'LIKE', "%".session('search')."%")
-            ;
+                ->orWhere('description', 'LIKE', "%" . session('search') . "%");
         }
 
 

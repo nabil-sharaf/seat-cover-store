@@ -12,7 +12,7 @@
     <meta property="og:description" content="AutoCare is well designed creating websites of automotive repair shops, stores with spare parts and accessories for car repairs, car washes, car danting and panting, service stations, car showrooms painting, major auto centers and other sites related to cars and car services." />
     <meta property="og:image" content="http://autocare.dexignlab.com/xhtml/social-image.png" />
     <meta name="format-detection" content="telephone=no">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- FAVICONS ICON -->
     <link rel="icon" href="{{asset('front')}}/images/favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('front')}}/images/favicon.png" />
@@ -40,5 +40,56 @@
     <!-- Revolution Slider Css -->
     <link rel="stylesheet" type="text/css" href="{{asset('front')}}/plugins/revolution/css/settings.css">
     <link rel="stylesheet" type="text/css" href="{{asset('front')}}/plugins/revolution/css/navigation.css">
+
+    {{--    select2--}}
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{asset('admin/plugins/select2/css/select2.min.css')}}">
+    <link rel="stylesheet" href="{{asset('admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 @stack('styles')
+    <style>
+        /*select 2 styles*/
+        .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow,
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            display: none !important;
+        }
+
+        .select2-container--bootstrap4 .select2-selection--single,
+        .select2-container--default .select2-selection--single {
+            padding-right: 0.75rem !important;
+        }
+
+        .select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered,
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            padding-right: 0 !important;
+        }
+
+        .select2-container--bootstrap4 .select2-selection--single::after,
+        .select2-container--default .select2-selection--single::after {
+            content: '\25BC';
+            position: absolute;
+            top: 50%;
+            left: 0.75rem;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        /* Additional styles for better consistency */
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #ced4da !important;
+            border-radius: 0.25rem !important;
+            padding: 0.375rem 0.75rem !important;
+            height: calc(2.25rem + 2px) !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 1.5 !important;
+            color: #495057 !important;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #007bff !important;
+        }
+    </style>
 </head>

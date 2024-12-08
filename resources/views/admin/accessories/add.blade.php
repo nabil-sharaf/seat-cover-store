@@ -3,7 +3,9 @@
 @section('page-title')
     الاكسسوارات
 @endsection
-
+@if(isset($error))
+        <div class="btn btn-danger">{{$error}}</div>
+@endif
 @section('content')
     <div class="card card-info">
         <div class="card-header">

@@ -1,4 +1,44 @@
 
+{{--<div class="section-full p-t50 p-b20 bg-gray">--}}
+{{--    <div class="container">--}}
+{{--        <div class="row">--}}
+{{--            <div class="col-lg-4 col-md-4 col-sm-12">--}}
+{{--                <div class="icon-bx-wraper left m-b30">--}}
+{{--                    <div class="icon-md text-black radius">--}}
+{{--                        <a href="#" class="icon-cell text-black"><i class="fas fa-gift"></i></a>--}}
+{{--                    </div>--}}
+{{--                    <div class="icon-content">--}}
+{{--                        <h5 class="dlab-tilte">Free shipping on orders $60+</h5>--}}
+{{--                        <p>Order more than 60$ and you will get free shippining Worldwide. More info.</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <div class="col-lg-4 col-md-4 col-sm-12">--}}
+{{--                <div class="icon-bx-wraper left m-b30">--}}
+{{--                    <div class="icon-md text-black radius">--}}
+{{--                        <a href="#" class="icon-cell text-black"><i class="fas fa-plane"></i></a>--}}
+{{--                    </div>--}}
+{{--                    <div class="icon-content">--}}
+{{--                        <h5 class="dlab-tilte">Worldwide delivery</h5>--}}
+{{--                        <p>We deliver to the following countries: USA, Canada, Europe, Australia</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <div class="col-lg-4 col-md-4 col-sm-12">--}}
+{{--                <div class="icon-bx-wraper left m-b30">--}}
+{{--                    <div class="icon-md text-black radius">--}}
+{{--                        <a href="#" class="icon-cell text-black"><i class="fas fa-history"></i></a>--}}
+{{--                    </div>--}}
+{{--                    <div class="icon-content">--}}
+{{--                        <h5 class="dlab-tilte">60 days money back guranty!</h5>--}}
+{{--                        <p>Not happy with our product, feel free to return it, we will refund 100% your money!</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
+{{--</div>--}}
+<!-- contact area  END -->
 
 <!-- Footer -->
 <footer class="site-footer ">
@@ -9,13 +49,13 @@
                 <div class="col-lg-3 col-md-6 col-sm-6 footer-col-4">
                     <div class="widget widget_about">
                         <div class="logo-footer logo-white"><img src="{{asset('storage').'/'.$siteImages?->footer_image}}" alt=""></div>
-                        <p><strong></strong> {{\App\Models\Admin\Setting::getValue('footer_desc')}}</p>
-                        <ul class="dlab-social-icon dez-border">
-                            <li><a class="fab fa-facebook-f" href="{{asset('front')}}/https://www.facebook.com/" target="blank"></a></li>
-                            <li><a class="fab fa-twitter" href="{{asset('front')}}/https://twitter.com/" target="blank"></a></li>
-                            <li><a class="fab fa-linkedin-in" href="{{asset('front')}}/https://www.linkedin.com/" target="blank"></a></li>
-                            <li><a class="fab fa-facebook-f" href="{{asset('front')}}/https://www.facebook.com/" target="blank"></a></li>
-                        </ul>
+                         {!! \App\Models\Admin\Setting::getValue('footer_desc') !!}
+{{--                        <ul class="dlab-social-icon dez-border">--}}
+{{--                            <li><a class="fab fa-facebook-f" href="{{asset('front')}}/https://www.facebook.com/" target="blank"></a></li>--}}
+{{--                            <li><a class="fab fa-twitter" href="{{asset('front')}}/https://twitter.com/" target="blank"></a></li>--}}
+{{--                            <li><a class="fab fa-linkedin-in" href="{{asset('front')}}/https://www.linkedin.com/" target="blank"></a></li>--}}
+{{--                            <li><a class="fab fa-facebook-f" href="{{asset('front')}}/https://www.facebook.com/" target="blank"></a></li>--}}
+{{--                        </ul>--}}
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6 footer-col-4">

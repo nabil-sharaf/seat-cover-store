@@ -21,26 +21,29 @@ class AccessoryRequest extends FormRequest
      */
     public function rules()
     {
-    $id = $this->route('accessory') ? $this->route('accessory')->id : null;
+        $id = $this->route('accessory') ? $this->route('accessory')->id : null;
         $rules = [
-            'name' => 'required|max:255|unique:accessories,name,'.$id,
-            'description'  => 'string|nullable',
-            'category_id'  => 'required|exists:categories,id',
-            'price'=>'required|numeric|gt:0',
-            'quantity'=>'required|integer|gt:0',
+            'name' => 'required|max:255|unique:accessories,name,' . $id,
+            'description' => 'string|nullable',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric|gt:0',
+            'quantity' => 'required|integer|gt:0',
             'discount_type' => 'nullable|in:fixed,percentage',
             'discount_value' => 'nullable|required_if:discount_type,fixed,percentage|numeric|gt:0',
             'start_date' => 'nullable|required_if:discount_type,fixed,percentage|date',
             'end_date' => 'nullable|required_if:discount_type,fixed,percentage|date|after_or_equal:start_date',
         ];
-        if($this->isMethod('post')){
-            $rules ['images.*']  = 'nullable|image|max:2048';
+        if ($this->isMethod('post')) {
+            $rules['images'] = 'required|array|min:1'; // التأكد من وجود الصور كمصفوفة تحتوي على عنصر واحد على الأقل
+            $rules['images.*'] = 'image|max:2048'; // التأكد من أن كل صورة لها نوع مناسب        }
         }
-        if($this->isMethod('put') || $this->isMethod('patch')){
-            $rules ['images.*']  = 'nullable|image|max:2048';
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $rules['images'] = 'nullable|array';
+            $rules ['images.*'] = 'image|max:2048';
         }
         return $rules;
     }
+
 
     public function messages()
     {
@@ -53,6 +56,7 @@ class AccessoryRequest extends FormRequest
             'price.gt' => 'يجب أن يكون السعر أكبر من الصفر',
             'category_id.required' => 'يجب اختيار القسم',
             'category_id.exists' => 'الفئة المحددة غير موجودة',
+            'images.required' => 'يجب ان يتم اختيار صورة على الأقل للمنتج',
             'images.*.image' => 'يجب أن يكون الملف صورة',
             'images.*.max' => 'يجب أن لا يتجاوز حجم الصورة 2 ميجابايت',
             'discount_type.in' => 'نوع الخصم يجب أن يكون نسبة أو ثابت',
@@ -66,6 +70,5 @@ class AccessoryRequest extends FormRequest
             'end_date.after_or_equal' => 'يجب أن يكون تاريخ نهاية الخصم مساويًا أو بعد تاريخ البداية',
         ];
     }
-
 
 }
