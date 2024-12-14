@@ -31,6 +31,30 @@
                 </div>
             </div>
 
+            <!-- about_us Image -->
+            <div class="row mb-4">
+                <label for="about_thumb" class="col-md-4 col-form-label text-md-right">صورةالفيديو التعريفي  :</label>
+                <div class="col-md-6">
+                    <img src="{{ asset('storage/'.$siteImages?->about_thumb) }}" alt="about_thumb" class="img-thumbnail mb-3" id="about_thumb-preview" style="width:100px; max-height: 80px;">
+                    <input type="file" name="about_thumb" id="about_thumb" class="form-control @error('about_thumb') is-invalid @enderror" onchange="previewImage(event, 'about_thumb-preview')">
+                    @error('about_thumb')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+            <!-- page_title Image -->
+            <div class="row mb-4">
+                <label for="title_image" class="col-md-4 col-form-label text-md-right">صورة عنوان الصفحات  :</label>
+                <div class="col-md-6">
+                    <img src="{{ asset('storage/'.$siteImages?->title_image) }}" alt="page image" class="img-thumbnail mb-3" id="title_image-preview" style="width:100px; max-height: 80px;">
+                    <input type="file" name="title_image" id="title_image" class="form-control @error('title_image') is-invalid @enderror" onchange="previewImage(event, 'title_image-preview')">
+                    @error('title_image')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
             <!-- sponsors Image -->
             <div class="row mb-4">
                 <label for="sponsor_images" class="col-md-4 col-form-label text-md-right">صور الشركات الراعية   :</label>

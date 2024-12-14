@@ -26,6 +26,7 @@ class AddToCartRequest extends FormRequest
             'car_brand' => 'required_if:product_type,earth,seat|exists:car_brands,id',
             'car_model' => 'required_if:product_type,earth,seat|exists:car_models,id',
             'bag_option' => 'nullable',
+            'parent_id'=>'nullable|exists:categories,id',
         ];
     }
 

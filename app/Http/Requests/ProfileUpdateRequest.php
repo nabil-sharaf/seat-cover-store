@@ -18,13 +18,19 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:100'],
-            'last_name' => ['required','string','max:100'],
+            'last_name' => ['required', 'string', 'max:100'],
             'email' => ['string', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
-            'phone' => ['required', 'string', 'regex:/^(01)[0-9]{9}$/','unique:users,phone,'.$this->user()->id], // تحقق من أن الجوال يبدأ بـ 01 ومكون من 11 رقمًا
+            'phone' => ['required',
+                'string',
+                'min:9',
+                'max:15',
+                'regex:/^(\+?9665|9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/',
+                'unique:users,phone,' . $this->user()->id], // التأكد أن رقم الجوال رقم سعودي
             'current_password' => 'nullable|string|min:8',
             'new_password' => 'nullable|string|min:8|confirmed',
-            ];
+        ];
     }
+
     public function messages(): array
     {
         return [

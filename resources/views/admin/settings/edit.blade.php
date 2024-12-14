@@ -68,8 +68,8 @@
                                                 TikTok
                                             </option>
                                             <option
-                                                value="telegram" {{ $setting->social_type == 'telegram' ? 'selected' : '' }}>
-                                                Telegram
+                                                value="snapchat" {{ $setting->social_type == 'snapchat' ? 'selected' : '' }}>
+                                                SnapChat
                                             </option>
                                         </select>
                                     </div>

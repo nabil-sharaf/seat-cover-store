@@ -54,6 +54,13 @@ class SettingsTableSeeder extends Seeder
                 'hide'=>null
             ],
             [
+                'setting_key' => 'about_us_link',
+                'setting_value' => 'www.youtube.com',
+                'setting_type' => 'string',
+                'description' => 'لينك  فيديو من نحن (الرئيسية)  ',
+                'hide'=>null
+            ],
+            [
                 'setting_key' => 'facebook',
                 'setting_value' => 'https://www.facebook.com',
                 'setting_type' => 'string',
@@ -111,6 +118,15 @@ class SettingsTableSeeder extends Seeder
                 'description' => 'الوصف في الفوتر  ',
                 'hide'=>null
             ],
+
+            [
+            'setting_key' => 'branches_desc',
+                'setting_value' => ' ضع هنا النص الذي سيظهر في جزء تعرف على فروعنا في الرئيسية',
+                'setting_type' => 'text',
+                'description' => 'وصف الفروع في الرئيسية  ',
+                'hide'=>null
+            ],
+
 
             [
                 'setting_key' => 'tax_rate',

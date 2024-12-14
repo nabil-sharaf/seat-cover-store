@@ -1,10 +1,10 @@
 @extends('front.layouts.app')
 @section('content')
     <!-- inner page banner -->
-    <div class="dlab-bnr-inr overlay-black-middle" style="background-image:url(images/background/bg4.jpg);">
+    <div class="dlab-bnr-inr overlay-black-middle" style="background-image:url({{asset('storage/'.$siteImages?->title_image)}});">
         <div class="container">
             <div class="dlab-bnr-inr-entry">
-                <h1 class="text-white">Product Details</h1>
+                <h1 class="text-white">{{$category->name}}</h1>
             </div>
         </div>
     </div>
@@ -40,7 +40,7 @@
                             <form id="order-form" method="post">
                                 @csrf
                                 <div class="details-card">
-                                    <h3 class="product-name-title"> تلبيسة الدياموند</h3>
+                                    <h3 class="product-name-title"> {{$category->name}} </h3>
                                     <p class="car-selection-title">اختر لون التلبيسة:</p>
                                     <div class="products-grid">
                                         @foreach($colors as $color)
@@ -121,17 +121,17 @@
                                                 <option data-bag-price="0" value="" disabled selected>هل المنتج بشنطة
                                                 </option>
                                                 <option data-bag-price="0" value="0">بدون شنطة</option>
-                                                <option data-bag-price="{{$category->bagOption->bag_price}}"
+                                                <option data-bag-price="{{$category->bagOption?->bag_price}}"
                                                         class="bag-option-price" value="1"> بشنطة
-                                                    - {{$category->bagOption->bag_price }} ر.س
+                                                    - {{$category->bagOption?->bag_price }} ر.س
                                                 </option>
                                             </select>
                                         </div>
 
                                         <input id="category-id" type="hidden" name="category_id"
                                                value="{{$category->id}}"/>
-                                        <input type="hidden" name="parent_id" value="{{$category->parent_id}}"/>
-                                        <input type="hidden" name="product_type" value="{{$category->product_type}}"/>
+                                        <input id="parent-id" type="hidden" name="parent_id" value="{{$category->parent_id}}"/>
+                                        <input id="product-type" type="hidden" name="product_type" value="{{$category->product_type}}"/>
                                         <input id="tax-rate" type="hidden" name="tax_rate"
                                                value="{{\App\Models\Admin\Setting::getValue('tax_rate')}}"/>
 
@@ -155,6 +155,10 @@
                                                    name="product_count" value="1" min="1" step="1"/>
                                             <button id="add-to-cart" class="add-to-cart-btn " type="button">أضف للسلة <i
                                                     class="fas fa-shopping-cart "></i></button>
+                                        </div>
+
+                                        <div class="text-center go-to-cart" style="display: none">
+                                           <a class="site-button" href="{{route('home.shop-cart')}}">الذهاب للسلة</a>
                                         </div>
 
                                     </div>
@@ -494,8 +498,12 @@
 
             $('#car-model').on('change', function () {
                 let modelId = $(this).val();
+                let productType = $('#product-type').val();
                 if (modelId) {
-                    $('#made-year-div,#bag-option-div').show();
+                    $('#made-year-div').show();
+                    if (productType === 'earth') {
+                        $('#bag-option-div').show();
+                    }
                     $.ajax({
                             url: "{{route('get-made-years')}}",
                             type: 'GET',

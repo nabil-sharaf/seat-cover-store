@@ -30,7 +30,7 @@
                         <!-- right part start -->
                         <div class="col-lg-4 col-md-6 d-md-flex d-lg-flex">
                             <div class="p-a30 m-b30 border contact-area border-1">
-                                <h2 class="m-b10">{{$branch->name}}</h2>
+                                <h2 class="m-b10 branch-name">{{$branch->name}}</h2>
                                 <p></p>
                                 <ul class="no-margin">
                                     <li class="icon-bx-wraper left m-b30">
@@ -87,6 +87,9 @@
             box-sizing: border-box; /* لضمان أن البوردر يتم حسابه ضمن العرض */
             display: flex;
             flex-direction: column; /* إذا كان لديك محتوى داخلي يتم ترتيبه عموديًا */
+        }
+        .branch-name{
+            font-size: 23px !important;
         }
     </style>
 @endpush

@@ -45,7 +45,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'phone' => 'غير موجود لدينا تأكد من رقم الموبايل وكلمة المرور',
+                'phone' => 'غير موجود لدينا تأكد من رقم الجوال وكلمة المرور',
             ]);
         }
 
@@ -86,7 +86,7 @@ class LoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'phone.required' => 'حقل الموبايل مطلوب.',
+            'phone.required' => 'حقل الجوال مطلوب.',
             'phone.regex' => 'تأكد من  الرقم الذي ادخلته صحيح',
             'password.required' => 'حقل كلمة المرور مطلوب.',
         ];

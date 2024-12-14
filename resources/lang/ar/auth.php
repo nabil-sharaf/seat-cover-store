@@ -5,7 +5,7 @@ return [
     'register_title' => 'تسجيل حساب جديد',
     'register_description' => 'ليس لديك حساب؟ سجل الآن وتمتع بكل مزايا وخصومات العملاء المميزين',
     'username_placeholder' => 'اسم المستخدم',
-    'phone_placeholder' => 'رقم التليفون الذي سيتم تسجيل الدخول به',
+    'phone_placeholder' => 'رقم الجوال الذي سيتم تسجيل الدخول به',
     'email_placeholder' => 'الإيميل (اختياري)',
     'password_placeholder' => 'كلمة السر',
     'confirm_password_placeholder' => 'تأكيد كلمة السر',
@@ -14,6 +14,6 @@ return [
     'login_welcome' => 'مرحبًا بعودتك مرة أخرى',
     'login_button' => 'تسجيل دخول',
     'remember_me' => 'تذكرني',
-    'forgot_password' => 'نسيت كلمة المرور؟',
+    'forgot_password' => ' نسيت كلمة المرور ؟ ',
     'no_account' => 'ليس لديك حساب؟ سجل الآن',
 ];

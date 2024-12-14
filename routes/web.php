@@ -45,7 +45,7 @@ Route::get('/accessories', [AccessoryController::class, 'index'])->name('accesso
 Route::get('/accessory/{accessory}', [AccessoryController::class, 'accessoryDetails'])->name('accessory.details');
 
 
-Route::get('/talbisa',[TalbisaController::class,'index']);
+Route::get('/talbisa/{id}',[TalbisaController::class,'index'])->name('talbisa.index');
 
 //--------------------------- Cart Shopping Routes -----------------------------
 
@@ -53,7 +53,7 @@ Route::get('/talbisa',[TalbisaController::class,'index']);
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::get('/cart/shop-cart/{order?}',[CartController::class,'shoppingCartDetails'])->name('home.shop-cart'); //جلب المحتويات والتفاصيل  في صفحة السلة
 Route::post('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
-//Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update'); // راوت تحديث الكمية في صفحة السلة
+Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 //Route::get('/cart/details', [CartController::class, 'getCartDetails'])->name('cart.details');  // تفاصيل السلة في السايد مينيو
 //
 

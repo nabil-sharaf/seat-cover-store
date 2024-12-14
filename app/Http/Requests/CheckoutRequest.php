@@ -26,42 +26,45 @@ class CheckoutRequest extends FormRequest
         return [
             // قواعد التحقق للطلب
             'full_name' => 'required|string|max:255',
-            'phone'     => 'required|string|min:10|max:15',
+            'phone'     =>
+                'required|string|min:19|max:15'|
+                'regex:/^(\+?9665|9665|05|5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/',
             'address'   => 'required|string|max:255',
             'city'      => 'required|string|max:100',
             'state'     => 'required|string|max:100',
 
-            // قواعد التحقق من بيانات المنتجات
-            'products.*.id' => 'required|exists:products,id',
-            'products.*.quantity' => 'required|integer|min:1',
+        ];
+    }
 
-            // كود الخصم
-            'code' => 'nullable|string|exists:promo_codes,code',
-
-            // إضافة قواعد أخرى حسب الحاجة...
+    public function attributes(): array
+    {
+        return [
+            'full_name' => 'الاسم الكامل',
+            'phone' => 'رقم الجوال',
+            'address' => 'العنوان',
+            'city' => 'المدينة',
+            'state' => 'المحافظة',
         ];
     }
 
     /**
-     * تخصيص الرسائل الخطأ.
-     *
-     * @return array
+     * Get custom messages for validator errors.
      */
-    public function messages()
+    public function messages(): array
     {
         return [
-            'full_name.required' => 'الاسم الكامل مطلوب.',
-            'phone.required'     => 'رقم الهاتف مطلوب.',
-            'address.required'   => 'العنوان مطلوب.',
-            'city.required'      => 'المدينة مطلوبة.',
-            'state.required'     => 'الولاية مطلوبة.',
-
-            'products.*.id.required' => 'رقم المنتج مطلوب.',
-            'products.*.id.exists' => 'المنتج غير موجود.',
-            'products.*.quantity.required' => 'كمية المنتج مطلوبة.',
-            'products.*.quantity.min' => 'الكمية لا يمكن أن تكون أقل من 1.',
-
-            'code.exists' => 'كود الخصم غير صالح أو منتهي الصلاحية.',
+            'full_name.required' => 'يرجى إدخال الاسم الكامل',
+            'full_name.max' => 'الاسم الكامل يجب ألا يتجاوز :255 حرف',
+            'phone.required' => 'يرجى إدخال رقم الهاتف',
+            'phone.max' => 'تأكد أن رقم الجوال رقم سعودي صحيح',
+            'phone.min'=>'تأكد أن رقم الجوال رقم سعودي صحيح',
+            'phone.regex'=>'تأكد أن رقم الجوال رقم سعودي صحيح',
+            'address.required' => 'يرجى إدخال العنوان',
+            'address.max' => 'العنوان يجب ألا يتجاوز :255 حرف',
+            'city.required' => 'يرجى اختيار المدينة',
+            'city.max' => 'اسم المدينة يجب ألا يتجاوز :100 حرف',
+            'state.required' => 'يرجى اختيار المحافظة',
+            'state.exists' => 'المحافظة المختارة غير صالحة',
         ];
     }
 }

@@ -452,7 +452,7 @@
                 var totalAfterDiscount = totalPrice - coupounDiscount;
                 var total = shipping + totalAfterDiscount;
                 var taxRate = parseFloat($('#tax-rate').val()) / 100 || 0;
-                var taxAmount = total * taxRate;
+                var taxAmount = totalAfterDiscount * taxRate;
                 var finalTotal = parseFloat(total + taxAmount);
                 $('#final_total').val(finalTotal.toFixed(2) + '  ر.س ');
 

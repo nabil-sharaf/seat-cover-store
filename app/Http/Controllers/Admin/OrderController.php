@@ -234,7 +234,7 @@ class OrderController extends Controller
             }
 
             $tax_rate = Setting::getValue('tax_rate');
-            $tax_amount = ($totalPrice + $shippingCost - $promoDiscount) * ($tax_rate / 100);
+            $tax_amount = ($totalPrice  - $promoDiscount) * ($tax_rate / 100);
             $order->total_price = $totalPrice;
             $order->promo_discount = $promoDiscount;
             $order->total_after_discount = $totalPrice - $promoDiscount;
@@ -491,7 +491,7 @@ class OrderController extends Controller
 
 
             $tax_rate = Setting::getValue('tax_rate');
-            $tax_amount = ($totalPrice + $shippingCost - $promoDiscount) * ($tax_rate / 100);
+            $tax_amount = ($totalPrice - $promoDiscount) * ($tax_rate / 100);
             $order->total_price = $totalPrice;
             $order->promo_discount = $promoDiscount;
             $order->total_after_discount = $totalPrice - $promoDiscount;

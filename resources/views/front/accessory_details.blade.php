@@ -1,10 +1,10 @@
 @extends('front.layouts.app')
 @section('content')
     <!-- inner page banner -->
-    <div class="dlab-bnr-inr overlay-black-middle" style="background-image:url(images/background/bg4.jpg);">
+    <div class="dlab-bnr-inr overlay-black-middle" style="background-image:url({{asset('storage/'.$siteImages?->title_image)}});">
         <div class="container">
             <div class="dlab-bnr-inr-entry">
-                <h1 class="text-white">Product Details</h1>
+                <h1 class="text-white">تفاصيل المنتج</h1>
             </div>
         </div>
     </div>
@@ -94,6 +94,9 @@
                                 <button  type="button" class="btn site-button add-to-cart-btn btn-lg">
                                     أضف للسلة <i class="ti-shopping-cart me-2"></i>
                                 </button>
+                                </div>
+                                <div class=" go-to-cart mt-4" style="display: none">
+                                    <a class="site-button" href="{{route('home.shop-cart')}}">الذهاب للسلة</a>
                                 </div>
                             </form>
                         </div>
@@ -313,6 +316,15 @@
         margin-right: 25%;
         transition: all 0.3s ease;
     }
+    .go-to-cart{
+        width: 100%;
+    }
+    .go-to-cart a {
+        width: 50%;
+        border-radius: 10px;
+        margin-right: 25%;
+        transition: all 0.3s ease;
+    }
 
     .qty-div {
         width: 100%;
@@ -354,6 +366,10 @@
             width: 70%;
             margin-right: 15%;
         }
+        .go-to-cart a {
+            width: 70%;
+            margin-right: 15%;
+        }
     }
 
     @media (max-width: 768px) {
@@ -388,6 +404,10 @@
         .add-to-cart-btn {
             width: 100%;
             margin-right: 0;
+        }
+        .go-to-cart a{
+            width:100%;
+            margin-right:0;
         }
 
         .qty-div {

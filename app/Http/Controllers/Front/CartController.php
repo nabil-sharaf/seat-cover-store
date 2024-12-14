@@ -12,6 +12,7 @@ use App\Models\Admin\CoverColor;
 use App\Models\Admin\Order;
 use App\Models\Admin\SeatCount;
 use App\Models\Admin\SeatPrice;
+use App\Models\Admin\Setting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
@@ -48,7 +49,7 @@ class CartController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'تم إضافة المنتج للسلة بنجاح',
-                'cart_count' => Cart::getTotalQuantity(),
+                'cart_count' => Cart::getContent()->count(),
             ]);
 
         } catch (\Exception $e) {
@@ -61,44 +62,26 @@ class CartController extends Controller
 
 
     // تحديث كمية المنتج في السلة صفحة الشوبينج كارت
-    public function updateCart(Request $request)
+    public function update(Request $request, $id)
     {
-        $productId = $request->input('product_id');
-        $quantity = $request->input('quantity');
-        $product = Product::find($productId);
 
-
-        $freeProducts = 0;
-
-        // جلب نوع العميل
-        $customerOfferType = auth()->check() ? auth()->user()->customer_type : 'regular'; // نوع العميل الافتراضي هو "reqular"
-
-        // الحصول على العرض المناسب من الـ Accessor
-        $offer = $product->getOfferDetails($customerOfferType);
-
-        // التأكد إذا كان المنتج يحتوي على عرض
-        if ($offer && $quantity >= $offer->offer_quantity) {
-            // حساب عدد المنتجات المجانية التي يستحقها العميل
-            $freeProducts = floor($quantity / $offer->offer_quantity) * $offer->free_quantity;
-        }
-
-        // تحديث السلة بالمنتج والكميات المجانية
-        Cart::update($productId, [
+        Cart::update($id, [
             'quantity' => [
                 'relative' => false,
-                'value' => $quantity
+                'value' => $request->quantity, // الكمية الجديدة
             ],
-            'price' => $product->discounted_price,
-            'attributes' => [
-                'free_quantity' => $freeProducts // إضافة الكمية المجانية في attributes
-            ]
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'تم تحديث السلة بنجاح.',
-            'free_quantity' => $freeProducts,
-        ]);
+        $total = Cart::getTotal();
+        $tax_rate = (Setting::getValue('tax_rate')/100);
+        $taxAmount = ($total * $tax_rate);
+            return response()->json([
+                'success' => true,
+                'message' => 'تم تحديث الكمية بنجاح',
+                'total'=>$total,
+                'tax_amount'=>$taxAmount,
+                'total_with_tax' =>($total + $taxAmount),
+            ]);
     }
 
     // تفاصيل محتويات السلة كاملة بصفحة الشوبينج كارت
@@ -140,10 +123,10 @@ class CartController extends Controller
             ];
         });
 
-        $totalQuantity = Cart::getTotalQuantity();
         $totalPrice = Cart::getTotal();
+        $taxAmount = $totalPrice *(Setting::getValue('tax_rate')/100);
 
-        return view('front.shopping_cart', compact(['formattedItems', 'totalPrice', 'totalQuantity', 'order']));
+        return view('front.shopping_cart', compact(['formattedItems', 'totalPrice','taxAmount' ,'order']));
     }
 
 
@@ -215,7 +198,11 @@ class CartController extends Controller
     {
         Cart::remove($id);
 
-        return response()->json(['success' => true, 'message' => 'Product removed from cart successfully.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'تم حذف المنتج من السلة.',
+            'cart_count' => Cart::getContent()->count(),
+        ]);
     }
 
 // تفريغ العربة
@@ -260,6 +247,7 @@ class CartController extends Controller
                 'base_price' => $accessory->discounted_price,
                 'bag_price' => 0,
                 'image' =>$accessory->images ? $accessory->images[0] :'',
+                'prent_id'=>$data['parent_id'] ?? null
             ]
         ];
     }
@@ -305,6 +293,7 @@ class CartController extends Controller
                 'bag_price' => $bagPrice,
                 'image' => $coverColor->image,
                 'accessory_id'=>null,
+                'parent_id'=>$data['parent_id'],
             ]
         ];
     }

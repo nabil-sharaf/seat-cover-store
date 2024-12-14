@@ -7,6 +7,5 @@
         {{$slot}}
     @endisset
 </div>
-
 @include('front.layouts.footer')
 @include('front.layouts.footer_scripts')

@@ -26,6 +26,8 @@ class SiteImagesController extends Controller
             'about_us_image' => 'nullable|image|max:2048',
             'payment_image' => 'nullable|image|max:2048',
             'sponsor_images.*' => 'nullable|image|max:2048',
+            'title_image' => 'nullable|image|max:2048',
+            'about_thumb' => 'nullable|image|max:2048',
         ]);
 
         $images = [
@@ -34,6 +36,8 @@ class SiteImagesController extends Controller
             'footer_image' => 'footer',
             'about_us_image' => 'about',
             'payment_image' => 'payment',
+            'title_image'=>'title',
+            'about_thumb'=>'thumb'
 
         ];
 

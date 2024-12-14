@@ -11,4 +11,6 @@ class GuestAddress extends Model
 
     protected $guarded = [];
     protected $table = 'guest_addresses';
+
 }
+

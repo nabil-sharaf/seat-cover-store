@@ -20,8 +20,15 @@ class homeController extends Controller
         $categories = Category::with('accessories')->get();
 
         $sliders = Slider::all();
+        $branches = Branch::all();
+
+//        $branches = $branches->map(function ($branch) {
+//            $branch->name = str_replace('فرع', '', $branch->name);
+//            return $branch;
+//        });
+
         $testimonials = Testimonial::all();
-        return view('front.index', compact('categories','testimonials', 'sliders'));
+        return view('front.index', compact('categories','testimonials', 'sliders','branches'));
     }
 
     public function accessoryDetails($id)

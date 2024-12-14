@@ -61,85 +61,87 @@
             </div>
             <hr>
             <h4>المنتجات في هذا الطلب:</h4>
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>المنتج</th>
-                    <th class="text-center">النوع</th>
-                    <th class="text-center">الكمية</th>
-                    <th class="text-center">السعر</th>
-                    <th class="text-center">الإجمالي</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($order->orderDetails as $detail)
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
                     <tr>
-                        @if($detail->product_type == 'accessory')
-                            <td>{{ $detail->accessory->name }}</td>
-                            <td class="text-center">اكسسوار</td>
-                        @elseif($detail->product_type =='earth')
-                            <td>{{$detail->category->name.' - '.
-                             $detail->coverColor->name .' '.
-                             $detail->coverColor->tatriz_color.' - '.
-                             ' نوع السيارة '.
-                             '('.$detail->brand->brand_name . ' : '.$detail->model->model_name.') '}}<br/>
-                                سنة الصنع:({{$detail->made_years}}) -
-                                {{$detail->seatCount->name.' - '}}
-                                {{$detail->bag_option ==1?'  بشنطة ' : ' بدون شنطة '}}
-                            </td>
-                            <td class="text-center">أرضيات</td>
-                        @else
-                            <td>{{$detail->category->name.' - '.
-                             $detail->coverColor->name .' '.
-                             $detail->coverColor->tatriz_color.' - '.
-                             ' نوع السيارة '.
-                             '('.$detail->brand->brand_name . ' : '.$detail->model->model_name.') '}}<br/>
-                                سنة الصنع:({{$detail->made_years}}) -
-                            {{$detail->seatCount->name}}
-                            <td class="text-center">مقاعد</td>
-                        @endif
-                        <td class="text-center">{{ $detail->quantity }}</td>
-                        <td class="text-center">{{ $detail->unit_price }} ر.س</td>
-                        <td class="text-center">{{ $detail->quantity * $detail->unit_price }} ر.س</td>
+                        <th>المنتج</th>
+                        <th class="text-center">النوع</th>
+                        <th class="text-center">الكمية</th>
+                        <th class="text-center">السعر</th>
+                        <th class="text-center">الإجمالي</th>
                     </tr>
-                @endforeach
-
-                @if($order->user_id)
-                    @if(($order->promo_discount) > 0)
-                        <tr class="">
-                            <td colspan="3" class="text-left font-weight-bold">اجمالي سعر المنتجات</td>
-                            <td class="table-active">{{ $order->total_price }} ر.س</td>
-                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($order->orderDetails as $detail)
                         <tr>
-                            <td colspan="2" class="text-left font-weight-bold">قيمة الخصم</td>
-                            <td colspan="2">خصم
-                                كوبون: {{$order->promo_discount > 0 ? $order->promo_discount.'  ر.س ' : ' --- '}}
-                            </td>
+                            @if($detail->product_type == 'accessory')
+                                <td>{{ $detail->accessory->name }}</td>
+                                <td class="text-center">اكسسوار</td>
+                            @elseif($detail->product_type =='earth')
+                                <td>{{$detail->category->name.' - '.
+                             $detail->coverColor->name .' '.
+                             $detail->coverColor->tatriz_color.' - '.
+                             ' نوع السيارة '.
+                             '('.$detail->brand->brand_name . ' : '.$detail->model->model_name.') '}}<br/>
+                                    سنة الصنع:({{$detail->made_years}}) -
+                                    {{$detail->seatCount->name.' - '}}
+                                    {{$detail->bag_option ==1?'  بشنطة ' : ' بدون شنطة '}}
+                                </td>
+                                <td class="text-center">أرضيات</td>
+                            @else
+                                <td>{{$detail->category->name.' - '.
+                             $detail->coverColor->name .' '.
+                             $detail->coverColor->tatriz_color.' - '.
+                             ' نوع السيارة '.
+                             '('.$detail->brand->brand_name . ' : '.$detail->model->model_name.') '}}<br/>
+                                    سنة الصنع:({{$detail->made_years}}) -
+                                {{$detail->seatCount->name}}
+                                <td class="text-center">مقاعد</td>
+                            @endif
+                            <td class="text-center">{{ $detail->quantity }}</td>
+                            <td class="text-center">{{ $detail->unit_price }} ر.س</td>
+                            <td class="text-center">{{ $detail->quantity * $detail->unit_price }} ر.س</td>
                         </tr>
+                    @endforeach
+
+                    @if($order->user_id)
+                        @if(($order->promo_discount) > 0)
+                            <tr class="">
+                                <td colspan="4" class="text-left font-weight-bold">اجمالي سعر المنتجات</td>
+                                <td class="table-active text-center font-weight-bold">{{ $order->total_price }} ر.س</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="text-left font-weight-bold">قيمة خصم الكوبون</td>
+                                <td class="text-center font-weight-bold">
+                                    {{$order->promo_discount > 0 ? $order->promo_discount.'  ر.س ' : ' --- '}}
+                                </td>
+                            </tr>
+                        @endif
                     @endif
-                @endif
-                <tr>
-                    <td colspan="3" class="text-left font-weight-bold">
-                        تكاليف الشحن
-                    </td>
-                    <td colspan="2"
-                        class="font-weight-bold text-center">{{$order->shipping_cost > 0 ? $order->shipping_cost.' ر.س ' :'لا يوجد' }}</td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="text-left font-weight-bold">
-                        ضريبة القيمة المضافة {{\App\Models\Admin\Setting::getValue('tax_rate') . ' %'}}
-                    </td>
-                    <td colspan="2"
-                        class="font-weight-bold text-center">{{$order->tax_amount > 0 ? $order->tax_amount.' ر.س ' :'لا يوجد' }}</td>
-                </tr>
-                <tr class="table-info">
-                    <td colspan="3" class="text-left font-weight-bold">
-                        {{ ( $order->promo_discount > 0) ? 'السعر الإجمالي للاوردر' : 'إجمالي الطلب' }}
-                    </td>
-                    <td colspan="2" class="font-weight-bold text-center">{{ $order->final_total }} ر.س</td>
-                </tr>
-                </tbody>
-            </table>
+                    <tr>
+                        <td colspan="4" class="text-left font-weight-bold">
+                            تكاليف الشحن
+                        </td>
+                        <td colspan="2"
+                            class="font-weight-bold text-center">{{$order->shipping_cost > 0 ? $order->shipping_cost.' ر.س ' :'لا يوجد' }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-left font-weight-bold">
+                            ضريبة القيمة المضافة {{\App\Models\Admin\Setting::getValue('tax_rate') . ' %'}}
+                        </td>
+                        <td colspan="2"
+                            class="font-weight-bold text-center">{{$order->tax_amount > 0 ? $order->tax_amount.' ر.س ' :'لا يوجد' }}</td>
+                    </tr>
+                    <tr class="table-info">
+                        <td colspan="4" class="text-left font-weight-bold">
+                            {{ ( $order->promo_discount > 0) ? 'السعر الإجمالي للاوردر' : 'إجمالي الطلب' }}
+                        </td>
+                        <td colspan="2" class="font-weight-bold text-center">{{ $order->final_total }} ر.س</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="card-footer">
             <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">رجوع إلى قائمة الطلبات</a>
@@ -184,7 +186,89 @@
 @endpush
 @push('styles')
     <style>
+
+        @media screen and (min-width: 768px) {
+            .table-responsive {
+                overflow-x: visible;
+            }
+        }
+
+        @media screen and (max-width: 767px) {
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                min-width: 800px;
+            }
+        }
+
+        .table {
+            margin-bottom: 1rem;
+            background-color: transparent;
+            border-collapse: collapse;
+        }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            padding: 0.75rem;
+            vertical-align: middle;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .table tbody td {
+            padding: 0.75rem;
+            vertical-align: middle;
+            border: 1px solid #dee2e6;
+        }
+
+        .table-bordered {
+            border: 1px solid #dee2e6;
+        }
+
+        .table-info td {
+            background-color: #e6f3f8 !important;
+        }
+
+        .table tr:hover {
+            background-color: rgba(0,0,0,.02);
+        }
+
+        /* تنسيق الأعمدة */
+        .table td:nth-child(1) {
+            min-width: 300px;
+        }
+
+        .table td:nth-child(2) {
+            min-width: 100px;
+        }
+
+        .table td:nth-child(3),
+        .table td:nth-child(4),
+        .table td:nth-child(5) {
+            min-width: 120px;
+        }
+
+        /* تنسيق الصفوف الإجمالية */
+        .table tr.table-info td {
+            font-weight: bold;
+            border-top: 2px solid #dee2e6;
+        }
+
+        /* تنسيق خاص للطباعة */
         @media print {
+            .table {
+                width: 100% !important;
+                min-width: auto !important;
+            }
+
+            .table td,
+            .table th {
+                padding: 0.5rem !important;
+            }
             .btn, .card-footer, #statusGroup, title, .customerName, .status-now {
                 display: none !important;
             }
@@ -202,7 +286,6 @@
                 right: 10px; /* تحريك الوقت إلى اليمين */
                 text-align: right;
             }
-
         }
 
     </style>

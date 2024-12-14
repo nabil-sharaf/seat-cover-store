@@ -15,15 +15,30 @@ use Illuminate\Http\Request;
 
 class TalbisaController extends Controller
 {
-    public function index()
+    public function index($id)
     {
-        $category = Category::where('id',4)->first();
-        $seatCounts = SeatCount::all();
-        $car_brands = CarBrand::all();
-        $colors = $category->coverColors;
-        return view('front.talbisa',
-            compact('category', 'seatCounts', 'car_brands','colors')
-        );
+        // جلب الكاتيجوري بناءً على الـ ID
+        $category = Category::find($id);
+
+        // التحقق من وجود الكاتيجوري
+        if (!$category) {
+            abort(404); // إذا لم يتم العثور عليه، يتم عرض صفحة خطأ 404
+        }
+
+        // التحقق من نوع المنتج
+        if ($category->product_type === 'accessory') {
+            return redirect()->route('accessories.index');
+        }
+        // التحقق من نوع المنتج
+        if ($category->product_type !== 'accessory' && $category->parent_id !== null) {
+            // جلب البيانات الأخرى إذا لم يكن نوع المنتج إكسسوار
+            $seatCounts = SeatCount::all();
+            $car_brands = CarBrand::all();
+            $colors = $category->coverColors;
+
+            return view('front.talbisa', compact('category', 'seatCounts', 'car_brands', 'colors'));
+        }
+        return redirect()->route('home.index');
     }
 
     public function getBrandsBySeatCount(Request $request)
@@ -43,11 +58,12 @@ class TalbisaController extends Controller
         $seatCountId = $request->input('seat_count_id');
         // جلب الموديلات المرتبطة ببراند معين
         $models = CarModel::where('brand_id', $brandId)
-            ->where('seat_count_id',$seatCountId)->get();
+            ->where('seat_count_id', $seatCountId)->get();
 
         // ارجع الموديلات كـ JSON
         return response()->json($models);
     }
+
     public function getMadeYears(Request $request)
     {
         $modelId = $request->input('model_id');

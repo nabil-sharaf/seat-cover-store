@@ -14,7 +14,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{asset('front')}}/javascript:void(0);">
+                            <a href="javascript:void(0);">
                                 <i class="fas fa-user-check text-primary"></i>
                                 <span>{{\App\Models\Admin\Setting::getValue('shipping_title')}}</span>
                             </a>
@@ -25,6 +25,12 @@
                                 <span>{{\App\Models\Admin\Setting::getValue('appointments')}}</span>
                             </a>
                         </li>
+{{--                        <li>--}}
+{{--                            <a href="javascript:void(0);">--}}
+{{--                                <i class="fas fa-user-check text-primary"></i>--}}
+{{--                                <span class="text-decoration-underline fw-bold">تسجيل دخول</span>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
                     </ul>
                 </div>
                 <div class="dlab-topbar-right d-flex ">
@@ -41,21 +47,21 @@
                         @if($instagram !='')
                             <li><a class="fab fa-instagram" href="{{$instagram}}" target="blank"></a></li>
                         @endif
-                            @if($whatsapp !='')
-                            <li><a class="fab fa-whatsapp" href="{{$whatsapp}}" target="blank"></a></li>
+                        @if($whatsapp !='')
+                            <li><a class="whats-icon-head fab fa-whatsapp" href="{{$whatsapp}}" target="blank"></a></li>
                         @endif
                         @foreach($socialLinks as $social)
                             @if($social && $social->setting_value && $social->social_type)
                                 <li>
                                     <a href="{{ $social->setting_value }}" target="_blank"
-                                        @if($social->social_type == 'tiktok')
-                                             class="fab fa-tiktok"
-                                        @elseif($social->social_type == 'youtube')
+                                       @if($social->social_type == 'tiktok')
+                                           class="fab fa-tiktok"
+                                       @elseif($social->social_type == 'youtube')
                                            class="fab fa-youtube"
                                        @elseif($social->social_type == 'twitter')
                                            class="fab fa-twitter"
-                                       @elseif($social->social_type == 'telegram')
-                                           class="fab fa-telegram"
+                                       @elseif($social->social_type == 'snapchat')
+                                           class="fab fa-snapchat-ghost"
                                         @endif
                                     >
                                     </a>
@@ -73,19 +79,8 @@
         <div class="main-bar clearfix ">
             <div class="container-fluid clearfix">
                 <!-- website logo -->
-                <div class="logo-header mostion logo-dark"><a href="{{asset('front')}}/index.html"><img
+                <div class="logo-header mostion logo-dark"><a href="#"><img
                             src="{{asset('storage').'/'.$siteImages?->logo}}" width="193" height="89" alt=""></a></div>
-    <a href="https://wa.me/{{\App\Models\Admin\Setting::getValue('phone')}}" class="floating-whatsapp-head " target="_blank" >
-        <div class="whatsapp-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" class="wa-messenger-svg-whatsapp">
-                <path d="M19.11 17.205c-.372 0-1.088 1.39-1.518 1.39a.63.63 0 0 1-.315-.1c-.802-.402-1.504-.817-2.163-1.447-.545-.516-1.146-1.29-1.46-1.963a.426.426 0 0 1-.073-.215c0-.33.99-.945.99-1.49 0-.143-.73-2.09-.832-2.335-.143-.372-.214-.487-.6-.487-.187 0-.36-.043-.53-.043-.302 0-.53.115-.746.315-.688.645-1.032 1.318-1.06 2.264v.114c-.015.99.472 1.977 1.017 2.78 1.23 1.82 2.506 3.41 4.554 4.34.616.287 2.035.888 2.722.888.817 0 2.15-.515 2.478-1.318.13-.33.244-.73.244-1.088 0-.058 0-.144-.03-.215-.1-.172-2.434-1.39-2.678-1.39zm-2.908 7.593c-1.747 0-3.48-.53-4.942-1.49L7.793 24.41l1.132-3.337a8.955 8.955 0 0 1-1.72-5.272c0-4.955 4.04-8.995 8.997-8.995S25.2 10.845 25.2 15.8c0 4.958-4.04 8.998-8.998 8.998zm0-19.798c-5.96 0-10.8 4.842-10.8 10.8 0 1.964.53 3.898 1.546 5.574L5 27.176l5.974-1.92a10.807 10.807 0 0 0 16.03-9.455c0-5.958-4.842-10.8-10.802-10.8z"
-                      fill="#ffffff"
-                      fill-rule="evenodd"/>
-            </svg>
-        </div>
-        <span>تواصل معنا</span>
-    </a>
-
                 <!-- nav toggle button -->
                 <button class="navbar-toggler collapsed navicon justify-content-end" type="button"
                         data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
@@ -97,10 +92,52 @@
                 <!-- extra nav -->
                 <div class="extra-nav">
                     <div class="extra-cell">
-                        <a href="javascript:void(0);" id="quik-search-btn" class="search-btn"><i
-                                class="fas fa-search"></i></a>
-                        <a href="{{asset('front')}}/shop-cart.html" class="cart-btn"><i
-                                class="fas fa-shopping-cart "></i></a>
+                        <a href="javascript:void(0);" id="quik-search-btn" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </a>
+
+                        @auth
+                            <div class="user-dropdown-wrapper">
+                                <a href="javascript:void(0);" id="user-login-btn" class="fa-user-btn  authenticated-user-btn">
+                                    <i class="fas fa-user" title="حسابي"></i>
+                                </a>
+                                <div class="user-dropdown">
+                                    <ul>
+                                        <li>
+                                            <a href="{{ route('profile.index') }}">
+                                                <i class="fas fa-user-circle"></i>
+                                                حسابي
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                <i class="fas fa-sign-out-alt"></i>
+                                                تسجيل خروج
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        @else
+                            <a href="{{route('login')}}" id="user-login-btn" class="fa-user-btn">
+                                <i class="fas fa-user" title="تسجيل دخول - انشاء حساب"></i>
+                            </a>
+                        @endauth
+
+                        <a href="{{route('home.shop-cart')}}" class="cart-btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            @php
+                                $cartCount = \Darryldecode\Cart\Facades\CartFacade::getContent()->count();
+                            @endphp
+                            <span id="cart-count-span"
+                                  class="badge bg-danger position-absolute top-0 start-100 translate-middle"
+                                  style="display:{{$cartCount==0 ? 'none':''}};">
+                {{$cartCount}}
+            </span>
+                        </a>
                     </div>
                 </div>
                 <!-- Quik search -->
@@ -113,27 +150,50 @@
                 <!-- main nav -->
                 <div class="header-nav navbar-collapse collapse justify-content-center" id="navbarNavDropdown">
                     <ul class="nav navbar-nav">
-                        <li class="{{Route::is('home.index') ? 'active':''}}"><a href="{{route('home.index')}}">الرئيسية</a>
+                        <li class="{{Route::is('home.index') ? 'active':''}}"><a
+                                href="{{route('home.index')}}">الرئيسية</a>
                         </li>
-                        <li class="{{Route::is('home.category.products') ? 'active':''}}"><a href="javascript:;">منتجاتنا <i class="fas fa-chevron-down"></i></a>
+                        <li class="{{Route::is('home.category.products') ? 'active':''}}"><a href="javascript:;">منتجاتنا
+                                <i class="fas fa-chevron-down"></i></a>
                             <ul class="sub-menu">
                                 @php
-                                $categories = \App\Models\Admin\Category::whereNull('parent_id')->get();
+                                    $categories = \App\Models\Admin\Category::whereNull('parent_id')->get();
                                 @endphp
+
                                 @foreach($categories as $category)
-                                <li><a href="{{route('home.category.products',$category->id)}}">{{$category->name}}</a></li>
+                                    <li style="">
+                                        @if($category->children?->isNotEmpty())
+                                            <a href="javascript:;">{{$category->name}}<i class="fas fa-angle-right"></i></a>
+                                            <ul class="sub-menu" style="direction: ltr">
+                                                @foreach($category->children as $cat)
+                                                    <li>
+                                                        <a href="{{ route('talbisa.index', $cat->id) }}">{{$cat->name}}</a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            <a href="{{ route('home.category.products', $category->id) }}">{{$category->name}}</a>
+                                        @endif
+                                    </li>
+
                                 @endforeach
                             </ul>
                         </li>
-                        <li class="{{Route::is('home.about') ? 'active':''}}"><a href="{{route('home.about')}}">من نحن</a>
+                        <li class="{{Route::is('home.about') ? 'active':''}}"><a href="{{route('home.about')}}">من
+                                نحن</a>
                         </li>
                         <li class="{{Route::is('home.branches') ? 'active':''}}"><a href="{{route('home.branches')}}">فروعنا</a>
                         </li>
-{{--                        <li class="{{Route::is('home.category.contact') ? 'active':''}}"><a href="javascript:;">اتصل بنا</a>--}}
-{{--                        </li>--}}
+                        {{--                        <li class="{{Route::is('home.category.contact') ? 'active':''}}"><a href="javascript:;">اتصل بنا</a>--}}
+                        {{--                        </li>--}}
                     </ul>
                 </div>
             </div>
+                @if(session('editing_order_id'))
+                    <div class="text-center editing-message">
+                        <div class="alert alert-info">انت تقوم حاليا بتعديل الاوردر الخاص بك <a href="{{route('orders.clear-cart')}}" class="text-danger text-decoration-underline"> الغاء التعديل </a></div>
+                    </div>
+                @endif
         </div>
     </div>
     <!-- main header END -->

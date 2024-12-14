@@ -1,10 +1,11 @@
 @extends('front.layouts.app')
 @section('content')
     <!-- inner page banner -->
-    <div class="dlab-bnr-inr overlay-black-middle" style="background-image:url(images/background/bg4.jpg);">
+    <div class="dlab-bnr-inr overlay-black-middle"
+         style="background-image:url({{asset('storage/'.$siteImages?->title_image)}});">
         <div class="container">
             <div class="dlab-bnr-inr-entry">
-                <h1 class="text-white">Cart</h1>
+                <h1 class="text-white">تفاصيل السلة</h1>
             </div>
         </div>
     </div>
@@ -41,7 +42,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($formattedItems as $item)
+                                @forelse($formattedItems as $item)
                                     <tr class="alert">
                                         <td>{{$loop->iteration}}</td>
                                         <td class="product-item-img">
@@ -89,7 +90,13 @@
                                                data-id="{{ $item['id'] }}"></a>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr class="text-center">
+                                        <td colspan="7"> لا يوجد لديك منتجات في السلة حاليا اضف منتجاتك أولا ثم ادخل هنا
+                                            لاتمام الشراء
+                                        </td>
+                                    </tr>
+                                @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -97,25 +104,26 @@
 
                     <!-- Mobile view -->
                     <div class="d-md-none">
-                        @foreach($formattedItems as $item)
-                            <div class="card mb-3">
+                        @forelse($formattedItems as $item)
+                            <div class="card mb-3 card-item">
                                 <div class="card-body">
                                     <div class="row align-items-center">
                                         <div class="col-4">
-                                            <img src="{{asset('storage').'/'.$item['details']['image']}}" alt="" class="img-fluid">
+                                            <img src="{{asset('storage').'/'.$item['details']['image']}}" alt=""
+                                                 class="img-fluid">
                                         </div>
                                         <div class="col-8">
                                             <h5 class="card-title">{{$item['name']}}</h5>
                                             @if($item['original_ids']['product_type'] !='accessory')
-                                            <button type="button"
-                                                    class="btn btn-link p-0 mb-2"
-                                                    data-bs-toggle="popover"
-                                                    data-bs-placement="bottom"
-                                                    title="تفاصيل التلبيسة"
-                                                    data-bs-content="براند السيارة: {{ $item['details']['brand'] }} - الموديل: {{ $item['details']['model'] }} - عدد المقاعد: {{ $item['details']['seat_count'] }} - اللون: {{ $item['details']['color'] }} - موديل السنة: ({{ $item['details']['made_year'] }}) - هل المنتج بشنطة: {{ $item['details']['bag_option'] }}">
-                                                <span>تفاصيل المنتج</span>
-                                                <i class="fas fa-info-circle"></i>
-                                            </button>
+                                                <button type="button"
+                                                        class="btn btn-link p-0 mb-2"
+                                                        data-bs-toggle="popover"
+                                                        data-bs-placement="bottom"
+                                                        title="تفاصيل التلبيسة"
+                                                        data-bs-content="براند السيارة: {{ $item['details']['brand'] }} - الموديل: {{ $item['details']['model'] }} - عدد المقاعد: {{ $item['details']['seat_count'] }} - اللون: {{ $item['details']['color'] }} - موديل السنة: ({{ $item['details']['made_year'] }}) - هل المنتج بشنطة: {{ $item['details']['bag_option'] }}">
+                                                    <span>تفاصيل المنتج</span>
+                                                    <i class="fas fa-info-circle"></i>
+                                                </button>
                                             @endif
                                         </div>
                                     </div>
@@ -159,50 +167,58 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        @empty
+                            <div class="text-center">
+                                <p>
+                                    لا يوجد لديك منتجات في السلة حاليا اضف منتجاتك أولا ثم ادخل هنا لاتمام الشراء </p>
+
+                            </div>
+                        @endforelse
                     </div>
 
                     <!-- Summary section -->
-                    <div class="summary-section card mt-4">
-                        <div class="card-body">
-                            <h5 class="card-title mb-4">الإجمالي</h5>
-                            <div class="table-responsive">
-                                <table class="table table-bordered mb-0">
-                                    <tbody>
-                                    <tr>
-                                        <td>اجمالي الاوردر</td>
-                                        <td>--</td>
-                                    </tr>
-                                    <tr>
-                                        <td>الشحن</td>
-                                        <td>مجاني</td>
-                                    </tr>
-                                    <tr>
-                                        <td>كوبون الخصم</td>
-                                        <td>--</td>
-                                    </tr>
-                                    <tr>
-                                        <td>القيمة المضافة</td>
-                                        <td>--</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>الإجمالي</strong></td>
-                                        <td><strong>--</strong></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                    @if($formattedItems->isNotEmpty())
+                        <div class="summary-section card mt-4">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4">الإجمالي</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered mb-0">
+                                        <tbody>
+                                        <tr>
+                                            <td >اجمالي سعر المنتجات</td>
+                                            <td id="product-total">{{$totalPrice}} ر.س</td>
+                                        </tr>
+                                        <tr>
+                                            <td>القيمة المضافة</td>
+                                            <td id="tax-amount">{{$taxAmount}} ر.س</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>الإجمالي</strong></td>
+                                            <td id="total-with-tax" class="text-primary"><strong>{{$totalPrice + $taxAmount}} ر.س</strong></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                            <div class="d-flex flex-column flex-md-row justify-content-between mt-4 gap-3">
-                                <button class="btn site-button order-2 order-md-2" onclick="window.history.back()">
-                                    العودة للصفحة السابقة <i class="fa fa-arrow-circle-left"></i>
-                                </button>
-                                <button class="btn site-button order-1 order-md-1">
-                                    التوجه لصفحة الدفع
-                                </button>
+                                <div class="d-flex flex-column flex-md-row justify-content-between mt-4 gap-3">
+                                    <button class="btn site-button order-1 order-md-1" onclick="window.history.back()">
+                                        <i class="fa fa-arrow-circle-right"></i> العودة للصفحة السابقة
+                                    </button>
+
+                                    <a href="{{session('editing_order_id') ? route('checkout.indexEdit',session('editing_order_id')) :route('checkout.index')}}"
+                                       class="btn site-button order-2 order-md-2">
+                                        التوجه لصفحة الدفع
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @else
+                        <div class="text-center">
+                            <a class="btn site-button order-2 order-md-2" href="{{route('home.index')}}">
+                                العودة للرئيسة <i class="fa fa-arrow-circle-left"></i>
+                            </a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -359,6 +375,7 @@
 
                 const itemId = $(this).data('id');
                 const row = $(this).closest('tr');
+                const cardItem = $(this).closest('.card-item');
 
                 $.ajax({
                     url: '{{route('cart.remove',':id')}}'.replace(':id', itemId),
@@ -368,12 +385,25 @@
                             // حذف الصف من الجدول
                             row.fadeOut(300, function () {
                                 $(this).remove();
-
                                 // إذا كانت السلة فارغة
                                 if ($('tr.alert').length === 0) {
                                     location.reload(); // أو عرض رسالة أن السلة فارغة
                                 }
                             });
+                            // حذف الايتيم في وضع الموبايل
+                            cardItem.fadeOut(300, function () {
+                                $(this).remove();
+                                // إذا كانت السلة فارغة
+                                if ($('.card-item').length === 0) {
+                                    location.reload(); // أو عرض رسالة أن السلة فارغة
+                                }
+                            });
+                            $('#cart-count-span').text(response.cart_count);
+                            if (response.cart_count === 0) {
+                                $('#cart-count-span').hide();
+                            } else {
+                                $('#cart-count-span').show();
+                            }
 
                             // تحديث عدد العناصر في السلة في الهيدر (إذا كان موجود)
                             // $('.cart-count').text(response.cart_count);
@@ -407,21 +437,40 @@
 
 
         function updateQuantity(input) {
-            const itemId = input.dataset.id;
-            const quantity = parseInt(input.value);
+            const itemId = input.dataset.id; // ID المنتج
+            const quantity = parseInt(input.value); // الكمية الجديدة
+            const row = input.closest('tr'); // الصف الخاص بالمنتج
+            const price = parseFloat(row.querySelector('.product-item-price').textContent); // سعر الوحدة
+            const totalCell = row.querySelector('.product-item-total'); // خانة الإجمالي
 
 
-            // You might want to add your AJAX logic here:
-            /*
-            axios.post('/cart/update', {
-                id: itemId,
-                quantity: quantity
-            }).then(response => {
-                // Update total price, etc.
-            }).catch(error => {
-                console.error('Error updating quantity:', error);
-            });
-            */
+            if (quantity >= parseInt(input.min)
+                // &&quantity <= parseInt(input.max)
+            ) {
+                // تحديث الإجمالي في الواجهة
+                const newTotal = price * quantity;
+                totalCell.textContent = newTotal.toFixed(2);
+
+                // إرسال طلب AJAX لتحديث الكمية في السلة
+                $.ajax({
+                    url: '{{route('cart.update', ':id')}}'.replace(':id', itemId),
+                    method: 'post',
+                    data: { quantity: quantity },
+                    success: function (response) {
+                        if (response.success === true) {
+                            // عرض رسالة نجاح
+                            $('#product-total').text(response.total + ' ر.س');
+                            $('#tax-amount').text(response.tax_amount + ' ر.س');
+                            $('#total-with-tax').text(response.total_with_tax + ' ر.س');
+                        }
+                    },
+                    error: function (xhr) {
+                        console.log(xhr)
+                    }
+                });
+            } else {
+                toastr.error('الكمية خارج النطاق المسموح');
+            }
         }
     </script>
 @endpush

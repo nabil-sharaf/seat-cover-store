@@ -17,9 +17,7 @@ class AccessoryController extends Controller
 
     public function accessoryDetails(Accessory $accessory)
     {
-        $relatedProducts = Accessory::where('id','!=',$accessory->id)
-            ->where('category_id',$accessory->category_id)->take(10)->get();
-        return view('front.accessory_details', compact('accessory','relatedProducts'));
+        return view('front.accessory_details', compact('accessory'));
     }
 
 

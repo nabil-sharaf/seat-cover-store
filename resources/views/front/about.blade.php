@@ -4,7 +4,7 @@
     <div class="page-content">
         <!-- inner page banner -->
         <div class="dlab-bnr-inr overlay-black-middle"
-             style="background-image:url({{asset('storage/'.$siteImages?->about_us_image)}}); opacity: .91">
+             style="background-image:url({{asset('storage/'.$siteImages?->title_image)}}); opacity: .91">
             <div class="container">
                 <div class="dlab-bnr-inr-entry">
                     <h1 class="text-white">من نحن</h1>
@@ -73,8 +73,7 @@
                                                     class="ti-flag-alt-2"></i></a></div>
                                         <div class="icon-content p-l40">
                                             <h4 class="w3-tilte">فروعنا </h4>
-                                            <p>لدينا اكثر من فرع (الرياض -جدة المدينة ) ونسعى لأن نكون متواجدين في كل
-                                                أنحاء المملكة لنكون دائما بالقرب منك </p>
+                                            <p>لدينا اكثر من فرع على مستوى انحاء المملكة العربية السعودية ونسعى دائما أن نكون بالقرب من عملائنا </p>
                                         </div>
                                     </div>
                                 </div>
